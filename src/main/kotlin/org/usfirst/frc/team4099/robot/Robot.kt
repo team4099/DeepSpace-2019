@@ -18,6 +18,8 @@ import org.usfirst.frc.team4099.robot.subsystems.*
 
 class Robot : IterativeRobot() {
 
+    private val controls = ControlBoard.instance
+    private val elevator = Elevator.instance
 
     init {
         CrashTracker.logRobotConstruction()
@@ -88,7 +90,9 @@ class Robot : IterativeRobot() {
 
     override fun teleopPeriodic() {
         try {
-
+            val moveUp = controls.moveUp
+            val moveDown = controls.moveDown
+            val toggle = controls.toggle
 
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)

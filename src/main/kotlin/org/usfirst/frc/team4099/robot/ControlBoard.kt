@@ -9,6 +9,16 @@ class ControlBoard private constructor() {
     private val operator: Gamepad = XboxOneGamepad(Constants.Joysticks.SHOTGUN_PORT)
 
 
+    val moveUp: Boolean
+        get() = operator.DPadUp
+
+    val moveDown: Boolean
+        get() = operator.DPadDown
+
+    val toggle: Boolean
+        get() = operator.RightShoulder
+
+
     companion object {
         val instance = ControlBoard()
     }
