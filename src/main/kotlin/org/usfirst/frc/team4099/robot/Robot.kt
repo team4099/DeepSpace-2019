@@ -14,11 +14,14 @@ import org.usfirst.frc.team4099.robot.drive.TankDriveHelper
 import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
 import org.usfirst.frc.team4099.robot.loops.Looper
 import org.usfirst.frc.team4099.robot.loops.VoltageEstimator
+import org.usfirst.frc.team4099.robot.ControlBoard
 import org.usfirst.frc.team4099.robot.subsystems.*
 
 class Robot : IterativeRobot() {
 
-
+    private val drive = Drive.instance
+    private val intake = Intake.instance
+    private val controlboard = ControlBoard.instance
     init {
         CrashTracker.logRobotConstruction()
     }
@@ -88,7 +91,21 @@ class Robot : IterativeRobot() {
 
     override fun teleopPeriodic() {
         try {
+            if (intake.up && controlboard.lowerIntake) {
+                intake.up = false
+                println("Lowering intake")
+            } else if (!intake.up && controlboard.lowerIntake) {
+                intake.up = true
+                println("Raising intake")
+            }
 
+            intake.intakeState = when {
+                controlboard.reverseIntakeFast -> Intake.IntakeState.FAST_OUT
+                controlboard.reverseIntakeSlow -> Intake.IntakeState.SLOW_OUT
+                controlboard.runIntake -> Intake.IntakeState.IN
+                intake.intakeState != Intake.IntakeState.SLOW -> Intake.IntakeState.STOP
+                else -> intake.intakeState
+            }
 
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)

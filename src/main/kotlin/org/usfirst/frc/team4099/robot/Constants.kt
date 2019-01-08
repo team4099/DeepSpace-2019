@@ -7,4 +7,8 @@ class Constants {
         val SHIFTER_REVERSE_ID = 2
     }
 
+    object Joysticks {
+        val DRIVER_PORT = 0
+        val SHOTGUN_PORT = 1
+    }
 }
