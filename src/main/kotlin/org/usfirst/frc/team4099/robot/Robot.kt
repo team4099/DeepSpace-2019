@@ -21,7 +21,11 @@ class Robot : IterativeRobot() {
 
     private val drive = Drive.instance
     private val intake = Intake.instance
+
     private val controlboard = ControlBoard.instance
+    private val disabledLooper = Looper("disabledLooper")
+    private val enabledLooper = Looper("enabledLooper")
+
     init {
         CrashTracker.logRobotConstruction()
     }
@@ -29,7 +33,17 @@ class Robot : IterativeRobot() {
 
     override fun robotInit() {
         try {
+            CameraServer.getInstance().startAutomaticCapture()
+            CrashTracker.logRobotInit()
 
+            DashboardConfigurator.initDashboard()
+
+            enabledLooper.register(intake.loop)
+            enabledLooper.register(intake.loop)
+
+            enabledLooper.register(BrownoutDefender.instance)
+
+            disabledLooper.register(VoltageEstimator.instance)
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("robotInit", t)
             throw t
