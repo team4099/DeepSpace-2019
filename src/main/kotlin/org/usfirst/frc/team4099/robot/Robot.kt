@@ -94,6 +94,18 @@ class Robot : IterativeRobot() {
             val moveDown = controls.moveDown
             val toggle = controls.toggle
 
+            if (operator.moveDown && moveUp) {
+                operator.moveDown = false
+            } else if (!operator.moveDown && moveDown) {
+                operator.moveDown = true
+            }
+
+            elevator.updatePosition()
+
+            if (toggle) {
+                elevator.toggleOuttakeMode()
+            }
+
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)
             throw t

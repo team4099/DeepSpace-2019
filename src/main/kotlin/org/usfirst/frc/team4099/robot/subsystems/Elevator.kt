@@ -20,6 +20,7 @@ class Elevator private constructor(): Subsystem {
         private set
     var observedElevatorVelocity = 0.0
         private set
+    var isHatchPanel = true
 
     enum class ElevatorState (val targetPos : Double) {
         HATCHLOW(20.0), HATCHMID(40.0), HATCHHIGH(60.0),
@@ -112,6 +113,56 @@ class Elevator private constructor(): Subsystem {
 //        talon.config_kD(0, SmartDashboard.getNumber("elevator/pidDUP", Constants.Gains.ELEVATOR_UP_KD), 0)
 //        talon.config_kF(0, SmartDashboard.getNumber("elevator/pidFUP", Constants.Gains.ELEVATOR_UP_KF), 0)
 
+    }
+
+
+    fun toggleOuttakeMode () {
+        isHatchPanel = !isHatchPanel
+        if (elevatorState = ElevatorState.HATCHLOW) {
+            elevatorState = ElevatorState.PORTLOW
+        } else if (elevatorState = ElevatorState.HATCHMID) {
+            elevatorState = ElevatorState.PORTMID
+        } else if (elevatorState = ElevatorState.HATCHHIGH) {
+            elevatorState = ElevatorState.PORTHIGH
+        } else if (elevatorState = ElevatorState.PORTLOW) {
+            elevatorState = ElevatorState.HATCHLOW
+        } else if (elevatorState = ElevatorState.PORTMID) {
+            elevatorState = ElevatorState.HATCHMID
+        } else if (elevatorState = ElevatorState.PORTHIGH) {
+            elevatorState = ElevatorState.HATCHHIGH
+        }
+    }
+
+    fun updatePosition () {
+        if (moveUp) {
+            if (isHatchPanel) {
+                if (elevatorState = ElevatorState.HATCHLOW) {
+                    elevatorState = ElevatorState.HATCHMID
+                } else if (elevatorState = ElevatorState.HATCHMID) {
+                    elevatorState = ElevatorState.HATCHHIGH
+                }
+            } else {
+                if (elevatorState = ElevatorState.PORTLOW) {
+                    elevatorState = ElevatorState.PORTMID
+                } else if (elevatorState = ElevatorState.PORTMID) {
+                    elevatorState = ElevatorState.PORTHIGH
+                }
+            }
+        } else if (moveDown){
+            if (isHatchPanel) {
+                if (elevatorState = ElevatorState.HATCHHIGH) {
+                    elevatorState = ElevatorState.HATCHMID
+                } else if (elevatorState = ElevatorState.HATCHMID) {
+                    elevatorState = ElevatorState.HATCHLOW
+                }
+            } else {
+                if (elevatorState = ElevatorState.PORTHIGH) {
+                    elevatorState = ElevatorState.PORTMID
+                } else if (elevatorState = ElevatorState.PORTMID) {
+                    elevatorState = ElevatorState.PORTLOW
+                }
+            }
+        }
     }
 
     private fun setElevatorPosition(position: ElevatorState) {
