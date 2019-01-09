@@ -9,10 +9,15 @@ import org.usfirst.frc.team4099.robot.loops.Loop
 
 class Grabber private constructor() : Subsystem{
     private val pneumaticShifter: DoubleSolenoid = DoubleSolenoid(Constants.Intake.SHIFTER_FORWARD_ID, Constants.Intake.SHIFTER_REVERSE_ID)
-
+    private var pushStartTime = 0.0
     var push = false
         set (wantsPush) {
-            pneumaticShifter.set(if (wantsPush) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
+            if (wantsPush) {
+                pushStartTime = (System.currentTimeMillis()).toDouble()
+                pneumaticShifter.set(DoubleSolenoid.Value.kForward)
+            } else {
+                pneumaticShifter.set(DoubleSolenoid.Value.kReverse)
+            }
             field = wantsPush
         }
 
@@ -33,6 +38,9 @@ class Grabber private constructor() : Subsystem{
 
         override fun onLoop() {
             synchronized(this@Grabber) {
+                if(push == true && System.currentTimeMillis() + 100 > pushStartTime){
+                    push = false
+                }
             }
         }
 
