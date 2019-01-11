@@ -15,9 +15,17 @@ import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
 import org.usfirst.frc.team4099.robot.loops.Looper
 import org.usfirst.frc.team4099.robot.loops.VoltageEstimator
 import org.usfirst.frc.team4099.robot.subsystems.*
+import org.usfirst.frc.team4099.robot.ControlBoard.*
 
 class Robot : IterativeRobot() {
 
+    private val drive = Drive.instance
+    private val grabber = Grabber.instance
+
+
+    private val controlboard = ControlBoard.instance
+    private val disabledLooper = Looper("disabledLooper")
+    private val enabledLooper = Looper("enabledLooper")
 
     init {
         CrashTracker.logRobotConstruction()
@@ -26,7 +34,16 @@ class Robot : IterativeRobot() {
 
     override fun robotInit() {
         try {
+            CameraServer.getInstance().startAutomaticCapture()
+            CrashTracker.logRobotInit()
 
+            DashboardConfigurator.initDashboard()
+
+            enabledLooper.register(grabber.loop)
+
+            enabledLooper.register(BrownoutDefender.instance)
+
+            disabledLooper.register(VoltageEstimator.instance)
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("robotInit", t)
             throw t
@@ -56,6 +73,8 @@ class Robot : IterativeRobot() {
 
     override fun teleopInit() {
         try {
+
+
 
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopInit", t)
@@ -88,6 +107,12 @@ class Robot : IterativeRobot() {
 
     override fun teleopPeriodic() {
         try {
+            if (!grabber.push && controlboard.toggleGrabber) {
+                grabber.push = true
+                println("Pushing the hatch-ey boi")
+            } else {
+                grabber.push = false
+            }
 
 
         } catch (t: Throwable) {
