@@ -16,8 +16,8 @@ class Superstructure : Subsystem {
     val mInstance = Superstructure()
 
     // Put Subsystem instantiation here:
-    const val intake = Intake.instance
-    const val mDrive = Drive.instance
+    private val intake = Intake.instance
+    private val mDrive = Drive.instance
 
     enum class SystemState {
         IDLE,
@@ -49,16 +49,44 @@ class Superstructure : Subsystem {
 
     fun onLoop() {
         synchronized(this@Superstructure) {
-            val newState = mSystemState
-            newState = when(mSystemState) {
-                IDLE -> handleIdle()
-                INTAKE_UP -> handleElevatorUp()
+           when(mSystemState) {
+               IDLE -> handleIdle()
+               ALIGNING_LINE, ALIGNING_VISION -> handleVision()
+               INTAKE_UP -> handleElevatorUp()
+               CLIMBING -> handleClimb()
+               INTAKE_CARGO -> handleCargoIntake()
+               UNJAMMING -> handleUnjam()
+               BLINK -> handleBlink()
             }
         }
     }
 
+    private fun handleIdle() {
+        // TODO
+    }
+
+    private fun handleVision() {
+        // TODO
+    }
+
     private fun handleElevatorUp() {
-        intake.up = false
+        intake.up = false // Move intake down
         // Move elevator up
+    }
+
+    private fun handleClimb() {
+        // TODO
+    }
+
+    private fun handleCargoIntake() {
+        // TODO
+    }
+
+    private fun handleUnjam() {
+        // TODO
+    }
+
+    private fun handleBlink() {
+        // TODO
     }
 }
