@@ -14,9 +14,9 @@ class Climber private constructor() : Subsystem {
     private val pneumaticPiston_B2: DoubleSolenoid = DoubleSolenoid(Constants.Climber.CLIMBER_B2_FORWARD_ID, Constants.Climber.CLIMBER_B2_REVERSE_ID)
 
     enum class ClimberState {
-        CLIMBING, NOT_CLIMBING, UNCLIMBING
+        FRONT_DOWN, BACK_DOWN, BOTH_UP
     }
-    var climberState = ClimberState.NOT_CLIMBING
+    var climberState = ClimberState.BOTH_UP
     override fun outputToSmartDashboard() {
     }
 
@@ -28,26 +28,37 @@ class Climber private constructor() : Subsystem {
     }
 
     private fun frontPistonsDown() {
-        pneumaticPiston_F1.set(pneumaticShifter_F1.Value.kForward)
-        pneumaticPiston_F2.set(pneumaticShifter_F2.Value.kForward)
+        pneumaticPiston_F1.set(pneumaticPiston_F1.Value.kForward)
+        pneumaticPiston_F2.set(pneumaticPiston_F2.Value.kForward)
+        climberState = ClimberState.FRONT_DOWN
     }
     private fun backPistonsDown() {
-        pneumaticPiston_B1.set(pneumaticShifter_B1.Value.kForward)
-        pneumaticPiston_B2.set(pneumaticShifter_B2.Value.kForward)
+        pneumaticPiston_B1.set(pneumaticPiston_B1.Value.kForward)
+        pneumaticPiston_B2.set(pneumaticPiston_B2.Value.kForward)
+        climberState = ClimberState.BACK_DOWN
     }
     private fun frontPistonsUp() {
-        pneumaticPiston_F1.set(pneumaticShifter_F1.Value.kReverse)
-        pneumaticPiston_F2.set(pneumaticShifter_F2.Value.kReverse)
+        if (climberState == ClimberState.FRONT_DOWN) {
+            pneumaticPiston_F1.set(pneumaticPiston_F1.Value.kReverse)
+            pneumaticPiston_F2.set(pneumaticPiston_F2.Value.kReverse)
+            climberState = ClimberState.BOTH_UP
+        }
     }
     private fun backPistonsUp() {
-        pneumaticPiston_F1.set(pneumaticShifter_B1.Value.kReverse)
-        pneumaticPiston_F1.set(pneumaticShifter_B2.Value.kReverse)
+        if (climberState == ClimberState.BACK_DOWN) {
+            pneumaticPiston_F1.set(pneumaticPiston_B1.Value.kReverse)
+            pneumaticPiston_F1.set(pneumaticPiston_B2.Value.kReverse)
+            climberState = ClimberState.BOTH_UP
+        }
+
+
     }
 
     val loop: Loop = object : Loop {
         override fun onStart() {
             frontPistonsUp()
             backPistonsUp()
+
         }
         override fun onLoop() {
 
@@ -56,6 +67,7 @@ class Climber private constructor() : Subsystem {
         override fun onStop() {
             frontPistonsUp()
             backPistonsUp()
+
         }
     }
 
