@@ -13,7 +13,7 @@ class Elevator private constructor(): Subsystem {
     private val talon = CANMotorControllerFactory.createDefaultTalon(Constants.Elevator.ELEVATOR_TALON_ID)
 
     private var elevatorPower = 0.0
-    //var elevatorState = ElevatorState.OPEN_LOOP
+    var elevatorState = ElevatorState.OPEN_LOOP
     var movementState = MovementState.STILL
         private set
     var observedElevatorPosition = 0.0
