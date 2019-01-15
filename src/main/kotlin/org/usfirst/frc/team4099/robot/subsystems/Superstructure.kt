@@ -18,6 +18,7 @@ class Superstructure : Subsystem {
     // Put Subsystem instantiation here:
     private val intake = Intake.instance
     private val mDrive = Drive.instance
+    private val mElevator = Elevator.instance
 
     enum class SystemState {
         IDLE,
@@ -71,7 +72,7 @@ class Superstructure : Subsystem {
 
     private fun handleElevatorUp() {
         intake.up = false // Move intake down
-        // Move elevator up
+         // Move elevator up
     }
 
     private fun handleClimb() {
