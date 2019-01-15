@@ -117,48 +117,48 @@ class Elevator private constructor(): Subsystem {
 
 
     fun toggleOuttakeMode () {
-        isHatchPanel = !isHatchPanel
-        if (elevatorState = ElevatorState.HATCHLOW) {
+        isHatchPanel == !isHatchPanel
+        if (elevatorState == ElevatorState.HATCHLOW) {
             elevatorState = ElevatorState.PORTLOW
-        } else if (elevatorState = ElevatorState.HATCHMID) {
+        } else if (elevatorState == ElevatorState.HATCHMID) {
             elevatorState = ElevatorState.PORTMID
-        } else if (elevatorState = ElevatorState.HATCHHIGH) {
+        } else if (elevatorState == ElevatorState.HATCHHIGH) {
             elevatorState = ElevatorState.PORTHIGH
-        } else if (elevatorState = ElevatorState.PORTLOW) {
+        } else if (elevatorState == ElevatorState.PORTLOW) {
             elevatorState = ElevatorState.HATCHLOW
-        } else if (elevatorState = ElevatorState.PORTMID) {
+        } else if (elevatorState == ElevatorState.PORTMID) {
             elevatorState = ElevatorState.HATCHMID
-        } else if (elevatorState = ElevatorState.PORTHIGH) {
+        } else if (elevatorState == ElevatorState.PORTHIGH) {
             elevatorState = ElevatorState.HATCHHIGH
         }
     }
 
-    fun updatePosition () {
-        if (moveUp) {
+    fun updatePosition (wantsUp: Boolean) {
+        if (wantsUp) {
             if (isHatchPanel) {
-                if (elevatorState = ElevatorState.HATCHLOW) {
+                if (elevatorState == ElevatorState.HATCHLOW) {
                     elevatorState = ElevatorState.HATCHMID
-                } else if (elevatorState = ElevatorState.HATCHMID) {
+                } else if (elevatorState == ElevatorState.HATCHMID) {
                     elevatorState = ElevatorState.HATCHHIGH
                 }
             } else {
-                if (elevatorState = ElevatorState.PORTLOW) {
+                if (elevatorState == ElevatorState.PORTLOW) {
                     elevatorState = ElevatorState.PORTMID
-                } else if (elevatorState = ElevatorState.PORTMID) {
+                } else if (elevatorState == ElevatorState.PORTMID) {
                     elevatorState = ElevatorState.PORTHIGH
                 }
             }
-        } else if (moveDown){
+        } else if (!wantsUp){
             if (isHatchPanel) {
-                if (elevatorState = ElevatorState.HATCHHIGH) {
+                if (elevatorState == ElevatorState.HATCHHIGH) {
                     elevatorState = ElevatorState.HATCHMID
-                } else if (elevatorState = ElevatorState.HATCHMID) {
+                } else if (elevatorState == ElevatorState.HATCHMID) {
                     elevatorState = ElevatorState.HATCHLOW
                 }
             } else {
-                if (elevatorState = ElevatorState.PORTHIGH) {
+                if (elevatorState == ElevatorState.PORTHIGH) {
                     elevatorState = ElevatorState.PORTMID
-                } else if (elevatorState = ElevatorState.PORTMID) {
+                } else if (elevatorState == ElevatorState.PORTMID) {
                     elevatorState = ElevatorState.PORTLOW
                 }
             }
@@ -177,7 +177,7 @@ class Elevator private constructor(): Subsystem {
 
     val loop: Loop = object : Loop {
         override fun onStart() {
-            elevatorState = ElevatorState.LOW
+            elevatorState = ElevatorState.HATCHLOW
         }
 
         override fun onLoop() {

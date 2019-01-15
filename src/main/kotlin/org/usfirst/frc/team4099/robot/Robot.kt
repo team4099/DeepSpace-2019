@@ -96,11 +96,11 @@ class Robot : IterativeRobot() {
 
             if (operator.moveDown && moveUp) {
                 operator.moveDown = false
+                elevator.updatePosition(true)
             } else if (!operator.moveDown && moveDown) {
                 operator.moveDown = true
+                elevator.updatePosition(false)
             }
-
-            elevator.updatePosition()
 
             if (toggle) {
                 elevator.toggleOuttakeMode()
