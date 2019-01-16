@@ -11,6 +11,16 @@ class ControlBoard private constructor() {
     val toggleGrabber: Boolean
         get() = operator.leftShoulderButton
 
+    val moveUp: Boolean
+        get() = operator.DPadUp
+
+    val moveDown: Boolean
+        get() = operator.DPadDown
+
+    val toggle: Boolean
+        get() = operator.RightShoulder
+
+
     companion object {
         val instance = ControlBoard()
     }
