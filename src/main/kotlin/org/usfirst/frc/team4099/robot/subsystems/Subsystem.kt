@@ -4,4 +4,5 @@ interface Subsystem {
     fun outputToSmartDashboard()
     fun stop()
     fun zeroSensors()
+
 }
