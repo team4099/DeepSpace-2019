@@ -117,7 +117,7 @@ class Elevator private constructor(): Subsystem {
 
 
     fun toggleOuttakeMode () {
-        isHatchPanel == !isHatchPanel
+        isHatchPanel = !isHatchPanel
         if (elevatorState == ElevatorState.HATCHLOW) {
             elevatorState = ElevatorState.PORTLOW
         } else if (elevatorState == ElevatorState.HATCHMID) {
@@ -148,7 +148,7 @@ class Elevator private constructor(): Subsystem {
                     elevatorState = ElevatorState.PORTHIGH
                 }
             }
-        } else if (!wantsUp){
+        } else {
             if (isHatchPanel) {
                 if (elevatorState == ElevatorState.HATCHHIGH) {
                     elevatorState = ElevatorState.HATCHMID
