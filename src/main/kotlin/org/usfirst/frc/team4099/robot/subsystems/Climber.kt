@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid
 import com.ctre.phoenix.motorcontrol.ControlMode
 import edu.wpi.first.wpilibj.Talon
 import org.usfirst.frc.team4099.lib.util.CANMotorControllerFactory
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import org.usfirst.frc.team4099.robot.Constants
 import org.usfirst.frc.team4099.robot.loops.Loop
 
@@ -18,6 +19,7 @@ class Climber private constructor() : Subsystem {
     }
     var climberState = ClimberState.BOTH_UP
     override fun outputToSmartDashboard() {
+        SmartDashboard.putString("climber/climberState", climberState.toString())
     }
 
     override fun stop() {
@@ -28,26 +30,26 @@ class Climber private constructor() : Subsystem {
     }
 
     private fun frontPistonsDown() {
-        pneumaticPiston_F1.set(pneumaticPiston_F1.Value.kForward)
-        pneumaticPiston_F2.set(pneumaticPiston_F2.Value.kForward)
+        pneumaticPiston_F1.set(DoubleSolenoid.Value.kForward)
+        pneumaticPiston_F2.set(DoubleSolenoid.Value.kForward)
         climberState = ClimberState.FRONT_DOWN
     }
     private fun backPistonsDown() {
-        pneumaticPiston_B1.set(pneumaticPiston_B1.Value.kForward)
-        pneumaticPiston_B2.set(pneumaticPiston_B2.Value.kForward)
+        pneumaticPiston_B1.set(DoubleSolenoid.Value.kForward)
+        pneumaticPiston_B2.set(DoubleSolenoid.Value.kForward)
         climberState = ClimberState.BACK_DOWN
     }
     private fun frontPistonsUp() {
         if (climberState == ClimberState.FRONT_DOWN) {
-            pneumaticPiston_F1.set(pneumaticPiston_F1.Value.kReverse)
-            pneumaticPiston_F2.set(pneumaticPiston_F2.Value.kReverse)
+            pneumaticPiston_F1.set(DoubleSolenoid.Value.kReverse)
+            pneumaticPiston_F2.set(DoubleSolenoid.Value.kReverse)
             climberState = ClimberState.BOTH_UP
         }
     }
     private fun backPistonsUp() {
         if (climberState == ClimberState.BACK_DOWN) {
-            pneumaticPiston_F1.set(pneumaticPiston_B1.Value.kReverse)
-            pneumaticPiston_F1.set(pneumaticPiston_B2.Value.kReverse)
+            pneumaticPiston_F1.set(DoubleSolenoid.Value.kReverse)
+            pneumaticPiston_F1.set(DoubleSolenoid.Value.kReverse)
             climberState = ClimberState.BOTH_UP
         }
 
@@ -61,6 +63,26 @@ class Climber private constructor() : Subsystem {
 
         }
         override fun onLoop() {
+            synchronized(this@Climber) {
+                when(climberState) {
+                    ClimberState.FRONT_DOWN -> {
+                        pneumaticPiston_F1.set(DoubleSolenoid.Value.kForward)
+                        pneumaticPiston_F2.set(DoubleSolenoid.Value.kForward)
+                    }
+                    ClimberState.BACK_DOWN -> {
+                        pneumaticPiston_B1.set(DoubleSolenoid.Value.kForward)
+                        pneumaticPiston_B2.set(DoubleSolenoid.Value.kForward)
+                    }
+                    ClimberState.BOTH_UP -> {
+                        pneumaticPiston_F1.set(DoubleSolenoid.Value.kReverse)
+                        pneumaticPiston_F2.set(DoubleSolenoid.Value.kReverse)
+                        pneumaticPiston_B1.set(DoubleSolenoid.Value.kReverse)
+                        pneumaticPiston_B2.set(DoubleSolenoid.Value.kReverse)
+
+                    }
+
+                }
+            }
 
 
         }
@@ -70,5 +92,8 @@ class Climber private constructor() : Subsystem {
 
         }
     }
+    companion object {
+        val instance = Climber()
 
+    }
 }

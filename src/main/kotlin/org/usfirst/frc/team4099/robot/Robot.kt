@@ -1,24 +1,14 @@
 package org.usfirst.frc.team4099.robot
 
-import edu.wpi.first.wpilibj.CameraServer
 import edu.wpi.first.wpilibj.IterativeRobot
-import edu.wpi.first.wpilibj.livewindow.LiveWindow
-import org.usfirst.frc.team4099.DashboardConfigurator
-import org.usfirst.frc.team4099.auto.AutoModeExecuter
 import org.usfirst.frc.team4099.lib.util.CrashTracker
-import org.usfirst.frc.team4099.lib.util.LatchedBoolean
-import org.usfirst.frc.team4099.lib.util.ReflectingCSVWriter
-import org.usfirst.frc.team4099.lib.util.SignalTable
-import org.usfirst.frc.team4099.robot.drive.CheesyDriveHelper
-import org.usfirst.frc.team4099.robot.drive.TankDriveHelper
-import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
-import org.usfirst.frc.team4099.robot.loops.Looper
-import org.usfirst.frc.team4099.robot.loops.VoltageEstimator
 import org.usfirst.frc.team4099.robot.subsystems.*
 
 class Robot : IterativeRobot() {
 
-
+    private val climber = Climber.instance
+    private val controls = ControlBoard.instance
+    private val drive = Drive.instance
     init {
         CrashTracker.logRobotConstruction()
     }
@@ -88,8 +78,27 @@ class Robot : IterativeRobot() {
 
     override fun teleopPeriodic() {
         try {
+            val frontToggle = controls.front
+            val backToggle = controls.back
+            if (frontToggle && climber.climberState == Climber.ClimberState.FRONT_DOWN) {
+                climber.climberState = Climber.ClimberState.BOTH_UP
+
+            } else if (frontToggle && climber.climberState == Climber.ClimberState.BOTH_UP) {
+                climber.climberState = Climber.ClimberState.FRONT_DOWN
+
+            } else if (backToggle && climber.climberState == Climber.ClimberState.BOTH_UP) {
+                climber.climberState = Climber.ClimberState.BACK_DOWN
+
+            } else if (backToggle && climber.climberState == Climber.ClimberState.BACK_DOWN) {
+                climber.climberState = Climber.ClimberState.BOTH_UP
+            }
 
 
+
+
+
+
+            outputAllToSmartDashboard()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)
             throw t
