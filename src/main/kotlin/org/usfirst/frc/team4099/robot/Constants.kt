@@ -32,4 +32,9 @@ class Constants {
         val SHIFTER_REVERSE_ID = 1
     }
 
+    object Vision {
+        val CAMERA_TO_TARGET_HEIGHT = 20;
+        val CAMERA_ANGLE = 0;
+    }
+
 }
