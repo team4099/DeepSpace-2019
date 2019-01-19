@@ -7,8 +7,7 @@ import org.usfirst.frc.team4099.robot.loops.Loop
 import org.usfirst.frc.team4099.robot.Constants
 
 class Vision private constructor(): Subsystem {
-    var Kp = -0.1
-    var min_command = 0.05
+
     var steering_adjust = 0.0
     var distance = 0
 
@@ -16,7 +15,6 @@ class Vision private constructor(): Subsystem {
     var tx = table.getEntry("tx").getDouble(0.0)
     var tv = table.getEntry("tv").getDouble(0.0)
     var ty = table.getEntry("ty").getDouble(0.0)
-    val heading_error = (tx * -1.0)
 
     var visionState = VisionState.INACTIVE
 
@@ -25,9 +23,9 @@ class Vision private constructor(): Subsystem {
     }
 
     override fun outputToSmartDashboard() {
-        SmartDashboard.putNumber("LimelightX", tx)
-        SmartDashboard.putNumber("LimelightTarget", tv)
-        SmartDashboard.putNumber("LimelightY", ty)
+        SmartDashboard.putNumber("LimelightX: ", tx)
+        SmartDashboard.putNumber("LimelightTarget: ", tv)
+        SmartDashboard.putNumber("LimelightY: ", ty)
     }
 
     @Synchronized override fun stop() {
@@ -45,9 +43,9 @@ class Vision private constructor(): Subsystem {
                 when (visionState) {
                     VisionState.AIMING -> {
                         if (tx > 1.0) {
-                            steering_adjust = Kp * heading_error - min_command
+                            steering_adjust = Constants.Vision.Kp * tx - Constants.Vision.min_command
                         } else if (tx < 1.0) {
-                            steering_adjust = Kp * heading_error + min_command
+                            steering_adjust = Constants.Vision.Kp * tx + Constants.Vision.min_command
                         }
 
                     }
@@ -55,8 +53,7 @@ class Vision private constructor(): Subsystem {
                         if (tv == 0.0) {
                             steering_adjust = 0.3
                         } else {
-                            val heading_error = tx
-                            steering_adjust = Kp * tx
+                            steering_adjust = Constants.Vision.Kp * tx
                         }
                     }
 
