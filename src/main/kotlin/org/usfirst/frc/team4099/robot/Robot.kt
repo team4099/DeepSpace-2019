@@ -103,10 +103,10 @@ class Robot : IterativeRobot() {
 
     override fun teleopPeriodic() {
         try {
-            if (intake.up && controlboard.lowerIntake) {
+            if (intake.up && controlboard.toggleIntake) {
                 intake.up = false
                 println("Lowering intake")
-            } else if (!intake.up && controlboard.raiseIntake) {
+            } else if (!intake.up && controlboard.toggleIntake) {
                 intake.up = true
                 println("Raising intake")
             }
