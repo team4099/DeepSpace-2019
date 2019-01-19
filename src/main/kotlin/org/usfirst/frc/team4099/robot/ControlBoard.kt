@@ -8,6 +8,12 @@ class ControlBoard private constructor() {
     private val driver: Gamepad = XboxOneGamepad(Constants.Joysticks.DRIVER_PORT)
     private val operator: Gamepad = XboxOneGamepad(Constants.Joysticks.SHOTGUN_PORT)
 
+
+    val front: Boolean
+        get() = driver.rightShoulderButton
+    val back: Boolean
+        get() = driver.leftShoulderButton
+
     val toggleGrabber: Boolean
         get() = operator.leftShoulderButton
 
@@ -20,9 +26,10 @@ class ControlBoard private constructor() {
     val toggle: Boolean
         get() = operator.RightShoulder
 
-
     companion object {
         val instance = ControlBoard()
     }
+
+
 
 }
