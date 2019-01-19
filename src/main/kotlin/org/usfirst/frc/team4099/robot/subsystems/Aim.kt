@@ -2,22 +2,21 @@ package org.usfirst.frc.team4099.robot.subsystems
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import org.usfirst.frc.team4099.robot.Constants
-import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
 import org.usfirst.frc.team4099.robot.loops.Loop
 
-class Vision private constructor(): Subsystem {
+class Aim private constructor(): Subsystem {
     var Kp = -0.1
     var min_command = 0.05
     var steering_adjust = 0.0
+
     private val table: NetworkTable = NetworkTableInstance.getDefault().getTable("limelight")
     var tx = table.getEntry("tx").getDouble(0.0)
+    val heading_error = (tx * -1.0)
 
-    var visionState = VisionState.INACTIVE
+    var aimState = AimState.INACTIVE
 
-    enum class VisionState {
+    enum class AimState {
         AIMING, INACTIVE
     }
 
@@ -26,19 +25,18 @@ class Vision private constructor(): Subsystem {
     }
 
     @Synchronized override fun stop() {
-        visionState = VisionState.INACTIVE
+        aimState = AimState.INACTIVE
     }
 
     val loop: Loop = object : Loop {
         override fun onStart() {
-            visionState = VisionState.INACTIVE
+            aimState = AimState.INACTIVE
         }
 
         override fun onLoop() {
-            synchronized(this@Vision) {
-                when (visionState) {
-                    VisionState.AIMING -> {
-                        val heading_error = (tx * -1.0)
+            synchronized(this@Aim) {
+                when (aimState) {
+                    AimState.AIMING -> {
                         if (tx > 1.0) {
                             steering_adjust = Kp * heading_error - min_command
                         } else if (tx < 1.0) {
@@ -46,7 +44,7 @@ class Vision private constructor(): Subsystem {
                         }
 
                     }
-                    VisionState.INACTIVE -> steering_adjust = 0.0
+                    AimState.INACTIVE -> steering_adjust = 0.0
                 }
             }
         }
@@ -55,7 +53,7 @@ class Vision private constructor(): Subsystem {
     }
 
     companion object {
-        val instance = Vision()
+        val instance = Aim()
     }
 
     override fun zeroSensors() { }
