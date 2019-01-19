@@ -2,10 +2,22 @@ package org.usfirst.frc.team4099.robot
 
 import edu.wpi.first.wpilibj.IterativeRobot
 import org.usfirst.frc.team4099.lib.util.CrashTracker
+
+import org.usfirst.frc.team4099.lib.util.LatchedBoolean
+import org.usfirst.frc.team4099.lib.util.ReflectingCSVWriter
+import org.usfirst.frc.team4099.lib.util.SignalTable
+import org.usfirst.frc.team4099.robot.drive.CheesyDriveHelper
+import org.usfirst.frc.team4099.robot.drive.TankDriveHelper
+import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
+import org.usfirst.frc.team4099.robot.loops.Looper
+import org.usfirst.frc.team4099.robot.loops.VoltageEstimator
+import org.usfirst.frc.team4099.robot.ControlBoard
+
 import org.usfirst.frc.team4099.robot.subsystems.*
 import org.usfirst.frc.team4099.robot.ControlBoard.*
 
 class Robot : IterativeRobot() {
+
 
     private val climber = Climber.instance
     private val controls = ControlBoard.instance
@@ -16,6 +28,12 @@ class Robot : IterativeRobot() {
     private val disabledLooper = Looper("disabledLooper")
     private val enabledLooper = Looper("enabledLooper")
   
+
+    private val intake = Intake.instance
+
+
+
+
     init {
         CrashTracker.logRobotConstruction()
     }
@@ -28,7 +46,12 @@ class Robot : IterativeRobot() {
 
             DashboardConfigurator.initDashboard()
 
+
             enabledLooper.register(grabber.loop)
+
+            enabledLooper.register(intake.loop)
+            enabledLooper.register(intake.loop)
+
 
             enabledLooper.register(BrownoutDefender.instance)
 
@@ -132,6 +155,22 @@ class Robot : IterativeRobot() {
             }
 
 
+
+            if (intake.up && controlboard.lowerIntake) {
+                intake.up = false
+                println("Lowering intake")
+            } else if (!intake.up && controlboard.lowerIntake) {
+                intake.up = true
+                println("Raising intake")
+            }
+
+            intake.intakeState = when {
+                controlboard.reverseIntakeFast -> Intake.IntakeState.FAST_OUT
+                controlboard.reverseIntakeSlow -> Intake.IntakeState.SLOW_OUT
+                controlboard.runIntake -> Intake.IntakeState.IN
+                intake.intakeState != Intake.IntakeState.SLOW -> Intake.IntakeState.STOP
+                else -> intake.intakeState
+            }
 
 
             outputAllToSmartDashboard()

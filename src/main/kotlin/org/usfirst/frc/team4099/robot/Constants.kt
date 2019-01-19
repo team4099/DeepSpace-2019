@@ -1,6 +1,7 @@
 package org.usfirst.frc.team4099.robot
 
 class Constants {
+
     object Climber {
         val CLIMBER_F1_FORWARD_ID = 0
         val CLIMBER_F1_REVERSE_ID = 1
@@ -33,6 +34,7 @@ class Constants {
         val  SHIFTER_FORWARD_ID = 1
         val SHIFTER_REVERSE_ID = 2
     }
+
 
     object Joysticks {
         val DRIVER_PORT = 0
