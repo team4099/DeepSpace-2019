@@ -29,37 +29,9 @@ class Climber private constructor() : Subsystem {
     override fun zeroSensors() {
     }
 
-    private fun frontPistonsDown() {
-        pneumaticPiston_F1.set(DoubleSolenoid.Value.kForward)
-        pneumaticPiston_F2.set(DoubleSolenoid.Value.kForward)
-        climberState = ClimberState.FRONT_DOWN
-    }
-    private fun backPistonsDown() {
-        pneumaticPiston_B1.set(DoubleSolenoid.Value.kForward)
-        pneumaticPiston_B2.set(DoubleSolenoid.Value.kForward)
-        climberState = ClimberState.BACK_DOWN
-    }
-    private fun frontPistonsUp() {
-        if (climberState == ClimberState.FRONT_DOWN) {
-            pneumaticPiston_F1.set(DoubleSolenoid.Value.kReverse)
-            pneumaticPiston_F2.set(DoubleSolenoid.Value.kReverse)
-            climberState = ClimberState.BOTH_UP
-        }
-    }
-    private fun backPistonsUp() {
-        if (climberState == ClimberState.BACK_DOWN) {
-            pneumaticPiston_F1.set(DoubleSolenoid.Value.kReverse)
-            pneumaticPiston_F1.set(DoubleSolenoid.Value.kReverse)
-            climberState = ClimberState.BOTH_UP
-        }
-
-
-    }
-
     val loop: Loop = object : Loop {
         override fun onStart() {
-            frontPistonsUp()
-            backPistonsUp()
+            climberState = ClimberState.BOTH_UP
 
         }
         override fun onLoop() {
@@ -87,8 +59,7 @@ class Climber private constructor() : Subsystem {
 
         }
         override fun onStop() {
-            frontPistonsUp()
-            backPistonsUp()
+            climberState = ClimberState.BOTH_UP
 
         }
     }
