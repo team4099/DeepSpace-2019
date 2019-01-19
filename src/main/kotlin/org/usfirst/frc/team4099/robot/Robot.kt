@@ -117,8 +117,6 @@ class Robot : IterativeRobot() {
 
     override fun teleopPeriodic() {
         try {
-
-            if (intake.up && controlboard.toggleIntake) {
             val frontToggle = controls.front
             val backToggle = controls.back
             if (frontToggle && climber.climberState == Climber.ClimberState.FRONT_DOWN) {
@@ -153,10 +151,10 @@ class Robot : IterativeRobot() {
             } else {
                 grabber.push = false
             }
-            }
 
 
-            if (intake.up && controlboard.lowerIntake) {
+
+            if (intake.up && controlboard.toggleIntake) {
                 intake.up = false
                 println("Lowering intake")
             } else if (!intake.up && controlboard.toggleIntake) {

@@ -9,13 +9,6 @@ class ControlBoard private constructor() {
     private val operator: Gamepad = XboxOneGamepad(Constants.Joysticks.SHOTGUN_PORT)
 
 
-    /*
-    val raiseIntake: Boolean
-        get() = operator.dPadLeft
-
-    val lowerIntake: Boolean
-        get() = operator.dPadRight
-    */
     val toggleIntake: Boolean
         get() = operator.dPadLeft
     val reverseIntakeSlow: Boolean
