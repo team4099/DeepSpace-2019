@@ -26,6 +26,7 @@ class Constants {
 
     object Elevator {
         val ELEVATOR_TALON_ID = 0
+    }
       
     object Intake {
         val INTAKE_TALON_ID = 0
