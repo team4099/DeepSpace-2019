@@ -33,12 +33,10 @@ class Robot : IterativeRobot() {
 
     override fun robotInit() {
         try {
-            CameraServer.getInstance().startAutomaticCapture()
             CrashTracker.logRobotInit()
 
             DashboardConfigurator.initDashboard()
 
-            enabledLooper.register(intake.loop)
             enabledLooper.register(intake.loop)
 
             enabledLooper.register(BrownoutDefender.instance)
@@ -108,7 +106,7 @@ class Robot : IterativeRobot() {
             if (intake.up && controlboard.lowerIntake) {
                 intake.up = false
                 println("Lowering intake")
-            } else if (!intake.up && controlboard.lowerIntake) {
+            } else if (!intake.up && controlboard.raiseIntake) {
                 intake.up = true
                 println("Raising intake")
             }
