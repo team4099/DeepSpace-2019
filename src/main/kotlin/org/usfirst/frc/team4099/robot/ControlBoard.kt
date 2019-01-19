@@ -27,8 +27,27 @@ class ControlBoard private constructor() {
     val runIntake: Boolean
         get() = operator.aButton
 
+    val front: Boolean
+        get() = driver.rightShoulderButton
+    val back: Boolean
+        get() = driver.leftShoulderButton
+
+    val toggleGrabber: Boolean
+        get() = operator.leftShoulderButton
+
+    val moveUp: Boolean
+        get() = operator.dPadUp
+
+    val moveDown: Boolean
+        get() = operator.dPadDown
+
+    val toggle: Boolean
+        get() = operator.rightShoulderButton
+
     companion object {
         val instance = ControlBoard()
     }
+
+
 
 }
