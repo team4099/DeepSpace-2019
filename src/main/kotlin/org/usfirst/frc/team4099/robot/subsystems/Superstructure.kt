@@ -1,7 +1,6 @@
 package src.main.kotlin.org.usfirst.frc.team4099.robot.subsystems
 
-import org.usfirst.frc.team4099.robot.subsystems.Drive
-import org.usfirst.frc.team4099.robot.subsystems.Intake
+import org.usfirst.frc.team4099.robot.subsystems.*
 
 /**
  * @author Team 4099
@@ -17,8 +16,9 @@ class Superstructure : Subsystem {
 
     // Put Subsystem instantiation here:
     private val intake = Intake.instance
-    private val mDrive = Drive.instance
-    private val mElevator = Elevator.instance
+    private val drive = Drive.instance
+    private val elevator = Elevator.instance
+    private val vision = Vision.instance
 
     enum class SystemState {
         IDLE,
@@ -35,8 +35,8 @@ class Superstructure : Subsystem {
         IDLE, CLIMB, UNJAM, INTAKE_CARGO, ALIGN
     }
 
-    private val mSystemState = SystemState.IDLE
-    private val mWantedState = WantedState.IDLE
+    private var systemState = SystemState.IDLE
+    private val wantedState = WantedState.IDLE
 
     fun isAlignedLine() {
         // Get information from line follow sensor
@@ -50,14 +50,14 @@ class Superstructure : Subsystem {
 
     fun onLoop() {
         synchronized(this@Superstructure) {
-           when(mSystemState) {
-               IDLE -> handleIdle()
-               ALIGNING_LINE, ALIGNING_VISION -> handleVision()
-               INTAKE_UP -> handleElevatorUp()
-               CLIMBING -> handleClimb()
-               INTAKE_CARGO -> handleCargoIntake()
-               UNJAMMING -> handleUnjam()
-               BLINK -> handleBlink()
+           when(systemState) {
+               SystemState.IDLE -> handleIdle()
+               SystemState.ALIGNING_LINE, SystemState.ALIGNING_VISION -> handleVision()
+               SystemState.INTAKE_UP -> handleElevatorUp()
+               SystemState.CLIMBING -> handleClimb()
+               SystemState.INTAKE_CARGO -> handleCargoIntake()
+               SystemState.UNJAMMING -> handleUnjam()
+               SystemState.BLINK -> handleBlink()
             }
         }
     }
@@ -67,7 +67,8 @@ class Superstructure : Subsystem {
     }
 
     private fun handleVision() {
-        // TODO
+        vision.visionState = Vision.VisionState.AIMING
+        drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
     }
 
     private fun handleElevatorUp() {
