@@ -24,13 +24,13 @@ class ControlBoard private constructor() {
         get() = operator.aButton
 
     val moveUp: Boolean
-        get() = operator.DPadUp
+        get() = operator.dPadUp
 
     val moveDown: Boolean
-        get() = operator.DPadDown
+        get() = operator.dPadDown
 
     val toggle: Boolean
-        get() = operator.RightShoulder
+        get() = operator.rightShoulderButton
 
 
     companion object {

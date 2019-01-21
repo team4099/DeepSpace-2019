@@ -64,6 +64,9 @@ class Superstructure : Subsystem {
 
     private fun handleIdle() {
         // TODO
+        vision.visionState = Vision.VisionState.INACTIVE
+        elevator.elevatorState = Elevator.ElevatorState.PORTLOW
+
     }
 
     private fun handleVision() {
@@ -74,21 +77,28 @@ class Superstructure : Subsystem {
     private fun handleElevatorUp() {
         intake.up = false // Move intake down
          // Move elevator up
+        elevator.updatePosition(true)
     }
 
     private fun handleClimb() {
-        // TODO
+        // TODO turn lights on
     }
 
     private fun handleCargoIntake() {
-        // TODO
+        // TODO turn lights on
     }
 
     private fun handleUnjam() {
-        // TODO
+        // TODO turn lights on
     }
 
     private fun handleBlink() {
-        // TODO
+        // TODO turn lights on srisrujan
     }
+
+    override fun outputToSmartDashboard() { }
+
+    override fun stop() { }
+
+    override fun zeroSensors() { }
 }

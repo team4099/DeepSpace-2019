@@ -106,37 +106,6 @@ class Robot : IterativeRobot() {
     override fun teleopPeriodic() {
         try {
 
-            if (intake.up && controlboard.lowerIntake) {
-                intake.up = false
-                println("Lowering intake")
-            } else if (!intake.up && controlboard.lowerIntake) {
-                intake.up = true
-                println("Raising intake")
-            }
-
-            intake.intakeState = when {
-                controlboard.reverseIntakeFast -> Intake.IntakeState.FAST_OUT
-                controlboard.reverseIntakeSlow -> Intake.IntakeState.SLOW_OUT
-                controlboard.runIntake -> Intake.IntakeState.IN
-                intake.intakeState != Intake.IntakeState.SLOW -> Intake.IntakeState.STOP
-                else -> intake.intakeState
-            val moveUp = controls.moveUp
-            val moveDown = controls.moveDown
-            val toggle = controls.toggle
-
-            if (operator.moveDown && moveUp) {
-                operator.moveDown = false
-            } else if (!operator.moveDown && moveDown) {
-                operator.moveDown = true
-            }
-
-            elevator.updatePosition()
-
-            if (toggle) {
-                elevator.toggleOuttakeMode()
-
-            }
-
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)
             throw t
