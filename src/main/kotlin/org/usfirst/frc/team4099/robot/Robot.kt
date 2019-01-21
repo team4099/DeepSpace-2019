@@ -14,11 +14,16 @@ import org.usfirst.frc.team4099.robot.drive.TankDriveHelper
 import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
 import org.usfirst.frc.team4099.robot.loops.Looper
 import org.usfirst.frc.team4099.robot.loops.VoltageEstimator
+import org.usfirst.frc.team4099.robot.ControlBoard
 import org.usfirst.frc.team4099.robot.subsystems.*
 
 class Robot : IterativeRobot() {
 
-    private val controls = ControlBoard.instance
+    private val drive = Drive.instance
+    private val intake = Intake.instance
+    private val controlboard = ControlBoard.instance
+    private val disabledLooper = Looper("disabledLooper")
+    private val enabledLooper = Looper("enabledLooper")
     private val elevator = Elevator.instance
 
     init {
@@ -28,7 +33,17 @@ class Robot : IterativeRobot() {
 
     override fun robotInit() {
         try {
+            CameraServer.getInstance().startAutomaticCapture()
+            CrashTracker.logRobotInit()
 
+            DashboardConfigurator.initDashboard()
+
+            enabledLooper.register(intake.loop)
+            enabledLooper.register(intake.loop)
+
+            enabledLooper.register(BrownoutDefender.instance)
+
+            disabledLooper.register(VoltageEstimator.instance)
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("robotInit", t)
             throw t
@@ -90,6 +105,21 @@ class Robot : IterativeRobot() {
 
     override fun teleopPeriodic() {
         try {
+
+            if (intake.up && controlboard.lowerIntake) {
+                intake.up = false
+                println("Lowering intake")
+            } else if (!intake.up && controlboard.lowerIntake) {
+                intake.up = true
+                println("Raising intake")
+            }
+
+            intake.intakeState = when {
+                controlboard.reverseIntakeFast -> Intake.IntakeState.FAST_OUT
+                controlboard.reverseIntakeSlow -> Intake.IntakeState.SLOW_OUT
+                controlboard.runIntake -> Intake.IntakeState.IN
+                intake.intakeState != Intake.IntakeState.SLOW -> Intake.IntakeState.STOP
+                else -> intake.intakeState
             val moveUp = controls.moveUp
             val moveDown = controls.moveDown
             val toggle = controls.toggle
@@ -104,6 +134,7 @@ class Robot : IterativeRobot() {
 
             if (toggle) {
                 elevator.toggleOuttakeMode()
+
             }
 
         } catch (t: Throwable) {
