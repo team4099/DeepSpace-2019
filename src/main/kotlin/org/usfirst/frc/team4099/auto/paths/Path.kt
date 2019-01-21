@@ -4,17 +4,27 @@ import java.io.File
 class Path(path: FieldPaths) {
     var leftVelocities: ArrayList<Double> = ArrayList<Double>()
     var rightVelocities: ArrayList<Double> = ArrayList<Double>()
+    var robotHeadings: ArrayList<Double> = ArrayList<Double>();
     var timeDelta: Double = 0.02
     init {
         val leftFile: File
         val rightFile: File
-        if (path == FieldPaths.LEFTH2_TO_LEFTROCKET3){
-            leftFile = File("/pathFiles/LeftH2ToLeftRocket3.left.pf1.csv")
-            rightFile = File("/pathFiles/LeftH2ToLeftRocket3.right.pf1.csv")
-        }
-        else if (path == FieldPaths.RIGHTH2_TO_RIGHTROCKET3){
-
-        }
+//        if (path == FieldPaths.LEFTH2_TO_LEFTROCKET3){
+//            leftFile = File("/pathFiles/LeftH2ToLeftRocket3.left.pf1.csv")
+//            rightFile = File("/pathFiles/LeftH2ToLeftRocket3.right.pf1.csv")
+//        }
+//        else if (path == FieldPaths.RIGHTH2_TO_RIGHTROCKET3){
+//            leftFile = File("/pathFiles/RightH2ToRightRocket3.left.pf1.csv")
+//            rightFile = File("/pathFiles/RightH2ToRightRocket3.right.pf1.csv")
+//        }
+//        else {
+//            leftFile = File("")
+//            rightFile = File("")
+//        }
+        leftFile = path.pathFileLeft
+        rightFile = path.pathFileRight
+        fillVelocities(leftFile, rightFile)
+        fillHeadings(leftFile)
 
 
 
@@ -37,10 +47,35 @@ class Path(path: FieldPaths) {
             rightVelocities.add(separated.get(4).toDouble())
         }
     }
+    public fun fillHeadings(traj: File){
+        var lines:List<String> = traj.readLines()
+        for(i in 1..lines.lastIndex){
+            val separated:List<String> = lines.get(i).split(",")
+//            println("Velocity: " + separated.get(4) + " Acceleration: " + separated.get(5))
+//            val velocity = separated.get(4)
+//            val accel = separated.get(5)
+            robotHeadings.add(separated.get(7).toDouble())
+        }
+    }
     public fun getLeftVelocity(time: Double): Double {
         return leftVelocities.get((time/timeDelta).toInt())
     }
     public fun getRightVelocity(time: Double): Double {
         return rightVelocities.get((time/timeDelta).toInt())
+    }
+    public fun getLeftVelocityIndex(index: Int): Double {
+        return leftVelocities.get(index)
+    }
+    public fun getRightVelocityIndex(index: Int): Double {
+        return rightVelocities.get(index)
+    }
+    public fun getHeading(time: Double): Double {
+        return robotHeadings.get((time/timeDelta).toInt())
+    }
+    public fun getHeadingIndex(index: Int): Double{
+        return robotHeadings.get(index)
+    }
+    public fun getTrajLength(): Int {
+        return leftVelocities.size
     }
 }

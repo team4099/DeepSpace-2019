@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.SPI
 import edu.wpi.first.wpilibj.livewindow.LiveWindow
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
+import org.usfirst.frc.team4099.auto.paths.FieldPaths
+import org.usfirst.frc.team4099.auto.paths.Path
 import org.usfirst.frc.team4099.lib.drive.DriveSignal
 import org.usfirst.frc.team4099.lib.util.CANMotorControllerFactory
 import org.usfirst.frc.team4099.robot.Constants
@@ -27,6 +29,11 @@ class Drive private constructor() : Subsystem {
     private val pneumaticShifter: DoubleSolenoid = DoubleSolenoid(Constants.Drive.SHIFTER_FORWARD_ID, Constants.Drive.SHIFTER_REVERSE_ID)
 
     private val ahrs: AHRS
+
+    private var path: Path
+
+    private var segment: Int
+    private var trajLength: Int
 
     var brakeMode: NeutralMode = NeutralMode.Coast //sets whether the break mode should be coast (no resistance) or by force
         set(type) {
@@ -102,6 +109,10 @@ class Drive private constructor() : Subsystem {
         ahrs = AHRS(SPI.Port.kMXP)
 
         this.zeroSensors()
+
+        path = Path(FieldPaths.STANDSTILL)
+        segment = 0
+        trajLength = 0
     }
 
 
@@ -231,12 +242,18 @@ class Drive private constructor() : Subsystem {
 
     @Synchronized
     fun setVelocitySetpoint(leftInchesPerSec: Double, rightInchesPerSec: Double) {
-        configureTalonsForVelocityControl()
-        currentState = DriveControlState.VELOCITY_SETPOINT
-        leftMasterSRX.set(ControlMode.Velocity, leftInchesPerSec)
-        rightMasterSRX.set(ControlMode.Velocity, rightInchesPerSec)
-        println("left err: ${leftMasterSRX.getClosedLoopError(0)} trg: $leftInchesPerSec actual: ${leftMasterSRX.getSelectedSensorVelocity(0)}")
-        println("right err: ${rightMasterSRX.getClosedLoopError(0)} trg: $rightInchesPerSec actual: ${rightMasterSRX.getSelectedSensorVelocity(0)}")
+        if (usesTalonVelocityControl(currentState)) {
+            leftMasterSRX.set(ControlMode.Velocity, leftInchesPerSec)
+            rightMasterSRX.set(ControlMode.Velocity, rightInchesPerSec)
+            println("left err: ${leftMasterSRX.getClosedLoopError(0)} trg: $leftInchesPerSec actual: ${leftMasterSRX.getSelectedSensorVelocity(0)}")
+            println("right err: ${rightMasterSRX.getClosedLoopError(0)} trg: $rightInchesPerSec actual: ${rightMasterSRX.getSelectedSensorVelocity(0)}")
+        }
+        else {
+            configureTalonsForVelocityControl()
+            currentState = DriveControlState.VELOCITY_SETPOINT
+            setVelocitySetpoint(leftInchesPerSec, rightInchesPerSec)
+
+        }
     }
 
     @Synchronized
@@ -291,6 +308,35 @@ class Drive private constructor() : Subsystem {
             brakeMode = NeutralMode.Brake
         }
     }
+    fun enablePathFollow(pathInput: Path){
+        path = pathInput
+        configureTalonsForVelocityControl()
+        resetEncoders()
+        segment = 0
+        trajLength = path.getTrajLength()
+        currentState = DriveControlState.PATH_FOLLOWING
+        brakeMode = NeutralMode.Brake
+
+
+    }
+    fun updatePathFollowing(){
+        if (segment < trajLength) {
+            val gyro_heading: Float = ahrs.yaw
+            val desired_heading: Double = path.getHeadingIndex(segment)
+            val angleDifference: Double = boundHalfDegrees(desired_heading - gyro_heading)
+            val turn: Double = 0.8 * (-1.0 / 80.0) * angleDifference
+
+            val leftTurn: Double = path.getLeftVelocityIndex(segment) * 12 + turn
+            val rightTurn: Double = path.getRightVelocityIndex(segment) * 12 - turn
+
+            setVelocitySetpoint(leftTurn, rightTurn)
+
+            segment++
+        }
+        else {
+            setVelocitySetpoint(0.0, 0.0)
+        }
+    }
 
 
     fun onStart(timestamp: Double) {
@@ -321,12 +367,9 @@ class Drive private constructor() : Subsystem {
                     DriveControlState.VELOCITY_SETPOINT -> {
                         return
                     }
-                    /*DriveControlState.PATH_FOLLOWING ->{
-                        if (mPathFollower != null) {
-                            updatePathFollower(timestamp);
-                            mCSVWriter.add(mPathFollower.getDebug());
-                        }
-                    }*/
+                    DriveControlState.PATH_FOLLOWING ->{
+                        updatePathFollowing(segment)
+                    }
                     DriveControlState.TURN_TO_HEADING -> {
                         //updateTurnToHeading(timestamp);
                         return
@@ -373,6 +416,12 @@ class Drive private constructor() : Subsystem {
 
     fun getRightVelocityInchesPerSec(): Double {
         return rpmToInchesPerSecond(rightMasterSRX.getSelectedSensorVelocity(0).toDouble())
+    }
+    fun boundHalfDegrees(angle_degrees: Double): Double {
+        var angle_degrees = angle_degrees
+        while (angle_degrees >= 180.0) angle_degrees -= 360.0
+        while (angle_degrees < -180.0) angle_degrees += 360.0
+        return angle_degrees
     }
 
 
