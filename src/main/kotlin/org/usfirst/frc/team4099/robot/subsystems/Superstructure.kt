@@ -19,6 +19,7 @@ class Superstructure : Subsystem {
     private val drive = Drive.instance
     private val elevator = Elevator.instance
     private val vision = Vision.instance
+    private val led = LED.instance
 
     enum class SystemState {
         IDLE,
@@ -50,14 +51,16 @@ class Superstructure : Subsystem {
 
     fun onLoop() {
         synchronized(this@Superstructure) {
-           when(systemState) {
-               SystemState.IDLE -> handleIdle()
-               SystemState.ALIGNING_LINE, SystemState.ALIGNING_VISION -> handleVision()
-               SystemState.INTAKE_UP -> handleElevatorUp()
-               SystemState.CLIMBING -> handleClimb()
-               SystemState.INTAKE_CARGO -> handleCargoIntake()
-               SystemState.UNJAMMING -> handleUnjam()
-               SystemState.BLINK -> handleBlink()
+            led.systemState = if (elevator.isHatchPanel) LED.SystemState.HATCH else LED.SystemState.CARGO
+            when(systemState) {
+                SystemState.IDLE -> handleIdle()
+                SystemState.ALIGNING_LINE, SystemState.ALIGNING_VISION -> handleVision()
+                SystemState.INTAKE_UP -> handleElevatorUp()
+                SystemState.CLIMBING -> handleClimb()
+                SystemState.INTAKE_CARGO -> handleCargoIntake()
+                SystemState.UNJAMMING -> handleUnjam()
+                SystemState.BLINK -> handleBlink()
+
             }
         }
     }
@@ -66,12 +69,13 @@ class Superstructure : Subsystem {
         // TODO
         vision.visionState = Vision.VisionState.INACTIVE
         elevator.elevatorState = Elevator.ElevatorState.PORTLOW
-
+        led.systemState = LED.SystemState.OFF
     }
 
     private fun handleVision() {
         vision.visionState = Vision.VisionState.AIMING
         drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
+        led.systemState = LED.SystemState.ALIGNING
     }
 
     private fun handleElevatorUp() {
@@ -81,7 +85,10 @@ class Superstructure : Subsystem {
     }
 
     private fun handleClimb() {
-        // TODO turn lights on
+        when(climber.climberState){
+            Climber.ClimberState.FRONT_DOWN -> led.systemState = led.FRONT_DOWN
+            Climber.ClimberState.BACK_DOWN -> led.systemState = led.BACK_DOWN
+        }
     }
 
     private fun handleCargoIntake() {
