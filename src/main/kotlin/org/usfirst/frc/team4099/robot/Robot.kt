@@ -21,10 +21,10 @@ class Robot : IterativeRobot() {
 
     private val drive = Drive.instance
     private val intake = Intake.instance
-
     private val controlboard = ControlBoard.instance
     private val disabledLooper = Looper("disabledLooper")
     private val enabledLooper = Looper("enabledLooper")
+    private val elevator = Elevator.instance
 
     init {
         CrashTracker.logRobotConstruction()
@@ -105,6 +105,7 @@ class Robot : IterativeRobot() {
 
     override fun teleopPeriodic() {
         try {
+
             if (intake.up && controlboard.lowerIntake) {
                 intake.up = false
                 println("Lowering intake")
@@ -119,6 +120,21 @@ class Robot : IterativeRobot() {
                 controlboard.runIntake -> Intake.IntakeState.IN
                 intake.intakeState != Intake.IntakeState.SLOW -> Intake.IntakeState.STOP
                 else -> intake.intakeState
+            val moveUp = controls.moveUp
+            val moveDown = controls.moveDown
+            val toggle = controls.toggle
+
+            if (operator.moveDown && moveUp) {
+                operator.moveDown = false
+            } else if (!operator.moveDown && moveDown) {
+                operator.moveDown = true
+            }
+
+            elevator.updatePosition()
+
+            if (toggle) {
+                elevator.toggleOuttakeMode()
+
             }
 
         } catch (t: Throwable) {
