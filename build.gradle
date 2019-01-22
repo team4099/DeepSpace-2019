@@ -8,7 +8,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 def TEAM = 4099
-def ROBOT_MAIN_CLASS = "org.usfirst.frc.team4099.robot.Robot"
+def ROBOT_MAIN_CLASS = "org.usfirst.frc.team4099.robot.Main"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project EmbeddedTools.
