@@ -39,14 +39,16 @@ class Superstructure : Subsystem {
     private var systemState = SystemState.IDLE
     private val wantedState = WantedState.IDLE
 
-    fun isAlignedLine() {
+    private fun isAlignedLine(): Boolean {
         // Get information from line follow sensor
         // Add isAligned() to line follow subsystem
+        return true
     }
 
-    fun isAlignedVision() {
+    private fun isAlignedVision(): Boolean {
         // Get information from limelight subsystem
         // Add isAligned to limelight subsystem
+        return true
     }
 
     fun onLoop() {
@@ -60,7 +62,6 @@ class Superstructure : Subsystem {
                 SystemState.INTAKE_CARGO -> handleCargoIntake()
                 SystemState.UNJAMMING -> handleUnjam()
                 SystemState.BLINK -> handleBlink()
-
             }
         }
     }
@@ -98,11 +99,15 @@ class Superstructure : Subsystem {
     }
 
     private fun handleUnjam() {
-        // TODO turn lights on
+        if (intake.intakeState == Intake.IntakeState.FAST_OUT && grabber.intakeState == Grabber.IntakeState.OUT) {
+            led.setState(LED.SystemState.UNJAM)
+        }
     }
 
     private fun handleBlink() {
-        // TODO turn lights on srisrujan
+        if (isAlignedLine() &&  isAlignedVision()) {
+            led.setState(LED.SystemState.ALIGNING)
+        }
     }
 
     override fun outputToSmartDashboard() { }
