@@ -86,13 +86,15 @@ class Superstructure : Subsystem {
 
     private fun handleClimb() {
         when(climber.climberState){
-            Climber.ClimberState.FRONT_DOWN -> led.systemState = led.FRONT_DOWN
-            Climber.ClimberState.BACK_DOWN -> led.systemState = led.BACK_DOWN
+            Climber.ClimberState.FRONT_DOWN -> led.setState(LED.SystemState.FRONT_DOWN)
+            Climber.ClimberState.BACK_DOWN -> led.setState(LED.SystemState.BACK_DOWN)
         }
     }
 
     private fun handleCargoIntake() {
-        // TODO turn lights on
+        when(intake.intakeState) {
+            Intake.IntakeState.IN, Intake.IntakeState.SLOW -> led.setState(LED.SystemState.INTAKE_IN)
+        }
     }
 
     private fun handleUnjam() {
