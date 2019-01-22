@@ -51,7 +51,7 @@ class Superstructure : Subsystem {
             led.systemState = if (elevator.isHatchPanel) LED.SystemState.HATCH else LED.SystemState.CARGO
             when(systemState) {
                 SystemState.IDLE -> handleIdle()
-                SystemState.ALIGNING_LINE, SystemState.ALIGNING_VISION -> handleVision()
+                SystemState.ALIGNING_VISION -> handleVision()
                 SystemState.INTAKE_UP -> handleElevatorUp()
                 SystemState.CLIMBING -> handleClimb()
                 SystemState.INTAKE_CARGO -> handleCargoIntake()
