@@ -40,7 +40,7 @@ class Superstructure : Subsystem {
     private val wantedState = WantedState.IDLE
 
     private fun isAlignedVision(): Boolean {
-        if (vision.tx == 0.0 && vision.tv == 1.0) {
+        if (vision.tx == 0.0 && vision.tv == 1.0 && vision.ty == 0.0) {
             return true
         }
         return false
