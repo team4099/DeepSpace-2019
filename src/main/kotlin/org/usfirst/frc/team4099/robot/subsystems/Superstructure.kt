@@ -39,12 +39,6 @@ class Superstructure : Subsystem {
     private var systemState = SystemState.IDLE
     private val wantedState = WantedState.IDLE
 
-    private fun isAlignedLine(): Boolean {
-        // Get information from line follow sensor
-        // Add isAligned() to line follow subsystem
-        return true
-    }
-
     private fun isAlignedVision(): Boolean {
         // Get information from limelight subsystem
         // Add isAligned to limelight subsystem
@@ -105,7 +99,7 @@ class Superstructure : Subsystem {
     }
 
     private fun handleBlink() {
-        if (isAlignedLine() &&  isAlignedVision()) {
+        if (isAlignedVision()) {
             led.setState(LED.SystemState.ALIGNING)
         }
     }
