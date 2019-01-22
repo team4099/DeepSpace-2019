@@ -39,14 +39,11 @@ class Superstructure : Subsystem {
     private var systemState = SystemState.IDLE
     private val wantedState = WantedState.IDLE
 
-    fun isAlignedLine() {
-        // Get information from line follow sensor
-        // Add isAligned() to line follow subsystem
-    }
-
-    fun isAlignedVision() {
-        // Get information from limelight subsystem
-        // Add isAligned to limelight subsystem
+    private fun isAlignedVision(): Boolean {
+        if (vision.tx == 0.0 && vision.tv == 1.0) {
+            return true
+        }
+        return false
     }
 
     fun onLoop() {
@@ -60,7 +57,6 @@ class Superstructure : Subsystem {
                 SystemState.INTAKE_CARGO -> handleCargoIntake()
                 SystemState.UNJAMMING -> handleUnjam()
                 SystemState.BLINK -> handleBlink()
-
             }
         }
     }
@@ -86,21 +82,27 @@ class Superstructure : Subsystem {
 
     private fun handleClimb() {
         when(climber.climberState){
-            Climber.ClimberState.FRONT_DOWN -> led.systemState = led.FRONT_DOWN
-            Climber.ClimberState.BACK_DOWN -> led.systemState = led.BACK_DOWN
+            Climber.ClimberState.FRONT_DOWN -> led.setState(LED.SystemState.FRONT_DOWN)
+            Climber.ClimberState.BACK_DOWN -> led.setState(LED.SystemState.BACK_DOWN)
         }
     }
 
     private fun handleCargoIntake() {
-        // TODO turn lights on
+        when(intake.intakeState) {
+            Intake.IntakeState.IN, Intake.IntakeState.SLOW -> led.setState(LED.SystemState.INTAKE_IN)
+        }
     }
 
     private fun handleUnjam() {
-        // TODO turn lights on
+        if (intake.intakeState == Intake.IntakeState.FAST_OUT && grabber.intakeState == Grabber.IntakeState.OUT) {
+            led.setState(LED.SystemState.UNJAM)
+        }
     }
 
     private fun handleBlink() {
-        // TODO turn lights on srisrujan
+        if (isAlignedVision()) {
+            led.setState(LED.SystemState.ALIGNING)
+        }
     }
 
     override fun outputToSmartDashboard() { }
