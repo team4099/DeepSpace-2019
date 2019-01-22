@@ -40,9 +40,10 @@ class Superstructure : Subsystem {
     private val wantedState = WantedState.IDLE
 
     private fun isAlignedVision(): Boolean {
-        // Get information from limelight subsystem
-        // Add isAligned to limelight subsystem
-        return true
+        if (vision.tx == 0.0 && vision.tv == 1.0) {
+            return true
+        }
+        return false
     }
 
     fun onLoop() {
