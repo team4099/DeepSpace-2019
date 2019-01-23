@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.IterativeRobot
 import edu.wpi.first.wpilibj.livewindow.LiveWindow
 import org.usfirst.frc.team4099.DashboardConfigurator
 import org.usfirst.frc.team4099.auto.AutoModeExecuter
+import org.usfirst.frc.team4099.auto.modes.HatchPanelOnly
 import org.usfirst.frc.team4099.lib.util.CrashTracker
 import org.usfirst.frc.team4099.lib.util.LatchedBoolean
 import org.usfirst.frc.team4099.lib.util.ReflectingCSVWriter
@@ -17,6 +18,12 @@ import org.usfirst.frc.team4099.robot.loops.VoltageEstimator
 import org.usfirst.frc.team4099.robot.subsystems.*
 
 class Robot : IterativeRobot() {
+    private val drive = Drive.instance
+
+    private val disabledLooper = Looper("disabledLooper")
+    private val enabledLooper = Looper("enabledLooper")
+
+    private var autoModeExecuter: AutoModeExecuter? = null
 
 
     init {
@@ -26,6 +33,7 @@ class Robot : IterativeRobot() {
 
     override fun robotInit() {
         try {
+            enabledLooper.register(drive.loop)
 
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("robotInit", t)
@@ -35,6 +43,8 @@ class Robot : IterativeRobot() {
 
     override fun disabledInit() {
         try {
+            enabledLooper.stop() // end EnabledLooper
+            disabledLooper.start() // start DisabledLooper
 
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("disabledInit", t)
@@ -45,8 +55,15 @@ class Robot : IterativeRobot() {
 
     override fun autonomousInit() {
         try {
+            autoModeExecuter?.stop()
+            autoModeExecuter = null
 
+            disabledLooper.stop() // end DisabledLooper
+            enabledLooper.start() // start EnabledLooper
 
+            autoModeExecuter = AutoModeExecuter()
+            autoModeExecuter?.setAutoMode(HatchPanelOnly(DashboardConfigurator.StartingPosition.RIGHT, 0.0))
+            autoModeExecuter?.start()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("autonomousInit", t)
             throw t

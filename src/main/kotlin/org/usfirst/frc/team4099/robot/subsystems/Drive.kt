@@ -65,7 +65,7 @@ class Drive private constructor() : Subsystem {
     init {
         leftMasterSRX.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0) //configs sensor to a quad encoder
         leftMasterSRX.setSensorPhase(true) //to align positive sensor velocity with positive motor output
-        leftMasterSRX.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 5, 0)
+        leftMasterSRX.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 5, 0)//might change to 20 ms to align with looper
 
         leftMasterSRX.config_kP(0, Constants.Gains.LEFT_LOW_KP, 0) //sets PIDF values
         leftMasterSRX.config_kI(0, Constants.Gains.LEFT_LOW_KI, 0)
@@ -93,7 +93,7 @@ class Drive private constructor() : Subsystem {
         leftMasterSRX.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_10Ms, 0)
         leftMasterSRX.configVelocityMeasurementWindow(32, 0)
         rightMasterSRX.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_10Ms, 0)
-        rightMasterSRX.configVelocityMeasurementWindow(32, 10)
+        rightMasterSRX.configVelocityMeasurementWindow(32, 0)
 
         leftMasterSRX.inverted = true
         leftSlave1SRX.inverted = true
@@ -311,7 +311,7 @@ class Drive private constructor() : Subsystem {
     fun enablePathFollow(pathInput: Path){
         path = pathInput
         configureTalonsForVelocityControl()
-        resetEncoders()
+        zeroSensors()
         segment = 0
         trajLength = path.getTrajLength()
         currentState = DriveControlState.PATH_FOLLOWING
@@ -336,6 +336,9 @@ class Drive private constructor() : Subsystem {
         else {
             setVelocitySetpoint(0.0, 0.0)
         }
+    }
+    fun isPathFinished(): Boolean {
+        return segment >= trajLength
     }
 
 
@@ -368,7 +371,7 @@ class Drive private constructor() : Subsystem {
                         return
                     }
                     DriveControlState.PATH_FOLLOWING ->{
-                        updatePathFollowing(segment)
+                        updatePathFollowing()
                     }
                     DriveControlState.TURN_TO_HEADING -> {
                         //updateTurnToHeading(timestamp);
