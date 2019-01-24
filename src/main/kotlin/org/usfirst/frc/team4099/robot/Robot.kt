@@ -151,7 +151,15 @@ class Robot : IterativeRobot() {
             } else {
                 grabber.push = false
             }
-
+            if(controlboard.grab) {
+                grabber.intakeState = Grabber.IntakeState.IN
+            }
+            if(controlboard.eject){
+                grabber.intakeState = Grabber.IntakeState.OUT
+            }
+            if(controlboard.stopGrabber){
+                grabber.intakeState = Grabber.IntakeState.NEUTRAL
+            }
 
 
             if (intake.up && controlboard.toggleIntake) {

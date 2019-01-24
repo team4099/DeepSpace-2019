@@ -1,15 +1,16 @@
 package org.usfirst.frc.team4099.robot
 
 class Constants {
-
-    object Intake {
-        val INTAKE_TALON_ID = 0
-        val  SHIFTER_FORWARD_ID = 1
+    object Grabber {
+        val TALON_ID = 0
+        val SHIFTER_FORWARD_ID = 1
         val SHIFTER_REVERSE_ID = 2
     }
 
-    object Wheels {
-        val DRIVE_WHEEL_DIAMETER_INCHES = 0
+    object Intake {
+        val INTAKE_TALON_ID = 0
+        val SHIFTER_FORWARD_ID = 1
+        val SHIFTER_REVERSE_ID = 2
     }
 
     object Climber {
