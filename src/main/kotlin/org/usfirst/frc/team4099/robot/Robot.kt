@@ -1,11 +1,8 @@
 package org.usfirst.frc.team4099.robot
 
-import edu.wpi.first.wpilibj.CameraServer
 import edu.wpi.first.wpilibj.IterativeRobot
-import edu.wpi.first.wpilibj.livewindow.LiveWindow
-import org.usfirst.frc.team4099.DashboardConfigurator
-import org.usfirst.frc.team4099.auto.AutoModeExecuter
 import org.usfirst.frc.team4099.lib.util.CrashTracker
+
 import org.usfirst.frc.team4099.lib.util.LatchedBoolean
 import org.usfirst.frc.team4099.lib.util.ReflectingCSVWriter
 import org.usfirst.frc.team4099.lib.util.SignalTable
@@ -14,18 +11,28 @@ import org.usfirst.frc.team4099.robot.drive.TankDriveHelper
 import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
 import org.usfirst.frc.team4099.robot.loops.Looper
 import org.usfirst.frc.team4099.robot.loops.VoltageEstimator
+import org.usfirst.frc.team4099.robot.ControlBoard
+
 import org.usfirst.frc.team4099.robot.subsystems.*
 import org.usfirst.frc.team4099.robot.ControlBoard.*
 
 class Robot : IterativeRobot() {
 
+
+    private val climber = Climber.instance
+    private val controls = ControlBoard.instance
+    private val elevator = Elevator.instance
     private val drive = Drive.instance
     private val grabber = Grabber.instance
-
-
     private val controlboard = ControlBoard.instance
     private val disabledLooper = Looper("disabledLooper")
     private val enabledLooper = Looper("enabledLooper")
+  
+
+    private val intake = Intake.instance
+
+
+
 
     init {
         CrashTracker.logRobotConstruction()
@@ -34,12 +41,15 @@ class Robot : IterativeRobot() {
 
     override fun robotInit() {
         try {
-            CameraServer.getInstance().startAutomaticCapture()
             CrashTracker.logRobotInit()
 
             DashboardConfigurator.initDashboard()
 
+
             enabledLooper.register(grabber.loop)
+
+            enabledLooper.register(intake.loop)
+
 
             enabledLooper.register(BrownoutDefender.instance)
 
@@ -107,6 +117,34 @@ class Robot : IterativeRobot() {
 
     override fun teleopPeriodic() {
         try {
+            val frontToggle = controls.front
+            val backToggle = controls.back
+            if (frontToggle && climber.climberState == Climber.ClimberState.FRONT_DOWN) {
+                climber.climberState = Climber.ClimberState.BOTH_UP
+
+            } else if (frontToggle && climber.climberState == Climber.ClimberState.BOTH_UP) {
+                climber.climberState = Climber.ClimberState.FRONT_DOWN
+
+            } else if (backToggle && climber.climberState == Climber.ClimberState.BOTH_UP) {
+                climber.climberState = Climber.ClimberState.BACK_DOWN
+
+            } else if (backToggle && climber.climberState == Climber.ClimberState.BACK_DOWN) {
+                climber.climberState = Climber.ClimberState.BOTH_UP
+            }
+
+            val moveUp = controls.moveUp
+            val moveDown = controls.moveDown
+            val toggle = controls.toggle
+            if (operator.moveDown && moveUp) {
+                operator.moveDown = false
+                elevator.updatePosition(true)
+            } else if (!operator.moveDown && moveDown) {
+                operator.moveDown = true
+                elevator.updatePosition(false)
+            }
+            if (toggle) {
+                elevator.toggleOuttakeMode()
+            }
             if (!grabber.push && controlboard.toggleGrabber) {
                 grabber.push = true
                 println("Pushing the hatch-ey boi")
@@ -123,6 +161,25 @@ class Robot : IterativeRobot() {
                 grabber.intakeState = Grabber.IntakeState.NEUTRAL
             }
 
+
+            if (intake.up && controlboard.toggleIntake) {
+                intake.up = false
+                println("Lowering intake")
+            } else if (!intake.up && controlboard.toggleIntake) {
+                intake.up = true
+                println("Raising intake")
+            }
+
+            intake.intakeState = when {
+                controlboard.reverseIntakeFast -> Intake.IntakeState.FAST_OUT
+                controlboard.reverseIntakeSlow -> Intake.IntakeState.SLOW_OUT
+                controlboard.runIntake -> Intake.IntakeState.IN
+                intake.intakeState != Intake.IntakeState.SLOW -> Intake.IntakeState.STOP
+                else -> intake.intakeState
+            }
+
+
+            outputAllToSmartDashboard()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)
             throw t
