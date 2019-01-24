@@ -34,6 +34,9 @@ class Drive private constructor() : Subsystem {
 
     private var segment: Int
     private var trajLength: Int
+    private var lastLeftError: Double
+    private var lastRightError: Double
+
 
     var brakeMode: NeutralMode = NeutralMode.Coast //sets whether the break mode should be coast (no resistance) or by force
         set(type) {
@@ -113,6 +116,9 @@ class Drive private constructor() : Subsystem {
         path = Path(FieldPaths.STANDSTILL)
         segment = 0
         trajLength = 0
+
+        lastLeftError = 0.0
+        lastRightError = 0.0
     }
 
 
@@ -320,14 +326,32 @@ class Drive private constructor() : Subsystem {
 
     }
     fun updatePathFollowing(){
+        //note *12 is to convert ft to inches
         if (segment < trajLength) {
-            val gyro_heading: Float = ahrs.yaw
-            val desired_heading: Double = path.getHeadingIndex(segment)
-            val angleDifference: Double = boundHalfDegrees(desired_heading - gyro_heading)
-            val turn: Double = 0.8 * (-1.0 / 80.0) * angleDifference
+            var leftTurn: Double = path.getLeftVelocityIndex(segment) * 12
+            var rightTurn: Double = path.getRightVelocityIndex(segment) * 12
+            val gyroHeading: Float = ahrs.yaw
+            val desiredHeading: Double = radiansToDegrees(path.getHeadingIndex(segment))
+            val angleDifference: Double = boundHalfDegrees(desiredHeading - gyroHeading)
+            val turn: Double = 0.8 * 12 * (-1.0 / 80.0) * angleDifference
 
-            val leftTurn: Double = path.getLeftVelocityIndex(segment) * 12 + turn
-            val rightTurn: Double = path.getRightVelocityIndex(segment) * 12 - turn
+            val leftDistance: Double = getLeftDistanceInches()
+            val rightDistance: Double = getRightDistanceInches()
+
+            val leftErrorDistance: Double = path.getLeftDistanceIndex(segment)*12 - leftDistance
+            val rightErrorDistance: Double = path.getRightDistanceIndex(segment)*12 - rightDistance
+
+            val leftVelocityAdjustment = Constants.Gains.LEFT_LOW_KP * leftErrorDistance + Constants.Gains.LEFT_LOW_KD * ((leftErrorDistance - lastLeftError)/path.getDeltaTime())
+            val rightVelocityAdjustment = Constants.Gains.RIGHT_LOW_KP * rightErrorDistance + Constants.Gains.RIGHT_LOW_KD * ((rightErrorDistance - lastRightError)/path.getDeltaTime())
+
+            leftTurn = leftTurn + leftVelocityAdjustment
+            rightTurn = rightTurn + rightVelocityAdjustment
+
+            lastLeftError = leftErrorDistance
+
+
+            leftTurn = leftTurn + turn
+            rightTurn = rightTurn - turn
 
             setVelocitySetpoint(leftTurn, rightTurn)
 
@@ -419,6 +443,9 @@ class Drive private constructor() : Subsystem {
 
     fun getRightVelocityInchesPerSec(): Double {
         return rpmToInchesPerSecond(rightMasterSRX.getSelectedSensorVelocity(0).toDouble())
+    }
+    fun radiansToDegrees(rad: Double): Double{
+        return rad * 180 / (2 * Math.PI)
     }
     fun boundHalfDegrees(angle_degrees: Double): Double {
         var angle_degrees = angle_degrees

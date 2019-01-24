@@ -33,14 +33,8 @@ object DashboardConfigurator {
 
     }
 
-    fun getSelectedAutoMode(allianceOwnership: String): AutoModeBase {
 
 
-    }
-
-    fun updateAllianceOwnership(): String {
-
-    }
 
 
 }
