@@ -8,10 +8,10 @@ class LED private constructor() : Subsystem  {
     private val numStrips = 2
 
     enum class SystemState {
-        OFF, AUTO, HATCH, CARGO, ALIGNING, BACK_DOWN, FRONT_DOWN
+        OFF, AUTO, HATCH, CARGO, ALIGNING, BACK_DOWN, FRONT_DOWN, UNJAM, INTAKE_IN
     }
 
-    private var systemState = SystemState.OFF
+    var systemState = SystemState.OFF
 
     init {
         photon = Photon()
@@ -38,6 +38,8 @@ class LED private constructor() : Subsystem  {
                     SystemState.ALIGNING -> handleAlign()
                     SystemState.FRONT_DOWN -> handleFrontDown()
                     SystemState.BACK_DOWN -> handleBackDown()
+                    SystemState.UNJAM -> handleUnjam()
+                    SystemState.INTAKE_IN -> handleIntake()
                 }
             }
         }
@@ -47,6 +49,10 @@ class LED private constructor() : Subsystem  {
                 photon.setAnimation(i, Photon.Animation.OFF)
             }
         }
+    }
+
+    fun setState(state: SystemState) {
+        this.systemState = state
     }
 
     fun handleOff() {
@@ -81,13 +87,25 @@ class LED private constructor() : Subsystem  {
 
     fun handleFrontDown() {
         for (i in 0..numStrips) {
-            photon.setAnimation(i, Photon.Animation.SOLID, Photon.Color.AQUA)
+            photon.setAnimation(i, Photon.Animation.BLINK, Photon.Color.AQUA)
         }
     }
 
     fun handleBackDown() {
         for (i in 0..numStrips) {
-            photon.setAnimation(i, Photon.Animation.SOLID, Photon.Color.GREEN)
+            photon.setAnimation(i, Photon.Animation.BLINK, Photon.Color.GREEN)
+        }
+    }
+
+    fun handleUnjam() {
+        for (i in 0..numStrips) {
+            photon.setAnimation(i, Photon.Animation.CYLON, Photon.Color.ORANGE)
+        }
+    }
+
+    fun handleIntake() {
+        for (i in 0..numStrips) {
+            photon.setAnimation(i, Photon.Animation.BLINK, Photon.Color.GREEN)
         }
     }
 

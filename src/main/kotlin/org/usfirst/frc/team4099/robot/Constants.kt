@@ -1,18 +1,11 @@
 package org.usfirst.frc.team4099.robot
 
 class Constants {
-    object Drive {
-        val LEFT_MASTER_ID = 4
-        val LEFT_SLAVE_1_ID = 5
-        val LEFT_SLAVE_2_ID = 6
-        val RIGHT_MASTER_ID = 8
-        val RIGHT_SLAVE_1_ID = 9
-        val RIGHT_SLAVE_2_ID = 10
 
-        val HIGH_GEAR_MAX_SETPOINT = 17.0  //17 fps
-
-        val SHIFTER_FORWARD_ID = 0
-        val SHIFTER_REVERSE_ID = 1
+    object Intake {
+        val INTAKE_TALON_ID = 0
+        val  SHIFTER_FORWARD_ID = 1
+        val SHIFTER_REVERSE_ID = 2
     }
 
     object Wheels {
@@ -68,16 +61,25 @@ class Constants {
         val ELEVATOR_TALON_ID = 0
     }
 
-    object Intake {
-        val INTAKE_TALON_ID = 0
-        val SHIFTER_FORWARD_ID = 1
-        val SHIFTER_REVERSE_ID = 2
+    object Drive {
+        val LEFT_MASTER_ID = 4
+        val LEFT_SLAVE_1_ID = 5
+        val LEFT_SLAVE_2_ID = 6
+        val RIGHT_MASTER_ID = 8
+        val RIGHT_SLAVE_1_ID = 9
+        val RIGHT_SLAVE_2_ID = 10
+
+        val HIGH_GEAR_MAX_SETPOINT = 17.0  //17 fps
+
+        val SHIFTER_FORWARD_ID = 0
+        val SHIFTER_REVERSE_ID = 1
     }
 
-
-    object Joysticks {
-        val DRIVER_PORT = 0
-        val SHOTGUN_PORT = 1
+    object Vision {
+        val Kp = -0.1
+        val minCommand = 0.05
+        val CAMERA_TO_TARGET_HEIGHT = 20;
+        val CAMERA_ANGLE = 0;
     }
 
     object Velocity {
@@ -92,6 +94,10 @@ class Constants {
 
         val SHIFTER_CHANNEL = 0
         val SHIFTER_MODULE = 0
+    }
+
+    object Wheels {
+        val DRIVE_WHEEL_DIAMETER_INCHES = 6
     }
 
 }
