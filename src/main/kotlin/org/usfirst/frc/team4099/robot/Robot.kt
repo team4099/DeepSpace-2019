@@ -8,6 +8,7 @@ import org.usfirst.frc.team4099.lib.util.ReflectingCSVWriter
 import org.usfirst.frc.team4099.lib.util.SignalTable
 import org.usfirst.frc.team4099.robot.drive.CheesyDriveHelper
 import org.usfirst.frc.team4099.robot.drive.TankDriveHelper
+import org.usfirst.frc.team4099.DashboardConfigurator
 import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
 import org.usfirst.frc.team4099.robot.loops.Looper
 import org.usfirst.frc.team4099.robot.loops.VoltageEstimator
@@ -135,11 +136,9 @@ class Robot : IterativeRobot() {
             val moveUp = controls.moveUp
             val moveDown = controls.moveDown
             val toggle = controls.toggle
-            if (operator.moveDown && moveUp) {
-                operator.moveDown = false
+            if (controlboard.moveDown && moveUp) {
                 elevator.updatePosition(true)
-            } else if (!operator.moveDown && moveDown) {
-                operator.moveDown = true
+            } else if (!controlboard.moveDown && moveDown) {
                 elevator.updatePosition(false)
             }
             if (toggle) {

@@ -101,4 +101,9 @@ class Constants {
         val DRIVE_WHEEL_DIAMETER_INCHES = 6
     }
 
+    object Joysticks {
+        val DRIVER_PORT = 0
+        val SHOTGUN_PORT = 1
+    }
+
 }
