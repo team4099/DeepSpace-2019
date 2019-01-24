@@ -10,8 +10,8 @@ import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
 import org.usfirst.frc.team4099.robot.loops.Loop
 
 class Grabber private constructor() : Subsystem{
-    private val pneumaticShifter: DoubleSolenoid = DoubleSolenoid(Constants.Intake.SHIFTER_FORWARD_ID, Constants.Intake.SHIFTER_REVERSE_ID)
-    private val talonSRX : Talon = Talon(Constants.Intake.TALON_ID)
+    private val pneumaticShifter: DoubleSolenoid = DoubleSolenoid(Constants.Grabber.SHIFTER_FORWARD_ID, Constants.Grabber.SHIFTER_REVERSE_ID)
+    private val talonSRX : Talon = Talon(Constants.Grabber.TALON_ID)
     private var pushStartTime = 0.0
     var intakeState = IntakeState.NEUTRAL
     var push = false
