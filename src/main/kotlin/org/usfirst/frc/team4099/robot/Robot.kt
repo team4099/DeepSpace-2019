@@ -4,6 +4,11 @@ import edu.wpi.first.wpilibj.TimedRobot
 import org.usfirst.frc.team4099.lib.util.CrashTracker
 
 import org.usfirst.frc.team4099.robot.drive.CheesyDriveHelper
+<<<<<<< HEAD
+=======
+import org.usfirst.frc.team4099.robot.drive.TankDriveHelper
+import org.usfirst.frc.team4099.DashboardConfigurator
+>>>>>>> 47a7001f6310cfd11567c1c5febc3a5eb9cee8f7
 import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
 import org.usfirst.frc.team4099.robot.loops.Looper
 import org.usfirst.frc.team4099.robot.loops.VoltageEstimator
@@ -133,11 +138,17 @@ class Robot : TimedRobot() {
             val moveUp = controls.moveUp
             var moveDown = controls.moveDown
             val toggle = controls.toggle
+<<<<<<< HEAD
             if (moveDown && moveUp) {
                 moveDown = false
                 elevator.updatePosition(true)
             } else if (!moveDown && moveDown) {
                 moveDown = true
+=======
+            if (controlboard.moveDown && moveUp) {
+                elevator.updatePosition(true)
+            } else if (!controlboard.moveDown && moveDown) {
+>>>>>>> 47a7001f6310cfd11567c1c5febc3a5eb9cee8f7
                 elevator.updatePosition(false)
             }
             if (toggle) {
@@ -149,7 +160,15 @@ class Robot : TimedRobot() {
             } else {
                 grabber.push = false
             }
-
+            if(controlboard.grab) {
+                grabber.intakeState = Grabber.IntakeState.IN
+            }
+            if(controlboard.eject){
+                grabber.intakeState = Grabber.IntakeState.OUT
+            }
+            if(controlboard.stopGrabber){
+                grabber.intakeState = Grabber.IntakeState.NEUTRAL
+            }
 
 
             if (intake.up && controlBoard.toggleIntake) {

@@ -38,6 +38,15 @@ class ControlBoard private constructor() {
 
     val toggleGrabber: Boolean
         get() = operator.leftShoulderButton
+  
+    val grab : Boolean
+        get() = operator.rightShoulderButton
+
+    val eject : Boolean
+        get() = operator.leftShoulderButton
+
+    val stopGrabber : Boolean
+        get() = operator.aButton
 
     val moveUp: Boolean
         get() = operator.dPadUp
