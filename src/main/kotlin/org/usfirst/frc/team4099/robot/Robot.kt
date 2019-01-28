@@ -1,22 +1,16 @@
 package org.usfirst.frc.team4099.robot
 
-import edu.wpi.first.wpilibj.IterativeRobot
+import edu.wpi.first.wpilibj.TimedRobot
 import org.usfirst.frc.team4099.lib.util.CrashTracker
 
-import org.usfirst.frc.team4099.lib.util.LatchedBoolean
-import org.usfirst.frc.team4099.lib.util.ReflectingCSVWriter
-import org.usfirst.frc.team4099.lib.util.SignalTable
 import org.usfirst.frc.team4099.robot.drive.CheesyDriveHelper
-import org.usfirst.frc.team4099.robot.drive.TankDriveHelper
 import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
 import org.usfirst.frc.team4099.robot.loops.Looper
 import org.usfirst.frc.team4099.robot.loops.VoltageEstimator
-import org.usfirst.frc.team4099.robot.ControlBoard
 
 import org.usfirst.frc.team4099.robot.subsystems.*
-import org.usfirst.frc.team4099.robot.ControlBoard.*
 
-class Robot : IterativeRobot() {
+class Robot : TimedRobot() {
 
 
     private val climber = Climber.instance
@@ -24,9 +18,10 @@ class Robot : IterativeRobot() {
     private val elevator = Elevator.instance
     private val drive = Drive.instance
     private val grabber = Grabber.instance
-    private val controlboard = ControlBoard.instance
+    private val controlBoard = ControlBoard.instance
     private val disabledLooper = Looper("disabledLooper")
     private val enabledLooper = Looper("enabledLooper")
+    private val cheesyDriveHelper = CheesyDriveHelper()
   
 
     private val intake = Intake.instance
@@ -43,13 +38,14 @@ class Robot : IterativeRobot() {
         try {
             CrashTracker.logRobotInit()
 
-            DashboardConfigurator.initDashboard()
+//            DashboardConfigurator.initDashboard()
 
 
             enabledLooper.register(grabber.loop)
 
             enabledLooper.register(intake.loop)
 
+            enabledLooper.register(drive.loop)
 
             enabledLooper.register(BrownoutDefender.instance)
 
@@ -117,8 +113,10 @@ class Robot : IterativeRobot() {
 
     override fun teleopPeriodic() {
         try {
-            val frontToggle = controls.front
-            val backToggle = controls.back
+
+
+            val frontToggle = controls.actuateFrontClimb
+            val backToggle = controls.actuateBackClimb
             if (frontToggle && climber.climberState == Climber.ClimberState.FRONT_DOWN) {
                 climber.climberState = Climber.ClimberState.BOTH_UP
 
@@ -133,19 +131,19 @@ class Robot : IterativeRobot() {
             }
 
             val moveUp = controls.moveUp
-            val moveDown = controls.moveDown
+            var moveDown = controls.moveDown
             val toggle = controls.toggle
-            if (operator.moveDown && moveUp) {
-                operator.moveDown = false
+            if (moveDown && moveUp) {
+                moveDown = false
                 elevator.updatePosition(true)
-            } else if (!operator.moveDown && moveDown) {
-                operator.moveDown = true
+            } else if (!moveDown && moveDown) {
+                moveDown = true
                 elevator.updatePosition(false)
             }
             if (toggle) {
                 elevator.toggleOuttakeMode()
             }
-            if (!grabber.push && controlboard.toggleGrabber) {
+            if (!grabber.push && controlBoard.toggleGrabber) {
                 grabber.push = true
                 println("Pushing the hatch-ey boi")
             } else {
@@ -154,21 +152,30 @@ class Robot : IterativeRobot() {
 
 
 
-            if (intake.up && controlboard.toggleIntake) {
+            if (intake.up && controlBoard.toggleIntake) {
                 intake.up = false
                 println("Lowering intake")
-            } else if (!intake.up && controlboard.toggleIntake) {
+            } else if (!intake.up && controlBoard.toggleIntake) {
                 intake.up = true
                 println("Raising intake")
             }
 
             intake.intakeState = when {
-                controlboard.reverseIntakeFast -> Intake.IntakeState.FAST_OUT
-                controlboard.reverseIntakeSlow -> Intake.IntakeState.SLOW_OUT
-                controlboard.runIntake -> Intake.IntakeState.IN
+                controlBoard.reverseIntakeFast -> Intake.IntakeState.FAST_OUT
+                controlBoard.reverseIntakeSlow -> Intake.IntakeState.SLOW_OUT
+                controlBoard.runIntake -> Intake.IntakeState.IN
                 intake.intakeState != Intake.IntakeState.SLOW -> Intake.IntakeState.STOP
                 else -> intake.intakeState
             }
+
+            if (drive.highGear && controlBoard.switchToLowGear) {
+                drive.highGear = false
+                println("Shifting to low gear")
+            } else if (!drive.highGear && controlBoard.switchToHighGear) {
+                drive.highGear = true
+                println("Shifting to high gear")
+            }
+            drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controls.throttle, controls.turn, controls.throttle == 0.0))
 
 
             outputAllToSmartDashboard()

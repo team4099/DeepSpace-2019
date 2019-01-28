@@ -2,12 +2,12 @@ package org.usfirst.frc.team4099.robot
 
 class Constants {
     object Drive {
-        val LEFT_MASTER_ID = 4
+        val LEFT_MASTER_ID = 9
         val LEFT_SLAVE_1_ID = 5
-        val LEFT_SLAVE_2_ID = 6
+        val LEFT_SLAVE_2_ID = 10
         val RIGHT_MASTER_ID = 8
-        val RIGHT_SLAVE_1_ID = 9
-        val RIGHT_SLAVE_2_ID = 10
+        val RIGHT_SLAVE_1_ID = 0
+        val RIGHT_SLAVE_2_ID = 5
 
         val HIGH_GEAR_MAX_SETPOINT = 17.0  //17 fps
 
@@ -16,18 +16,15 @@ class Constants {
     }
 
     object Wheels {
-        val DRIVE_WHEEL_DIAMETER_INCHES = 0
+        val DRIVE_WHEEL_DIAMETER_INCHES = 6
     }
 
     object Climber {
-        val CLIMBER_F1_FORWARD_ID = 0
-        val CLIMBER_F1_REVERSE_ID = 1
-        val CLIMBER_F2_FORWARD_ID = 2
-        val CLIMBER_F2_REVERSE_ID = 3
-        val CLIMBER_B1_FORWARD_ID = 4
-        val CLIMBER_B1_REVERSE_ID = 5
-        val CLIMBER_B2_FORWARD_ID = 6
-        val CLIMBER_B2_REVERSE_ID = 7
+        val CLIMBER_F1_FORWARD_ID = 4
+        val CLIMBER_F1_REVERSE_ID = 5
+
+        val CLIMBER_B1_FORWARD_ID = 6
+        val CLIMBER_B1_REVERSE_ID = 7
     }
     object Gains {
         val LEFT_LOW_KP = 0.0000
@@ -70,8 +67,8 @@ class Constants {
 
     object Intake {
         val INTAKE_TALON_ID = 0
-        val SHIFTER_FORWARD_ID = 1
-        val SHIFTER_REVERSE_ID = 2
+        val SHIFTER_FORWARD_ID = 2
+        val SHIFTER_REVERSE_ID = 3
     }
 
 
@@ -92,6 +89,10 @@ class Constants {
 
         val SHIFTER_CHANNEL = 0
         val SHIFTER_MODULE = 0
+    }
+
+    object Loopers {
+        val LOOPER_DT = 0.005
     }
 
 }

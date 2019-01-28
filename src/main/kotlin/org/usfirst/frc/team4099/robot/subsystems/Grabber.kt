@@ -8,15 +8,12 @@ import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
 import org.usfirst.frc.team4099.robot.loops.Loop
 
 class Grabber private constructor() : Subsystem{
-    private val pneumaticShifter: DoubleSolenoid = DoubleSolenoid(Constants.Intake.SHIFTER_FORWARD_ID, Constants.Intake.SHIFTER_REVERSE_ID)
     private var pushStartTime = 0.0
     var push = false
         set (wantsPush) {
             if (wantsPush) {
                 pushStartTime = (System.currentTimeMillis()).toDouble()
-                pneumaticShifter.set(DoubleSolenoid.Value.kForward)
             } else {
-                pneumaticShifter.set(DoubleSolenoid.Value.kReverse)
             }
             field = wantsPush
         }
@@ -27,13 +24,11 @@ class Grabber private constructor() : Subsystem{
     }
 
     @Synchronized override fun stop() {
-        pneumaticShifter.set(DoubleSolenoid.Value.kOff)
     }
 
     val loop: Loop = object : Loop {
         override fun onStart() {
             push = false
-            pneumaticShifter.set(DoubleSolenoid.Value.kOff)
         }
 
         override fun onLoop() {
