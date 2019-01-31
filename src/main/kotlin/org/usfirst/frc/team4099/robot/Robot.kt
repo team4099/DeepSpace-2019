@@ -2,6 +2,7 @@ package org.usfirst.frc.team4099.robot
 
 import edu.wpi.first.wpilibj.CameraServer
 import edu.wpi.first.wpilibj.IterativeRobot
+import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj.livewindow.LiveWindow
 import org.usfirst.frc.team4099.DashboardConfigurator
 import org.usfirst.frc.team4099.auto.AutoModeExecuter
@@ -17,7 +18,7 @@ import org.usfirst.frc.team4099.robot.loops.Looper
 import org.usfirst.frc.team4099.robot.loops.VoltageEstimator
 import org.usfirst.frc.team4099.robot.subsystems.*
 
-class Robot : IterativeRobot() {
+class Robot : TimedRobot() {
     private val drive = Drive.instance
 
     private val disabledLooper = Looper("disabledLooper")
