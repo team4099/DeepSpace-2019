@@ -37,9 +37,9 @@ class Intake private constructor() : Subsystem {
     }
 
     override fun outputToSmartDashboard() {
-        SmartDashboard.putNumber("intake/intakePower", intakePower)
-        SmartDashboard.putBoolean("intake/isUp", up)
-        SmartDashboard.putNumber("intake/current", BrownoutDefender.instance.getCurrent(7))
+        //SmartDashboard.putNumber("intake/intakePower", intakePower)
+        //SmartDashboard.putBoolean("intake/isUp", up)
+        //SmartDashboard.putNumber("intake/current", BrownoutDefender.instance.getCurrent(7))
     }
 
     /**

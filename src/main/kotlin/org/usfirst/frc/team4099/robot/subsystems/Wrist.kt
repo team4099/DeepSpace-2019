@@ -7,6 +7,7 @@ import org.usfirst.frc.team4099.lib.util.CANMotorControllerFactory
 import org.usfirst.frc.team4099.lib.util.conversions.WristConversion
 import org.usfirst.frc.team4099.robot.Constants
 import org.usfirst.frc.team4099.robot.loops.Loop
+import kotlin.math.*
 
 /**
  * @author Team 4099
@@ -33,8 +34,8 @@ class Wrist private constructor(): Subsystem {
 
     enum class WristState(val targetAngle: Double) {
         HORIZONTAL(0.0),
-        STOWED_UP(Math.PI / 2),
-        SHOOT_UP(Math.PI / 4),
+        STOWED_UP(PI / 2),
+        SHOOT_UP(PI / 4),
         OPEN_LOOP(Double.NaN),
         VELOCITY_CONTROL(Double.NaN)
         //TODO Calibrate values
@@ -74,9 +75,9 @@ class Wrist private constructor(): Subsystem {
      * Outputs the angle of the wrist
      */
     override fun outputToSmartDashboard() {
-        SmartDashboard.putNumber("wrist/wristAngle", wristAngle)
-        SmartDashboard.putBoolean("wrist/wristUp", wristAngle > Math.PI / 4)
-        SmartDashboard.putNumber("wrist/wristSpeed", talon.sensorCollection.quadratureVelocity.toDouble())
+        //SmartDashboard.putNumber("wrist/wristAngle", wristAngle)
+        //SmartDashboard.putBoolean("wrist/wristUp", wristAngle > PI / 4)
+        //SmartDashboard.putNumber("wrist/wristSpeed", talon.sensorCollection.quadratureVelocity.toDouble())
     }
 
     @Synchronized override fun stop() {
