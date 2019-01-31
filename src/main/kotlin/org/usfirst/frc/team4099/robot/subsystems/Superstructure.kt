@@ -48,7 +48,13 @@ class Superstructure : Subsystem {
 
     fun onLoop() {
         synchronized(this@Superstructure) {
-            led.systemState = if (elevator.isHatchPanel) LED.SystemState.HATCH else LED.SystemState.CARGO
+            if (elevator.isHatchPanel) {
+                led.setStateColors("WHITE", LED.SystemState.SOLID)
+            }
+            else {
+                led.setStateColors("ORANGE", LED.SystemState.SOLID)
+            }
+
             when(systemState) {
                 SystemState.IDLE -> handleIdle()
                 SystemState.ALIGNING_VISION -> handleVision()
@@ -56,7 +62,6 @@ class Superstructure : Subsystem {
                 SystemState.CLIMBING -> handleClimb()
                 SystemState.INTAKE_CARGO -> handleCargoIntake()
                 SystemState.UNJAMMING -> handleUnjam()
-                SystemState.BLINK -> handleBlink()
             }
         }
     }
@@ -65,13 +70,13 @@ class Superstructure : Subsystem {
         // TODO
         vision.visionState = Vision.VisionState.INACTIVE
         elevator.elevatorState = Elevator.ElevatorState.PORTLOW
-        led.systemState = LED.SystemState.OFF
+        led.setState(LED.SystemState.OFF)
     }
 
     private fun handleVision() {
         vision.visionState = Vision.VisionState.AIMING
         drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
-        led.systemState = LED.SystemState.ALIGNING
+        led.setStateColors("PURPLE", LED.SystemState.SOLID)
     }
 
     private fun handleElevatorUp() {
@@ -82,28 +87,23 @@ class Superstructure : Subsystem {
 
     private fun handleClimb() {
         when(climber.climberState){
-            Climber.ClimberState.FRONT_DOWN -> led.setState(LED.SystemState.FRONT_DOWN)
-            Climber.ClimberState.BACK_DOWN -> led.setState(LED.SystemState.BACK_DOWN)
+            Climber.ClimberState.FRONT_DOWN -> led.setStateColors("AQUA", LED.SystemState.BLINK)
+            Climber.ClimberState.BACK_DOWN -> led.setStateColors("GREEN", LED.SystemState.BLINK)
         }
     }
 
     private fun handleCargoIntake() {
         when(intake.intakeState) {
-            Intake.IntakeState.IN, Intake.IntakeState.SLOW -> led.setState(LED.SystemState.INTAKE_IN)
+            Intake.IntakeState.IN, Intake.IntakeState.SLOW -> led.setStateColors("GREEN", LED.SystemState.BLINK)
         }
     }
 
     private fun handleUnjam() {
         if (intake.intakeState == Intake.IntakeState.FAST_OUT && grabber.intakeState == Grabber.IntakeState.OUT) {
-            led.setState(LED.SystemState.UNJAM)
+            led.setStateColors("ORANGE", LED.SystemState.CYLON)
         }
     }
 
-    private fun handleBlink() {
-        if (isAlignedVision()) {
-            led.setState(LED.SystemState.ALIGNING)
-        }
-    }
 
     override fun outputToSmartDashboard() { }
 
