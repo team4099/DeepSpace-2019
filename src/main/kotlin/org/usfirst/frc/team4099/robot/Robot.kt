@@ -16,7 +16,6 @@ class Robot : TimedRobot() {
 
 
     private val climber = Climber.instance
-    private val controls = ControlBoard.instance
     private val elevator = Elevator.instance
     private val drive = Drive.instance
     private val grabber = Grabber.instance
@@ -117,8 +116,8 @@ class Robot : TimedRobot() {
         try {
 
 
-            val frontToggle = controls.actuateFrontClimb
-            val backToggle = controls.actuateBackClimb
+            val frontToggle = controlBoard.actuateFrontClimb
+            val backToggle = controlBoard.actuateBackClimb
             if (frontToggle && climber.climberState == Climber.ClimberState.FRONT_DOWN) {
                 climber.climberState = Climber.ClimberState.BOTH_UP
 
@@ -132,9 +131,9 @@ class Robot : TimedRobot() {
                 climber.climberState = Climber.ClimberState.BOTH_UP
             }
 
-            val moveUp = controls.moveUp
-            var moveDown = controls.moveDown
-            val toggle = controls.toggle
+            val moveUp = controlBoard.moveUp
+            var moveDown = controlBoard.moveDown
+            val toggle = controlBoard.toggle
 
             if (controlBoard.moveDown && moveUp) {
                 elevator.updatePosition(true)
@@ -184,7 +183,7 @@ class Robot : TimedRobot() {
                 drive.highGear = true
                 println("Shifting to high gear")
             }
-            drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controls.throttle, controls.turn, controls.throttle == 0.0))
+            drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, controlBoard.throttle == 0.0))
 
 
             outputAllToSmartDashboard()
