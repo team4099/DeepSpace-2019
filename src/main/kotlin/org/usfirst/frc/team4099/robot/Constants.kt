@@ -124,4 +124,8 @@ class Constants {
         val SHOTGUN_PORT = 1
     }
 
+
+    object Wrist {
+        val WRIST_TALON_ID = 0
+    }
 }
