@@ -43,11 +43,11 @@ class Robot : TimedRobot() {
 //            DashboardConfigurator.initDashboard()
 
 
-            enabledLooper.register(grabber.loop)
-
-            enabledLooper.register(intake.loop)
-
-            enabledLooper.register(drive.loop)
+//            enabledLooper.register(grabber.loop)
+//
+//            enabledLooper.register(intake.loop)
+//
+//            enabledLooper.register(drive.loop)
 
             enabledLooper.register(BrownoutDefender.instance)
 
@@ -117,24 +117,24 @@ class Robot : TimedRobot() {
         try {
 
 
-            val frontToggle = controls.actuateFrontClimb
-            val backToggle = controls.actuateBackClimb
-            if (frontToggle && climber.climberState == Climber.ClimberState.FRONT_DOWN) {
-                climber.climberState = Climber.ClimberState.BOTH_UP
-
-            } else if (frontToggle && climber.climberState == Climber.ClimberState.BOTH_UP) {
-                climber.climberState = Climber.ClimberState.FRONT_DOWN
-
-            } else if (backToggle && climber.climberState == Climber.ClimberState.BOTH_UP) {
-                climber.climberState = Climber.ClimberState.BACK_DOWN
-
-            } else if (backToggle && climber.climberState == Climber.ClimberState.BACK_DOWN) {
-                climber.climberState = Climber.ClimberState.BOTH_UP
-            }
-
-            val moveUp = controls.moveUp
+//            val frontToggle = controls.actuateFrontClimb
+//            val backToggle = controls.actuateBackClimb
+//            if (frontToggle && climber.climberState == Climber.ClimberState.FRONT_DOWN) {
+//                climber.climberState = Climber.ClimberState.BOTH_UP
+//
+//            } else if (frontToggle && climber.climberState == Climber.ClimberState.BOTH_UP) {
+//                climber.climberState = Climber.ClimberState.FRONT_DOWN
+//
+//            } else if (backToggle && climber.climberState == Climber.ClimberState.BOTH_UP) {
+//                climber.climberState = Climber.ClimberState.BACK_DOWN
+//
+//            } else if (backToggle && climber.climberState == Climber.ClimberState.BACK_DOWN) {
+//                climber.climberState = Climber.ClimberState.BOTH_UP
+//            }
+//
+            var moveUp = controls.moveUp
             var moveDown = controls.moveDown
-            val toggle = controls.toggle
+            var toggle = controls.toggle
 
             if (controlBoard.moveDown && moveUp) {
                 elevator.updatePosition(true)
@@ -144,47 +144,47 @@ class Robot : TimedRobot() {
             if (toggle) {
                 elevator.toggleOuttakeMode()
             }
-            if (!grabber.push && controlBoard.toggleGrabber) {
-                grabber.push = true
-                println("Pushing the hatch-ey boi")
-            } else {
-                grabber.push = false
-            }
-            if(controlBoard.grab) {
-                grabber.intakeState = Grabber.IntakeState.IN
-            }
-            if(controlBoard.eject){
-                grabber.intakeState = Grabber.IntakeState.OUT
-            }
-            if(controlBoard.stopGrabber){
-                grabber.intakeState = Grabber.IntakeState.NEUTRAL
-            }
-
-
-            if (intake.up && controlBoard.toggleIntake) {
-                intake.up = false
-                println("Lowering intake")
-            } else if (!intake.up && controlBoard.toggleIntake) {
-                intake.up = true
-                println("Raising intake")
-            }
-
-            intake.intakeState = when {
-                controlBoard.reverseIntakeFast -> Intake.IntakeState.FAST_OUT
-                controlBoard.reverseIntakeSlow -> Intake.IntakeState.SLOW_OUT
-                controlBoard.runIntake -> Intake.IntakeState.IN
-                intake.intakeState != Intake.IntakeState.SLOW -> Intake.IntakeState.STOP
-                else -> intake.intakeState
-            }
-
-            if (drive.highGear && controlBoard.switchToLowGear) {
-                drive.highGear = false
-                println("Shifting to low gear")
-            } else if (!drive.highGear && controlBoard.switchToHighGear) {
-                drive.highGear = true
-                println("Shifting to high gear")
-            }
-            drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controls.throttle, controls.turn, controls.throttle == 0.0))
+//            if (!grabber.push && controlBoard.toggleGrabber) {
+//                grabber.push = true
+//                println("Pushing the hatch-ey boi")
+//            } else {
+//                grabber.push = false
+//            }
+//            if(controlBoard.grab) {
+//                grabber.intakeState = Grabber.IntakeState.IN
+//            }
+//            if(controlBoard.eject){
+//                grabber.intakeState = Grabber.IntakeState.OUT
+//            }
+//            if(controlBoard.stopGrabber){
+//                grabber.intakeState = Grabber.IntakeState.NEUTRAL
+//            }
+//
+//
+//            if (intake.up && controlBoard.toggleIntake) {
+//                intake.up = false
+//                println("Lowering intake")
+//            } else if (!intake.up && controlBoard.toggleIntake) {
+//                intake.up = true
+//                println("Raising intake")
+//            }
+//
+//            intake.intakeState = when {
+//                controlBoard.reverseIntakeFast -> Intake.IntakeState.FAST_OUT
+//                controlBoard.reverseIntakeSlow -> Intake.IntakeState.SLOW_OUT
+//                controlBoard.runIntake -> Intake.IntakeState.IN
+//                intake.intakeState != Intake.IntakeState.SLOW -> Intake.IntakeState.STOP
+//                else -> intake.intakeState
+//            }
+//
+//            if (drive.highGear && controlBoard.switchToLowGear) {
+//                drive.highGear = false
+//                println("Shifting to low gear")
+//            } else if (!drive.highGear && controlBoard.switchToHighGear) {
+//                drive.highGear = true
+//                println("Shifting to high gear")
+//            }
+//            drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controls.throttle, controls.turn, controls.throttle == 0.0))
 
 
             outputAllToSmartDashboard()
