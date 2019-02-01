@@ -9,10 +9,10 @@ class ControlBoard private constructor() {
     private val operator: Gamepad = XboxOneGamepad(Constants.Joysticks.SHOTGUN_PORT)
 
     val throttle: Double
-        get() = driver.rightTriggerAxis - driver.leftTriggerAxis
+        get() = -driver.rightTriggerAxis + driver.leftTriggerAxis
 
     val turn: Double
-        get() = driver.leftXAxis
+        get() = -driver.leftXAxis
 
     val switchToHighGear: Boolean
         get() = driver.rightShoulderButton
@@ -20,42 +20,45 @@ class ControlBoard private constructor() {
     val switchToLowGear: Boolean
         get() = driver.leftShoulderButton
 
-    val toggleIntake: Boolean
-        get() = operator.dPadLeft
-    val reverseIntakeSlow: Boolean
-        get() = operator.bButton
-
-    val reverseIntakeFast: Boolean
-        get() = operator.yButton
-
-    val runIntake: Boolean
+    val hatchPOut: Boolean
         get() = operator.aButton
 
-    val actuateFrontClimb: Boolean
-        get() = driver.dPadUp
-    val actuateBackClimb: Boolean
-        get() = driver.dPadUp
-
-    val toggleGrabber: Boolean
-        get() = operator.leftShoulderButton
-  
-    val grab : Boolean
-        get() = operator.rightShoulderButton
-
-    val eject : Boolean
-        get() = operator.leftShoulderButton
-
-    val stopGrabber : Boolean
-        get() = operator.aButton
-
-    val moveUp: Boolean
-        get() = operator.dPadUp
-
-    val moveDown: Boolean
-        get() = operator.dPadDown
-
-    val toggle: Boolean
-        get() = operator.rightShoulderButton
+//    val toggleIntake: Boolean
+//        get() = operator.dPadLeft
+//    val reverseIntakeSlow: Boolean
+//        get() = operator.bButton
+//
+//    val reverseIntakeFast: Boolean
+//        get() = operator.yButton
+//
+//    val runIntake: Boolean
+//        get() = operator.aButton
+//
+//    val actuateFrontClimb: Boolean
+//        get() = driver.dPadUp
+//    val actuateBackClimb: Boolean
+//        get() = driver.dPadUp
+//
+//    val toggleGrabber: Boolean
+//        get() = operator.leftShoulderButton
+//
+//    val grab : Boolean
+//        get() = operator.rightShoulderButton
+//
+//    val eject : Boolean
+//        get() = operator.leftShoulderButton
+//
+//    val stopGrabber : Boolean
+//        get() = operator.aButton
+//
+//    val moveUp: Boolean
+//        get() = operator.dPadUp
+//
+//    val moveDown: Boolean
+//        get() = operator.dPadDown
+//
+//    val toggle: Boolean
+//        get() = operator.rightShoulderButton
 
     companion object {
         val instance = ControlBoard()
