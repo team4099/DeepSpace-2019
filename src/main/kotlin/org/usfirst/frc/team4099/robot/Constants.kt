@@ -37,13 +37,13 @@ class Constants {
         val SHIFTER_FORWARD_ID = 0
         val SHIFTER_REVERSE_ID = 1
 
-        val MAX_HIGH_VELOCITY = 0 //change
-        val MAX_HIGH_ACCEL = 0 //change
-        val MAX_HIGH_JERK = 0 //change
+        val MAX_HIGH_VELOCITY = 72 //change
+        val MAX_HIGH_ACCEL =  78.2//change
+        val MAX_HIGH_JERK = 2000 //change
 
-        val MAX_LOW_VELOCITY = 0 //change
-        val MAX_LOW_ACCEL = 0 //change
-        val MAX_LOW_JERK = 0 //change
+        val MAX_LOW_VELOCITY = 72 //change
+        val MAX_LOW_ACCEL = 78.2 //change
+        val MAX_LOW_JERK = 2000 //change
 
         val HIGH_KV = 1/MAX_HIGH_VELOCITY
         val HIGH_KA = 0

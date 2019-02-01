@@ -2,7 +2,7 @@ package org.usfirst.frc.team4099
 
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
-import main.java.org.usfirst.frc.team4099.lib.util.AutoModeCreator
+//import main.java.org.usfirst.frc.team4099.lib.util.AutoModeCreator
 import org.usfirst.frc.team4099.auto.modes.*
 import org.usfirst.frc.team4099.robot.Constants
 import org.usfirst.frc.team4099.robot.Constants.Autonomous.AUTO_OPTIONS_DASHBOARD_KEY
