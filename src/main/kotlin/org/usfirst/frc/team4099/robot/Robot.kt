@@ -16,14 +16,14 @@ import org.usfirst.frc.team4099.robot.subsystems.*
 class Robot : TimedRobot() {
 
 
-    private val climber = Climber.instance
+    //private val climber = Climber.instance
     private val controls = ControlBoard.instance
-    private val elevator = Elevator.instance
-    private val drive = Drive.instance
+    //private val elevator = Elevator.instance
+    //private val drive = Drive.instance
     private val controlBoard = ControlBoard.instance
     private val disabledLooper = Looper("disabledLooper")
     private val enabledLooper = Looper("enabledLooper")
-    private val cheesyDriveHelper = CheesyDriveHelper()
+    //private val cheesyDriveHelper = CheesyDriveHelper()
     private val wrist = Wrist.instance
     private val intake = Intake.instance
 
@@ -45,7 +45,7 @@ class Robot : TimedRobot() {
 
             enabledLooper.register(wrist.loop)
 
-            enabledLooper.register(drive.loop)
+            //enabledLooper.register(drive.loop)
 
             enabledLooper.register(BrownoutDefender.instance)
 
@@ -115,7 +115,7 @@ class Robot : TimedRobot() {
         try {
 
 
-            val frontToggle = controls.actuateFrontClimb
+            /*val frontToggle = controls.actuateFrontClimb
             val backToggle = controls.actuateBackClimb
             if (frontToggle && climber.climberState == Climber.ClimberState.FRONT_DOWN) {
                 climber.climberState = Climber.ClimberState.BOTH_UP
@@ -148,7 +148,7 @@ class Robot : TimedRobot() {
             }
             if (toggle) {
                 elevator.toggleOuttakeMode()
-            }
+            }*/
             if (!intake.pistonsOut && controlBoard.togglePistons) {
                 intake.pistonsOut = true
                 println("Pushing the hatch-ey boi")
@@ -166,7 +166,7 @@ class Robot : TimedRobot() {
 
             wrist.setWristVelocity(controlBoard.wristPower)
 
-            if (drive.highGear && controlBoard.switchToLowGear) {
+            /*if (drive.highGear && controlBoard.switchToLowGear) {
                 drive.highGear = false
                 println("Shifting to low gear")
             } else if (!drive.highGear && controlBoard.switchToHighGear) {
@@ -175,7 +175,7 @@ class Robot : TimedRobot() {
             }
             drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controls.throttle, controls.turn, controls.throttle == 0.0))
 
-
+*/
             outputAllToSmartDashboard()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)
@@ -206,11 +206,11 @@ class Robot : TimedRobot() {
     }
 
     private fun startLiveWindowMode() {
-        drive.startLiveWindowMode()
+        //drive.startLiveWindowMode()
     }
 
     private fun updateLiveWindowTables() {
-        drive.updateLiveWindowTables()
+        //drive.updateLiveWindowTables()
     }
 
     private fun updateDashboardFeedback() {
