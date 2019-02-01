@@ -4,11 +4,9 @@ import edu.wpi.first.wpilibj.TimedRobot
 import org.usfirst.frc.team4099.lib.util.CrashTracker
 
 import org.usfirst.frc.team4099.robot.drive.CheesyDriveHelper
-<<<<<<< HEAD
-=======
+
 import org.usfirst.frc.team4099.robot.drive.TankDriveHelper
 import org.usfirst.frc.team4099.DashboardConfigurator
->>>>>>> 47a7001f6310cfd11567c1c5febc3a5eb9cee8f7
 import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
 import org.usfirst.frc.team4099.robot.loops.Looper
 import org.usfirst.frc.team4099.robot.loops.VoltageEstimator
@@ -22,7 +20,6 @@ class Robot : TimedRobot() {
     private val controls = ControlBoard.instance
     private val elevator = Elevator.instance
     private val drive = Drive.instance
-    private val grabber = Grabber.instance
     private val controlBoard = ControlBoard.instance
     private val disabledLooper = Looper("disabledLooper")
     private val enabledLooper = Looper("enabledLooper")
@@ -44,9 +41,6 @@ class Robot : TimedRobot() {
             CrashTracker.logRobotInit()
 
 //            DashboardConfigurator.initDashboard()
-
-
-            enabledLooper.register(grabber.loop)
 
             enabledLooper.register(intake.loop)
 
@@ -138,17 +132,17 @@ class Robot : TimedRobot() {
             val moveUp = controls.moveUp
             var moveDown = controls.moveDown
             val toggle = controls.toggle
-<<<<<<< HEAD
+
             if (moveDown && moveUp) {
                 moveDown = false
                 elevator.updatePosition(true)
             } else if (!moveDown && moveDown) {
                 moveDown = true
-=======
-            if (controlboard.moveDown && moveUp) {
+            }
+
+            if (controls.moveDown && moveUp) {
                 elevator.updatePosition(true)
-            } else if (!controlboard.moveDown && moveDown) {
->>>>>>> 47a7001f6310cfd11567c1c5febc3a5eb9cee8f7
+            } else if (!controls.moveDown && moveDown) {
                 elevator.updatePosition(false)
             }
             if (toggle) {
@@ -159,15 +153,6 @@ class Robot : TimedRobot() {
                 println("Pushing the hatch-ey boi")
             } else {
                 grabber.push = false
-            }
-            if(controlboard.grab) {
-                grabber.intakeState = Grabber.IntakeState.IN
-            }
-            if(controlboard.eject){
-                grabber.intakeState = Grabber.IntakeState.OUT
-            }
-            if(controlboard.stopGrabber){
-                grabber.intakeState = Grabber.IntakeState.NEUTRAL
             }
 
 
