@@ -36,18 +36,6 @@ class ControlBoard private constructor() {
     val actuateBackClimb: Boolean
         get() = driver.dPadUp
 
-    val toggleGrabber: Boolean
-        get() = operator.leftShoulderButton
-  
-    val grab : Boolean
-        get() = operator.rightShoulderButton
-
-    val eject : Boolean
-        get() = operator.leftShoulderButton
-
-    val stopGrabber : Boolean
-        get() = operator.aButton
-
     val moveUp: Boolean
         get() = operator.dPadUp
 
@@ -56,6 +44,13 @@ class ControlBoard private constructor() {
 
     val toggle: Boolean
         get() = operator.rightShoulderButton
+
+    val togglePistons : Boolean
+        get() = operator.aButton
+
+    val wristPower: Double
+        get() = operator.leftYAxis
+
 
     companion object {
         val instance = ControlBoard()

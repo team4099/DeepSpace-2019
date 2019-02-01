@@ -24,8 +24,7 @@ class Robot : TimedRobot() {
     private val disabledLooper = Looper("disabledLooper")
     private val enabledLooper = Looper("enabledLooper")
     private val cheesyDriveHelper = CheesyDriveHelper()
-  
-
+    private val wrist = Wrist.instance
     private val intake = Intake.instance
 
 
@@ -43,6 +42,8 @@ class Robot : TimedRobot() {
 //            DashboardConfigurator.initDashboard()
 
             enabledLooper.register(intake.loop)
+
+            enabledLooper.register(wrist.loop)
 
             enabledLooper.register(drive.loop)
 
@@ -140,28 +141,19 @@ class Robot : TimedRobot() {
                 moveDown = true
             }
 
-            if (controls.moveDown && moveUp) {
+            if (controlBoard.moveDown && moveUp) {
                 elevator.updatePosition(true)
-            } else if (!controls.moveDown && moveDown) {
+            } else if (!controlBoard.moveDown && moveDown) {
                 elevator.updatePosition(false)
             }
             if (toggle) {
                 elevator.toggleOuttakeMode()
             }
-            if (!grabber.push && controlBoard.toggleGrabber) {
-                grabber.push = true
+            if (!intake.pistonsOut && controlBoard.togglePistons) {
+                intake.pistonsOut = true
                 println("Pushing the hatch-ey boi")
             } else {
-                grabber.push = false
-            }
-
-
-            if (intake.up && controlBoard.toggleIntake) {
-                intake.up = false
-                println("Lowering intake")
-            } else if (!intake.up && controlBoard.toggleIntake) {
-                intake.up = true
-                println("Raising intake")
+                intake.pistonsOut = false
             }
 
             intake.intakeState = when {
@@ -171,6 +163,8 @@ class Robot : TimedRobot() {
                 intake.intakeState != Intake.IntakeState.SLOW -> Intake.IntakeState.STOP
                 else -> intake.intakeState
             }
+
+            wrist.setWristVelocity(controlBoard.wristPower)
 
             if (drive.highGear && controlBoard.switchToLowGear) {
                 drive.highGear = false

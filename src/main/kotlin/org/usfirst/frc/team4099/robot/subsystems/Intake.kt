@@ -25,7 +25,7 @@ class Intake private constructor() : Subsystem {
 
     var intakeState = IntakeState.IN
     private var intakePower = 0.0
-    var up = false
+    var pistonsOut = false
         set (wantsUp) {
             pneumaticShifter.set(if (wantsUp) DoubleSolenoid.Value.kReverse else DoubleSolenoid.Value.kForward)
             field = wantsUp
@@ -64,7 +64,7 @@ class Intake private constructor() : Subsystem {
      */
     val loop: Loop = object : Loop {
         override fun onStart() {
-            up = false
+            pistonsOut = false
             intakeState = IntakeState.STOP
         }
 
