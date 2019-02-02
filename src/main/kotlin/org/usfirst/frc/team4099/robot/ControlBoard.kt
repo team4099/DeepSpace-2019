@@ -8,33 +8,75 @@ class ControlBoard private constructor() {
     private val driver: Gamepad = XboxOneGamepad(Constants.Joysticks.DRIVER_PORT)
     private val operator: Gamepad = XboxOneGamepad(Constants.Joysticks.SHOTGUN_PORT)
 
-    val raiseIntake: Boolean
-        get() = operator.dPadLeft
+    val throttle: Double
+        get() = -driver.rightTriggerAxis + driver.leftTriggerAxis
 
-    val lowerIntake: Boolean
-        get() = operator.dPadRight
+    val turn: Double
+        get() = -driver.leftXAxis
 
-    val reverseIntakeSlow: Boolean
+    val switchToHighGear: Boolean
+        get() = driver.rightShoulderButton
+
+    val switchToLowGear: Boolean
+        get() = driver.leftShoulderButton
+
+    val hatchPExtend : Boolean
+        get() = operator.dPadDown
+
+    val hatchPOut: Boolean
+        get() = operator.dPadUp
+
+
+/*    val reverseIntakeSlow: Boolean
         get() = operator.bButton
 
     val reverseIntakeFast: Boolean
-        get() = operator.yButton
+        get() = operator.yButton*/
+
+    val intakePower : Double
+        get() = operator.leftYAxis
 
     val runIntake: Boolean
         get() = operator.aButton
 
-    val moveUp: Boolean
-        get() = operator.DPadUp
+    val actuateFrontClimb: Boolean
+        get() = driver.dPadUp
 
-    val moveDown: Boolean
-        get() = operator.DPadDown
+    val actuateBackClimb: Boolean
+        get() = driver.dPadDown
 
-    val toggle: Boolean
-        get() = operator.RightShoulder
+/*    val eject : Boolean
+        get() = operator.leftShoulderButton*/
 
+    val elevatorLow : Boolean
+        get() = operator.aButton
+
+    val elevatorMid : Boolean
+        get() = operator.bButton
+
+    val elevatorHigh : Boolean
+        get() = operator.yButton
+
+    val toggleIntake: Boolean
+        get() = operator.xButton
+
+    val elevatorPower: Double
+        get() = (operator.rightTriggerAxis - operator.leftTriggerAxis) * 1
+
+    val toggleWrist : Boolean
+        get() = operator.leftJoystickButton
+//
+//    val moveUp: Boolean
+//        get() = operator.dPadUp
+//
+//    val moveDown: Boolean
+//        get() = operator.dPadDown
+//
 
     companion object {
         val instance = ControlBoard()
     }
+
+
 
 }

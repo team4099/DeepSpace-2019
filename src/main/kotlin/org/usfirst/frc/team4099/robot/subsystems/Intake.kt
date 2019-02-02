@@ -19,7 +19,7 @@ import org.usfirst.frc.team4099.robot.loops.Loop
  */
 class Intake private constructor() : Subsystem {
 
-    private val Talon = Talon(Constants.Intake.INTAKE_TALON_ID)
+    private val talon = Talon(Constants.Intake.INTAKE_TALON_ID)
     private val pneumaticShifter: DoubleSolenoid = DoubleSolenoid(Constants.Intake.SHIFTER_FORWARD_ID,
             Constants.Intake.SHIFTER_REVERSE_ID)
 
@@ -55,7 +55,7 @@ class Intake private constructor() : Subsystem {
      * @param power a double that is the power for the intake
      */
     private fun setIntakePower(power: Double) {
-        Talon.set(power)
+        talon.set(power)
     }
 
     /**
@@ -73,14 +73,6 @@ class Intake private constructor() : Subsystem {
          */
         override fun onLoop() {
             synchronized(this@Intake) {
-                //                println("Ribbon switch pressed: $switchPressed")
-                if (intakeState == IntakeState.IN) {
-//                if (intakeState == IntakeState.IN && (
-//                                BrownoutDefender.instance.getCurrent(11) > 10
-//                                || BrownoutDefender.instance.getCurrent(7) > 10)) {
-                    intakeState = IntakeState.SLOW
-                    up = false
-                }
                 when (intakeState) {
                     IntakeState.IN -> setIntakePower(-1.0)
                     IntakeState.STOP -> setIntakePower(0.0)

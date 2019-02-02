@@ -1,7 +1,6 @@
 package src.main.kotlin.org.usfirst.frc.team4099.robot.subsystems
 
-import org.usfirst.frc.team4099.robot.subsystems.Drive
-import org.usfirst.frc.team4099.robot.subsystems.Intake
+import org.usfirst.frc.team4099.robot.subsystems.*
 
 /**
  * @author Team 4099
@@ -17,8 +16,12 @@ class Superstructure : Subsystem {
 
     // Put Subsystem instantiation here:
     private val intake = Intake.instance
-    private val mDrive = Drive.instance
-    private val mElevator = Elevator.instance
+    private val drive = Drive.instance
+    private val elevator = Elevator.instance
+    private val vision = Vision.instance
+    private val led = LED.instance
+    private val grabber = Grabber.instance
+    private val climber = Climber.instance
 
     enum class SystemState {
         IDLE,
@@ -35,59 +38,78 @@ class Superstructure : Subsystem {
         IDLE, CLIMB, UNJAM, INTAKE_CARGO, ALIGN
     }
 
-    private val mSystemState = SystemState.IDLE
-    private val mWantedState = WantedState.IDLE
+    private var systemState = SystemState.IDLE
+    private val wantedState = WantedState.IDLE
 
-    fun isAlignedLine() {
-        // Get information from line follow sensor
-        // Add isAligned() to line follow subsystem
-    }
-
-    fun isAlignedVision() {
-        // Get information from limelight subsystem
-        // Add isAligned to limelight subsystem
+    private fun isAlignedVision(): Boolean {
+        if (vision.tx == 0.0 && vision.tv == 1.0 && vision.ty == 0.0) {
+            return true
+        }
+        return false
     }
 
     fun onLoop() {
         synchronized(this@Superstructure) {
-           when(mSystemState) {
-               IDLE -> handleIdle()
-               ALIGNING_LINE, ALIGNING_VISION -> handleVision()
-               INTAKE_UP -> handleElevatorUp()
-               CLIMBING -> handleClimb()
-               INTAKE_CARGO -> handleCargoIntake()
-               UNJAMMING -> handleUnjam()
-               BLINK -> handleBlink()
+            led.systemState = if (elevator.isHatchPanel) LED.SystemState.HATCH else LED.SystemState.CARGO
+            when(systemState) {
+                SystemState.IDLE -> handleIdle()
+                SystemState.ALIGNING_VISION -> handleVision()
+                SystemState.INTAKE_UP -> handleElevatorUp()
+                SystemState.CLIMBING -> handleClimb()
+                SystemState.INTAKE_CARGO -> handleCargoIntake()
+                SystemState.UNJAMMING -> handleUnjam()
+                SystemState.BLINK -> handleBlink()
             }
         }
     }
 
     private fun handleIdle() {
         // TODO
+        vision.visionState = Vision.VisionState.INACTIVE
+        elevator.elevatorState = Elevator.ElevatorState.PORTLOW
+        led.systemState = LED.SystemState.OFF
     }
 
     private fun handleVision() {
-        // TODO
+        vision.visionState = Vision.VisionState.AIMING
+        drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
+        led.systemState = LED.SystemState.ALIGNING
     }
 
     private fun handleElevatorUp() {
         intake.up = false // Move intake down
          // Move elevator up
+        elevator.updatePosition(true)
     }
 
     private fun handleClimb() {
-        // TODO
+        when(climber.climberState){
+            Climber.ClimberState.FRONT_DOWN -> led.setState(LED.SystemState.FRONT_DOWN)
+            Climber.ClimberState.BACK_DOWN -> led.setState(LED.SystemState.BACK_DOWN)
+        }
     }
 
     private fun handleCargoIntake() {
-        // TODO
+        when(intake.intakeState) {
+            Intake.IntakeState.IN, Intake.IntakeState.SLOW -> led.setState(LED.SystemState.INTAKE_IN)
+        }
     }
 
     private fun handleUnjam() {
-        // TODO
+        if (intake.intakeState == Intake.IntakeState.FAST_OUT && grabber.intakeState == Grabber.IntakeState.OUT) {
+            led.setState(LED.SystemState.UNJAM)
+        }
     }
 
     private fun handleBlink() {
-        // TODO
+        if (isAlignedVision()) {
+            led.setState(LED.SystemState.ALIGNING)
+        }
     }
+
+    override fun outputToSmartDashboard() { }
+
+    override fun stop() { }
+
+    override fun zeroSensors() { }
 }

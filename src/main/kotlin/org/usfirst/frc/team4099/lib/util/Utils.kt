@@ -39,27 +39,27 @@ object Utils {
         return if (value >= 0) 1 else -1
     }
 
-    private fun getHTML(urlToRead: String): String {
-        try {
-            val result = StringBuilder()
-            val url = URL(urlToRead)
-            val conn = url.openConnection() as HttpURLConnection
-            conn.connectTimeout = Constants.Autonomous.CONNECTION_TIMEOUT_MILLIS
-            conn.readTimeout = Constants.Autonomous.CONNECTION_TIMEOUT_MILLIS
-            conn.requestMethod = "GET"
-            val rd = BufferedReader(InputStreamReader(conn.inputStream))
-            var line: String? = rd.readLine()
-            while (line != null) {
-                result.append(line)
-                line = rd.readLine()
-            }
-            rd.close()
-            return result.toString()
-        } catch (e: Exception) {
-            return "-1"
-        }
+//    private fun getHTML(urlToRead: String): String {
+//        try {
+//            val result = StringBuilder()
+//            val url = URL(urlToRead)
+//            val conn = url.openConnection() as HttpURLConnection
+//            conn.connectTimeout = Constants.Autonomous.CONNECTION_TIMEOUT_MILLIS
+//            conn.readTimeout = Constants.Autonomous.CONNECTION_TIMEOUT_MILLIS
+//            conn.requestMethod = "GET"
+//            val rd = BufferedReader(InputStreamReader(conn.inputStream))
+//            var line: String? = rd.readLine()
+//            while (line != null) {
+//                result.append(line)
+//                line = rd.readLine()
+//            }
+//            rd.close()
+//            return result.toString()
+//        } catch (e: Exception) {
+//            return "-1"
+//        }
 
-    }
+//    }
 
     fun getAverageFromList(list: List<Double>): Double {
         var total = 0.0

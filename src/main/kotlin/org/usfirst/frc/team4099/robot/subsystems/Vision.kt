@@ -8,7 +8,7 @@ import org.usfirst.frc.team4099.robot.Constants
 
 class Vision private constructor(): Subsystem {
 
-    var steering_adjust = 0.0
+    var steeringAdjust = 0.0
     var distance = 0
 
     private val table: NetworkTable = NetworkTableInstance.getDefault().getTable("limelight")
@@ -17,6 +17,9 @@ class Vision private constructor(): Subsystem {
     var ty = table.getEntry("ty").getDouble(0.0)
 
     var visionState = VisionState.INACTIVE
+        set(value) {
+            visionState = value
+        }
 
     enum class VisionState {
         AIMING, INACTIVE, SEEKING
@@ -42,22 +45,22 @@ class Vision private constructor(): Subsystem {
                 distance = (Math.tan(ty + Constants.Vision.CAMERA_ANGLE) / Constants.Vision.CAMERA_TO_TARGET_HEIGHT).toInt()
                 when (visionState) {
                     VisionState.AIMING -> {
-                        if (tx > 1.0) {
-                            steering_adjust = Constants.Vision.Kp * tx - Constants.Vision.min_command
-                        } else if (tx < 1.0) {
-                            steering_adjust = Constants.Vision.Kp * tx + Constants.Vision.min_command
+                        if (tx > 0.0) {
+                            steeringAdjust = Constants.Vision.Kp * tx - Constants.Vision.minCommand
+                        } else if (tx < 0.0) {
+                            steeringAdjust = Constants.Vision.Kp * tx + Constants.Vision.minCommand
                         }
 
                     }
                     VisionState.SEEKING -> {
                         if (tv == 0.0) {
-                            steering_adjust = 0.3
+                            steeringAdjust = 0.3
                         } else {
-                            steering_adjust = Constants.Vision.Kp * tx
+                            steeringAdjust = Constants.Vision.Kp * tx
                         }
                     }
 
-                    VisionState.INACTIVE -> steering_adjust = 0.0
+                    VisionState.INACTIVE -> steeringAdjust = 0.0
 
                 }
             }

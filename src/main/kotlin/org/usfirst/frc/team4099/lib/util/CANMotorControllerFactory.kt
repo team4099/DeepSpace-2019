@@ -19,7 +19,6 @@ object CANMotorControllerFactory {
         var ENABLE_SOFT_LIMIT = false
         var ENABLE_LIMIT_SWITCH = false
         var CURRENT_LIMIT = 0
-        var EXPIRATION_TIMEOUT_SECONDS = MotorSafety.DEFAULT_SAFETY_EXPIRATION
         var FORWARD_SOFT_LIMIT = 0
         var INVERTED = false
         var NOMINAL_CLOSED_LOOP_VOLTAGE = 12.0
