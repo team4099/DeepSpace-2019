@@ -19,7 +19,7 @@ class Robot : TimedRobot() {
 
 
     //private val climber = Climber.instance
-    //private val elevator = Elevator.instance
+    private val elevator = Elevator.instance
     private val drive = Drive.instance
     //private val grabber = Grabber.instance
     private val controlBoard = ControlBoard.instance
@@ -119,7 +119,14 @@ class Robot : TimedRobot() {
     override fun teleopPeriodic() {
         try {
 
-
+//            val wantedVelocity = controlBoard.elevatorPower * Constants.Elevator.MAX_SPEED
+//            if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER) {
+//                elevator.setElevatorVelocity(wantedVelocity)
+//                elevator.elevatorState = Elevator.ElevatorState.VELOCITY_CONTROL
+//            }
+//            else {
+//                elevator.setElevatorVelocity(0)
+//            }
 //            val frontToggle = controlBoard.actuateFrontClimb
 //            val backToggle = controlBoard.actuateBackClimb
 //            if (frontToggle && climber.climberState == Climber.ClimberState.FRONT_DOWN) {

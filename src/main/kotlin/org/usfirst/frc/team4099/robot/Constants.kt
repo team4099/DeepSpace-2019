@@ -71,6 +71,8 @@ class Constants {
 
     object Elevator {
         val ELEVATOR_TALON_ID = 0
+        val MAX_SPEED = 2400
+        val MIN_TRIGGER = 0.1
     }
 
 
