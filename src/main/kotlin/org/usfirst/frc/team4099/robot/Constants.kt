@@ -35,7 +35,7 @@ class Constants {
     }
 
     object Gains {
-        val LEFT_LOW_KP = 0.0000
+        val LEFT_LOW_KP = .1 * 1500 / 70
         val LEFT_LOW_KI = 0.0000
         val LEFT_LOW_KD = 0.0000
         val LEFT_LOW_KF = 1023.0 / 2220.0
