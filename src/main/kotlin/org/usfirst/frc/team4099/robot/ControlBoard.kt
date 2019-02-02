@@ -48,8 +48,8 @@ class ControlBoard private constructor() {
     val togglePistons : Boolean
         get() = operator.aButton
 
-    val wristPower: Double
-        get() = operator.leftYAxis
+    val toggleWrist : Boolean
+        get() = operator.leftJoystickButton
 
 
     companion object {

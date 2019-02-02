@@ -34,8 +34,7 @@ class Wrist private constructor(): Subsystem {
 
     enum class WristState(val targetAngle: Double) {
         HORIZONTAL(0.0),
-        STOWED_UP(PI / 2),
-        SHOOT_UP(PI / 4),
+        VERTICAL(PI / 2),
         OPEN_LOOP(Double.NaN),
         VELOCITY_CONTROL(Double.NaN)
         //TODO Calibrate values

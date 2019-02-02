@@ -164,7 +164,10 @@ class Robot : TimedRobot() {
                 else -> intake.intakeState
             }
 
-            wrist.setWristVelocity(controlBoard.wristPower)
+            if(controlBoard.toggleWrist){
+                wrist.setWristMode(if(wrist.wristState == Wrist.WristState.VERTICAL) Wrist.WristState.HORIZONTAL else Wrist.WristState.VERTICAL)
+            }
+
 
             /*if (drive.highGear && controlBoard.switchToLowGear) {
                 drive.highGear = false
