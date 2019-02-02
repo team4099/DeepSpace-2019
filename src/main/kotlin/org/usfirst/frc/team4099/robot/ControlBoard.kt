@@ -26,6 +26,7 @@ class ControlBoard private constructor() {
     val hatchPOut: Boolean
         get() = operator.dPadUp
 
+
 /*    val reverseIntakeSlow: Boolean
         get() = operator.bButton
 
@@ -35,14 +36,14 @@ class ControlBoard private constructor() {
     val intakePower : Double
         get() = operator.leftYAxis
 
-/*    val runIntake: Boolean
-        get() = operator.aButton*/
+    val runIntake: Boolean
+        get() = operator.aButton
 
     val actuateFrontClimb: Boolean
         get() = driver.dPadUp
 
     val actuateBackClimb: Boolean
-        get() = driver.dPadUp
+        get() = driver.dPadDown
 
 /*    val eject : Boolean
         get() = operator.leftShoulderButton*/
