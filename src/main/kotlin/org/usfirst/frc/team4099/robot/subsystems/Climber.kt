@@ -12,8 +12,8 @@ class Climber private constructor() : Subsystem {
     private val pneumaticPiston_F1: DoubleSolenoid = DoubleSolenoid(Constants.Climber.CLIMBER_F1_FORWARD_ID, Constants.Climber.CLIMBER_F1_REVERSE_ID)
     private val pneumaticPiston_B1: DoubleSolenoid = DoubleSolenoid(Constants.Climber.CLIMBER_B1_FORWARD_ID, Constants.Climber.CLIMBER_B1_REVERSE_ID)
 
-    enum class ClimberState {
-        FRONT_DOWN, BACK_DOWN, BOTH_UP
+    enum class ClimberState (val toString : String){
+        FRONT_DOWN("Front Down"), BACK_DOWN("Back Down"), BOTH_UP ("Both Up")
     }
     var climberState = ClimberState.BOTH_UP
     override fun outputToSmartDashboard() {

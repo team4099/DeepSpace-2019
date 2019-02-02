@@ -3,6 +3,9 @@ package org.usfirst.frc.team4099.robot
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.TimedRobot
+import edu.wpi.first.networktables.NetworkTable
+import edu.wpi.first.networktables.NetworkTableEntry
+import edu.wpi.first.networktables.NetworkTableInstance
 import org.usfirst.frc.team4099.lib.util.CrashTracker
 
 import org.usfirst.frc.team4099.robot.drive.CheesyDriveHelper
@@ -12,6 +15,7 @@ import org.usfirst.frc.team4099.lib.util.Utils
 import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
 import org.usfirst.frc.team4099.robot.loops.Looper
 import org.usfirst.frc.team4099.robot.loops.VoltageEstimator
+
 
 import org.usfirst.frc.team4099.robot.subsystems.*
 
@@ -26,7 +30,6 @@ class Robot : TimedRobot() {
     private val disabledLooper = Looper("disabledLooper")
     private val enabledLooper = Looper("enabledLooper")
     private val cheesyDriveHelper = CheesyDriveHelper()
-  
 
    // private val intake = Intake.instance
 
