@@ -20,36 +20,50 @@ class ControlBoard private constructor() {
     val switchToLowGear: Boolean
         get() = driver.leftShoulderButton
 
+    val hatchPExtend : Boolean
+        get() = operator.dPadDown
+
     val hatchPOut: Boolean
+        get() = operator.dPadUp
+
+/*    val reverseIntakeSlow: Boolean
+        get() = operator.bButton
+
+    val reverseIntakeFast: Boolean
+        get() = operator.yButton*/
+
+    val intakePower : Double
+        get() = operator.leftYAxis
+
+/*    val runIntake: Boolean
+        get() = operator.aButton*/
+
+    val actuateFrontClimb: Boolean
+        get() = driver.dPadUp
+
+    val actuateBackClimb: Boolean
+        get() = driver.dPadUp
+
+/*    val eject : Boolean
+        get() = operator.leftShoulderButton*/
+
+    val elevatorLow : Boolean
         get() = operator.aButton
 
-//    val toggleIntake: Boolean
-//        get() = operator.dPadLeft
-//    val reverseIntakeSlow: Boolean
-//        get() = operator.bButton
-//
-//    val reverseIntakeFast: Boolean
-//        get() = operator.yButton
-//
-//    val runIntake: Boolean
-//        get() = operator.aButton
-//
-//    val actuateFrontClimb: Boolean
-//        get() = driver.dPadUp
-//    val actuateBackClimb: Boolean
-//        get() = driver.dPadUp
-//
-//    val toggleGrabber: Boolean
-//        get() = operator.leftShoulderButton
-//
-//    val grab : Boolean
-//        get() = operator.rightShoulderButton
-//
-//    val eject : Boolean
-//        get() = operator.leftShoulderButton
-//
-//    val stopGrabber : Boolean
-//        get() = operator.aButton
+    val elevatorMid : Boolean
+        get() = operator.bButton
+
+    val elevatorHigh : Boolean
+        get() = operator.yButton
+
+    val toggleIntake: Boolean
+        get() = operator.xButton
+
+    val elevatorPower: Double
+        get() = (operator.rightTriggerAxis - operator.leftTriggerAxis) * 1
+
+    val toggleWrist : Boolean
+        get() = operator.leftJoystickButton
 //
 //    val moveUp: Boolean
 //        get() = operator.dPadUp
@@ -57,8 +71,6 @@ class ControlBoard private constructor() {
 //    val moveDown: Boolean
 //        get() = operator.dPadDown
 //
-//    val toggle: Boolean
-//        get() = operator.rightShoulderButton
 
     companion object {
         val instance = ControlBoard()
