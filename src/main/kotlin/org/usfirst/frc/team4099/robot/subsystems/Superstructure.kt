@@ -48,7 +48,13 @@ class Superstructure : Subsystem {
 
     fun onLoop() {
         synchronized(this@Superstructure) {
-            led.systemState = if (elevator.isHatchPanel) LED.SystemState.HATCH else LED.SystemState.CARGO
+            if (elevator.isHatchPanel) {
+                led.setStateColors("WHITE", LED.SystemState.SOLID)
+            }
+            else {
+                led.setStateColors("ORANGE", LED.SystemState.SOLID)
+            }
+
             when(systemState) {
                 SystemState.IDLE -> handleIdle()
                 SystemState.ALIGNING_VISION -> handleVision()
@@ -65,13 +71,13 @@ class Superstructure : Subsystem {
         // TODO
         vision.visionState = Vision.VisionState.INACTIVE
         elevator.elevatorState = Elevator.ElevatorState.PORTLOW
-        led.systemState = LED.SystemState.OFF
+        led.setState(LED.SystemState.OFF)
     }
 
     private fun handleVision() {
         vision.visionState = Vision.VisionState.AIMING
         drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
-        led.systemState = LED.SystemState.ALIGNING
+        led.setStateColors("PURPLE", LED.SystemState.SOLID)
     }
 
 //    private fun handleElevatorUp() {
@@ -104,6 +110,7 @@ class Superstructure : Subsystem {
 //            led.setState(LED.SystemState.ALIGNING)
 //        }
 //    }
+
 
     override fun outputToSmartDashboard() { }
 
