@@ -52,11 +52,11 @@ class Superstructure : Subsystem {
             when(systemState) {
                 SystemState.IDLE -> handleIdle()
                 SystemState.ALIGNING_VISION -> handleVision()
-                SystemState.INTAKE_UP -> handleElevatorUp()
-                SystemState.CLIMBING -> handleClimb()
-                SystemState.INTAKE_CARGO -> handleCargoIntake()
-                SystemState.UNJAMMING -> handleUnjam()
-                SystemState.BLINK -> handleBlink()
+//                SystemState.INTAKE_UP -> handleElevatorUp()
+//                SystemState.CLIMBING -> handleClimb()
+//                SystemState.INTAKE_CARGO -> handleCargoIntake()
+//                SystemState.UNJAMMING -> handleUnjam()
+//                SystemState.BLINK -> handleBlink()
             }
         }
     }
@@ -74,36 +74,36 @@ class Superstructure : Subsystem {
         led.systemState = LED.SystemState.ALIGNING
     }
 
-    private fun handleElevatorUp() {
-        intake.up = false // Move intake down
-         // Move elevator up
-        elevator.updatePosition(true)
-    }
-
-    private fun handleClimb() {
-        when(climber.climberState){
-            Climber.ClimberState.FRONT_DOWN -> led.setState(LED.SystemState.FRONT_DOWN)
-            Climber.ClimberState.BACK_DOWN -> led.setState(LED.SystemState.BACK_DOWN)
-        }
-    }
-
-    private fun handleCargoIntake() {
-        when(intake.intakeState) {
-            Intake.IntakeState.IN, Intake.IntakeState.SLOW -> led.setState(LED.SystemState.INTAKE_IN)
-        }
-    }
-
-    private fun handleUnjam() {
-        if (intake.intakeState == Intake.IntakeState.FAST_OUT && grabber.intakeState == Grabber.IntakeState.OUT) {
-            led.setState(LED.SystemState.UNJAM)
-        }
-    }
-
-    private fun handleBlink() {
-        if (isAlignedVision()) {
-            led.setState(LED.SystemState.ALIGNING)
-        }
-    }
+//    private fun handleElevatorUp() {
+//        intake.up = false // Move intake down
+//         // Move elevator up
+//        elevator.updatePosition(true)
+//    }
+//
+//    private fun handleClimb() {
+//        when(climber.climberState){
+//            Climber.ClimberState.FRONT_DOWN -> led.setState(LED.SystemState.FRONT_DOWN)
+//            Climber.ClimberState.BACK_DOWN -> led.setState(LED.SystemState.BACK_DOWN)
+//        }
+//    }
+//
+//    private fun handleCargoIntake() {
+//        when(intake.intakeState) {
+//            Intake.IntakeState.IN, Intake.IntakeState.SLOW -> led.setState(LED.SystemState.INTAKE_IN)
+//        }
+//    }
+//
+//    private fun handleUnjam() {
+//        if (intake.intakeState == Intake.IntakeState.FAST_OUT && grabber.intakeState == Grabber.IntakeState.OUT) {
+//            led.setState(LED.SystemState.UNJAM)
+//        }
+//    }
+//
+//    private fun handleBlink() {
+//        if (isAlignedVision()) {
+//            led.setState(LED.SystemState.ALIGNING)
+//        }
+//    }
 
     override fun outputToSmartDashboard() { }
 
