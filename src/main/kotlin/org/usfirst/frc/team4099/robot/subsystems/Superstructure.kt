@@ -1,5 +1,7 @@
 package src.main.kotlin.org.usfirst.frc.team4099.robot.subsystems
 
+import org.usfirst.frc.team4099.lib.drive.DriveSignal
+import org.usfirst.frc.team4099.robot.loops.Loop
 import org.usfirst.frc.team4099.robot.subsystems.*
 
 /**
@@ -15,7 +17,7 @@ class Superstructure : Subsystem {
     val mInstance = Superstructure()
 
     // Put Subsystem instantiation here:
-    private val intake = Intake.instance
+    //private val intake = Intake.instance
     private val drive = Drive.instance
     private val elevator = Elevator.instance
     private val vision = Vision.instance
@@ -45,24 +47,30 @@ class Superstructure : Subsystem {
         }
         return false
     }
+    val loop: Loop = object : Loop {
+        override fun onStart() {
+        }
+        override fun onStop(){
 
-    fun onLoop() {
-        synchronized(this@Superstructure) {
-            if (elevator.isHatchPanel) {
-                led.setStateColors("WHITE", LED.SystemState.SOLID)
-            }
-            else {
-                led.setStateColors("ORANGE", LED.SystemState.SOLID)
-            }
+        }
 
-            when(systemState) {
-                SystemState.IDLE -> handleIdle()
-                SystemState.ALIGNING_VISION -> handleVision()
+        override fun onLoop() {
+            synchronized(this@Superstructure) {
+                if (elevator.isHatchPanel) {
+                    led.setStateColors("WHITE", LED.SystemState.SOLID)
+                } else {
+                    led.setStateColors("ORANGE", LED.SystemState.SOLID)
+                }
+
+                when (systemState) {
+                    SystemState.IDLE -> handleIdle()
+                    SystemState.ALIGNING_VISION -> handleVision()
 //                SystemState.INTAKE_UP -> handleElevatorUp()
 //                SystemState.CLIMBING -> handleClimb()
 //                SystemState.INTAKE_CARGO -> handleCargoIntake()
 //                SystemState.UNJAMMING -> handleUnjam()
 //                SystemState.BLINK -> handleBlink()
+                }
             }
         }
     }
@@ -117,4 +125,8 @@ class Superstructure : Subsystem {
     override fun stop() { }
 
     override fun zeroSensors() { }
+    companion object {
+        val instance = Superstructure()
+    }
+
 }
