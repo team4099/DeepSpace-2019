@@ -41,6 +41,7 @@ class Robot : TimedRobot() {
             enabledLooper.register(BrownoutDefender.instance)
 
             disabledLooper.register(VoltageEstimator.instance)
+
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("robotInit", t)
             throw t

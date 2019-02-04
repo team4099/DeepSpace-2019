@@ -14,14 +14,14 @@ import org.usfirst.frc.team4099.robot.subsystems.*
  */
 
 class Superstructure : Subsystem {
-    val mInstance = Superstructure()
+  //  val mInstance = Superstructure()
 
     // Put Subsystem instantiation here:
     //private val intake = Intake.instance
     private val drive = Drive.instance
     private val elevator = Elevator.instance
     private val vision = Vision.instance
-    private val led = LED.instance
+    //private val led = LED.instance
 
     enum class SystemState {
         IDLE,
@@ -38,7 +38,7 @@ class Superstructure : Subsystem {
         IDLE, CLIMB, UNJAM, INTAKE_CARGO, ALIGN
     }
 
-    private var systemState = SystemState.IDLE
+    private var systemState = SystemState.ALIGNING_VISION
     private val wantedState = WantedState.IDLE
 
     private fun isAlignedVision(): Boolean {
@@ -57,9 +57,9 @@ class Superstructure : Subsystem {
         override fun onLoop() {
             synchronized(this@Superstructure) {
                 if (elevator.isHatchPanel) {
-                    led.setStateColors("WHITE", LED.SystemState.SOLID)
+                    //led.setStateColors("WHITE", LED.SystemState.SOLID)
                 } else {
-                    led.setStateColors("ORANGE", LED.SystemState.SOLID)
+                    //led.setStateColors("ORANGE", LED.SystemState.SOLID)
                 }
 
                 when (systemState) {
@@ -79,13 +79,13 @@ class Superstructure : Subsystem {
         // TODO
         vision.visionState = Vision.VisionState.INACTIVE
         elevator.elevatorState = Elevator.ElevatorState.PORTLOW
-        led.setState(LED.SystemState.OFF)
+        //led.setState(LED.SystemState.OFF)
     }
 
     private fun handleVision() {
         vision.visionState = Vision.VisionState.AIMING
         drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
-        led.setStateColors("PURPLE", LED.SystemState.SOLID)
+        //led.setStateColors("PURPLE", LED.SystemState.SOLID)
     }
 
 //    private fun handleElevatorUp() {
