@@ -3,6 +3,7 @@ package org.usfirst.frc.team4099.robot
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.TimedRobot
+import edu.wpi.first.wpilibj.CameraServer
 import edu.wpi.first.networktables.NetworkTable
 import edu.wpi.first.networktables.NetworkTableEntry
 import edu.wpi.first.networktables.NetworkTableInstance
@@ -39,6 +40,7 @@ class Robot : TimedRobot() {
 
     init {
         CrashTracker.logRobotConstruction()
+        CameraServer.getInstance().startAutomaticCapture()
     }
 
 
