@@ -40,7 +40,7 @@ class Vision private constructor(): Subsystem {
 
         override fun onLoop() {
             synchronized(this@Vision) {
-                println("vision loop")
+//                println("vision loop")
                 distance = (Math.tan(ty + Constants.Vision.CAMERA_ANGLE) / Constants.Vision.CAMERA_TO_TARGET_HEIGHT).toInt()
                 tx = table.getEntry("tx").getDouble(0.0)
                 tv = table.getEntry("tv").getDouble(0.0)

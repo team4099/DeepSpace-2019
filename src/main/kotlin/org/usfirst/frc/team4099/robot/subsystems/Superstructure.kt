@@ -85,7 +85,7 @@ class Superstructure : Subsystem {
 
     private fun handleVision() {
         vision.visionState = Vision.VisionState.AIMING
-        println("vision handled")
+//        println("vision handled")
         drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
         //led.setStateColors("PURPLE", LED.SystemState.SOLID)
     }

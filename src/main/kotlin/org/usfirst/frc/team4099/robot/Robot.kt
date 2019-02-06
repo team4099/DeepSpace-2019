@@ -75,7 +75,6 @@ class Robot : TimedRobot() {
             enabledLooper.register(drive.loop)
             enabledLooper.register(vision.loop)
             enabledLooper.start()
-            println("loops registered cunt")
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopInit", t)
             throw t
