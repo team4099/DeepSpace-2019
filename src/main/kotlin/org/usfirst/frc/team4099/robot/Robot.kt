@@ -12,7 +12,7 @@ import org.usfirst.frc.team4099.robot.subsystems.*
 import src.main.kotlin.org.usfirst.frc.team4099.robot.subsystems.Superstructure
 
 class Robot : TimedRobot() {
-
+    private val vision = Vision.instance
     private val drive = Drive.instance
     //private val intake = Intake.instance
     private val controlboard = ControlBoard.instance
@@ -32,11 +32,11 @@ class Robot : TimedRobot() {
             CrashTracker.logRobotInit()
 
             DashboardConfigurator.initDashboard()
-            enabledLooper.register(drive.loop)
+//            enabledLooper.register(drive.loop)
 
       //      enabledLooper.register(intake.loop)
             //enabledLooper.register(intake.loop)
-            enabledLooper.register(superstructure.loop)
+//            enabledLooper.register(superstructure.loop)
 
             enabledLooper.register(BrownoutDefender.instance)
 
@@ -71,7 +71,11 @@ class Robot : TimedRobot() {
 
     override fun teleopInit() {
         try {
-
+            enabledLooper.register(superstructure.loop)
+            enabledLooper.register(drive.loop)
+            enabledLooper.register(vision.loop)
+            enabledLooper.start()
+            println("loops registered cunt")
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopInit", t)
             throw t

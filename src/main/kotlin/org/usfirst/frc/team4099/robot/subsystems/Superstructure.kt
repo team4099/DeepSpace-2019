@@ -49,6 +49,7 @@ class Superstructure : Subsystem {
     }
     val loop: Loop = object : Loop {
         override fun onStart() {
+            systemState = SystemState.ALIGNING_VISION
         }
         override fun onStop(){
 
@@ -84,6 +85,7 @@ class Superstructure : Subsystem {
 
     private fun handleVision() {
         vision.visionState = Vision.VisionState.AIMING
+        println("vision handled")
         drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
         //led.setStateColors("PURPLE", LED.SystemState.SOLID)
     }

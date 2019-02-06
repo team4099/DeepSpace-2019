@@ -67,8 +67,8 @@ class Constants {
     }
 
     object Vision {
-        val Kp = -0.1
-        val minCommand = 0.05
+        val Kp = -0.02
+        val minCommand = 0.10
         val CAMERA_TO_TARGET_HEIGHT = 20;
         val CAMERA_ANGLE = 0;
     }
