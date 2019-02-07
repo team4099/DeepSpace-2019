@@ -2,7 +2,7 @@ package org.usfirst.frc.team4099.robot
 
 class Constants {
     object Gains {
-        val LEFT_LOW_KP = 0.0000
+        val LEFT_LOW_KP = .1 * 1500 / 70
         val LEFT_LOW_KI = 0.0000
         val LEFT_LOW_KD = 0.0000
         val LEFT_LOW_KF = 1023.0 / 2220.0
@@ -13,7 +13,7 @@ class Constants {
         val LEFT_HIGH_KD = 0.0000
         val LEFT_HIGH_KF = 1023.0 / 4420.0
 
-        val RIGHT_LOW_KP = 0.0000
+        val RIGHT_LOW_KP = .1 * 1500 / 70
         val RIGHT_LOW_KI = 0.0000
         val RIGHT_LOW_KD = 0.0000
         val RIGHT_LOW_KF = 1023.0 / 2220.0
@@ -25,12 +25,12 @@ class Constants {
         val RIGHT_HIGH_KF = 1023.0 / 4420.0
     }
     object Drive {
-        val LEFT_MASTER_ID = 4
+        val LEFT_MASTER_ID = 9
         val LEFT_SLAVE_1_ID = 5
-        val LEFT_SLAVE_2_ID = 6
+        val LEFT_SLAVE_2_ID = 10
         val RIGHT_MASTER_ID = 8
-        val RIGHT_SLAVE_1_ID = 9
-        val RIGHT_SLAVE_2_ID = 10
+        val RIGHT_SLAVE_1_ID = 0
+        val RIGHT_SLAVE_2_ID = 5
 
         val HIGH_GEAR_MAX_SETPOINT = 17.0  //17 fps
 
@@ -69,7 +69,7 @@ class Constants {
         val SHIFTER_MODULE = 0
     }
     object Loopers {
-        val LOOPER_DT = 0.005 // 200 Hz
+        val LOOPER_DT = 0.02 // 50 Hz
     }
 
     object Dashboard {

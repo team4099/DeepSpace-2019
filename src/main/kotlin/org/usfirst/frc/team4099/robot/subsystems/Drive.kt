@@ -98,12 +98,12 @@ class Drive private constructor() : Subsystem {
         rightMasterSRX.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_10Ms, 0)
         rightMasterSRX.configVelocityMeasurementWindow(32, 0)
 
-        leftMasterSRX.inverted = true
-        leftSlave1SRX.inverted = true
-        leftSlave2SPX.inverted = true
-        rightMasterSRX.inverted = false
-        rightSlave1SRX.inverted = false
-        rightSlave2SPX.inverted = false
+        leftMasterSRX.inverted = false
+        leftSlave1SRX.inverted = false
+        leftSlave2SPX.inverted = false
+        rightMasterSRX.inverted = true
+        rightSlave1SRX.inverted = true
+        rightSlave2SPX.inverted = true
 
         highGear = false
 
@@ -251,8 +251,8 @@ class Drive private constructor() : Subsystem {
         if (usesTalonVelocityControl(currentState)) {
             leftMasterSRX.set(ControlMode.Velocity, leftInchesPerSec)
             rightMasterSRX.set(ControlMode.Velocity, rightInchesPerSec)
-            println("left err: ${leftMasterSRX.getClosedLoopError(0)} trg: $leftInchesPerSec actual: ${leftMasterSRX.getSelectedSensorVelocity(0)}")
-            println("right err: ${rightMasterSRX.getClosedLoopError(0)} trg: $rightInchesPerSec actual: ${rightMasterSRX.getSelectedSensorVelocity(0)}")
+           // println("left err: ${leftMasterSRX.getClosedLoopError(0)} trg: $leftInchesPerSec actual: ${leftMasterSRX.getSelectedSensorVelocity(0)}")
+            //println("right err: ${rightMasterSRX.getClosedLoopError(0)} trg: $rightInchesPerSec actual: ${rightMasterSRX.getSelectedSensorVelocity(0)}")
         }
         else {
             configureTalonsForVelocityControl()
@@ -328,8 +328,8 @@ class Drive private constructor() : Subsystem {
     fun updatePathFollowing(){
         //note *12 is to convert ft to inches
         if (segment < trajLength) {
-            var leftTurn: Double = path.getLeftVelocityIndex(segment) * 12
-            var rightTurn: Double = path.getRightVelocityIndex(segment) * 12
+            var leftTurn: Double = path.getLeftVelocityIndex(segment) * 12 * 10
+            var rightTurn: Double = path.getRightVelocityIndex(segment) * 12 * 10
             val gyroHeading: Float = ahrs.yaw
             val desiredHeading: Double = radiansToDegrees(path.getHeadingIndex(segment))
             val angleDifference: Double = boundHalfDegrees(desiredHeading - gyroHeading)
@@ -344,16 +344,17 @@ class Drive private constructor() : Subsystem {
             val leftVelocityAdjustment = Constants.Gains.LEFT_LOW_KP * leftErrorDistance + Constants.Gains.LEFT_LOW_KD * ((leftErrorDistance - lastLeftError)/path.getDeltaTime())
             val rightVelocityAdjustment = Constants.Gains.RIGHT_LOW_KP * rightErrorDistance + Constants.Gains.RIGHT_LOW_KD * ((rightErrorDistance - lastRightError)/path.getDeltaTime())
 
-            leftTurn = leftTurn + leftVelocityAdjustment
-            rightTurn = rightTurn + rightVelocityAdjustment
+           // leftTurn = leftTurn + leftVelocityAdjustment
+           // rightTurn = rightTurn + rightVelocityAdjustment
 
             lastLeftError = leftErrorDistance
 
 
-            leftTurn = leftTurn + turn
-            rightTurn = rightTurn - turn
+            //leftTurn = leftTurn + turn
+            //rightTurn = rightTurn - turn
 
             setVelocitySetpoint(leftTurn, rightTurn)
+            println(" " +segment  + " " +leftTurn+" " + rightTurn)
 
             segment++
         }

@@ -28,6 +28,7 @@ class Path(path: FieldPaths) {
         fillVelocities(leftFile, rightFile)
         fillDistances(leftFile, rightFile)
         fillHeadings(leftFile)
+        println("********"+ leftVelocities.size)
 
 
 
