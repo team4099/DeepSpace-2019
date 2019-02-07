@@ -2,8 +2,6 @@ package org.usfirst.frc.team4099.auto.modes
 
 import org.usfirst.frc.team4099.auto.AutoModeEndedException
 import org.usfirst.frc.team4099.auto.actions.Action
-
-
 abstract class AutoModeBase {
     protected var m_update_rate = 1.0 / 50.0
     var isActive = false

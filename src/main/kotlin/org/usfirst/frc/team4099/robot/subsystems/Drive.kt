@@ -1,5 +1,6 @@
 package org.usfirst.frc.team4099.robot.subsystems
 
+import java.util.*
 
 import com.ctre.phoenix.motorcontrol.*
 import com.ctre.phoenix.motorcontrol.can.TalonSRX
@@ -141,7 +142,7 @@ class Drive private constructor() : Subsystem {
      * @param right
      */
     @Synchronized
-    private fun setLeftRightPower(left: Double, right: Double) {
+    public fun setLeftRightPower(left: Double, right: Double) {
         //        println("power: $left, $right")
         leftMasterSRX.set(ControlMode.PercentOutput, left)
         rightMasterSRX.set(ControlMode.PercentOutput, right)

@@ -23,6 +23,16 @@ class Constants {
         val RIGHT_HIGH_KI = 0.0000
         val RIGHT_HIGH_KD = 0.0000
         val RIGHT_HIGH_KF = 1023.0 / 4420.0
+
+        val ELEVATOR_UP_KP = 0.6
+        val ELEVATOR_UP_KI = 0.0008
+        val ELEVATOR_UP_KD = 55.000
+        val ELEVATOR_UP_KF = 0.5700
+
+        val ELEVATOR_DOWN_KP = 1.00
+        val ELEVATOR_DOWN_KI = 0.002
+        val ELEVATOR_DOWN_KD = 60.0
+        val ELEVATOR_DOWN_KF = 0.78
     }
     object Drive {
         val LEFT_MASTER_ID = 9
@@ -92,6 +102,44 @@ class Constants {
     object Joysticks {
         val DRIVER_PORT = 0
         val SHOTGUN_PORT = 1
+    }
+
+
+
+    object Grabber {
+        val TALON_ID = 0
+        val SHIFTER_FORWARD_ID = 1
+        val SHIFTER_REVERSE_ID = 2
+    }
+
+    object Climber {
+        val CLIMBER_F1_FORWARD_ID = 4
+        val CLIMBER_F1_REVERSE_ID = 5
+
+        val CLIMBER_B1_FORWARD_ID = 6
+        val CLIMBER_B1_REVERSE_ID = 7
+    }
+
+
+    object Elevator {
+        val ELEVATOR_TALON_ID = 0
+        val MAX_SPEED = 2400
+        val MIN_TRIGGER = 0.1
+    }
+
+
+    object Intake {
+        val INTAKE_TALON_ID = 0
+        val SHIFTER_FORWARD_ID = 2
+        val SHIFTER_REVERSE_ID = 3
+    }
+
+
+    object Vision {
+        val Kp = -0.1
+        val minCommand = 0.05
+        val CAMERA_TO_TARGET_HEIGHT = 20;
+        val CAMERA_ANGLE = 0;
     }
 
 
