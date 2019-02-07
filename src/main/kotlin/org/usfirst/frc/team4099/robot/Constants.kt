@@ -53,12 +53,12 @@ class Constants {
     }
 
     object Drive {
-        val LEFT_MASTER_ID = 4
+        val LEFT_MASTER_ID = 9
         val LEFT_SLAVE_1_ID = 5
-        val LEFT_SLAVE_2_ID = 6
+        val LEFT_SLAVE_2_ID = 10
         val RIGHT_MASTER_ID = 8
-        val RIGHT_SLAVE_1_ID = 9
-        val RIGHT_SLAVE_2_ID = 10
+        val RIGHT_SLAVE_1_ID = 0
+        val RIGHT_SLAVE_2_ID = 5
 
         val HIGH_GEAR_MAX_SETPOINT = 17.0  //17 fps
 
@@ -68,7 +68,7 @@ class Constants {
 
     object Vision {
         val Kp = -0.02
-        val minCommand = 0.10
+        val minCommand = 0.05
         val CAMERA_TO_TARGET_HEIGHT = 20;
         val CAMERA_ANGLE = 0;
     }

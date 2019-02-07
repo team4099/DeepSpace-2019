@@ -42,25 +42,28 @@ class Vision private constructor(): Subsystem {
             synchronized(this@Vision) {
 //                println("vision loop")
                 distance = (Math.tan(ty + Constants.Vision.CAMERA_ANGLE) / Constants.Vision.CAMERA_TO_TARGET_HEIGHT).toInt()
-                tx = table.getEntry("tx").getDouble(0.0)
+                tx = table.getEntry("tx").getDouble(0.0
+                )
                 tv = table.getEntry("tv").getDouble(0.0)
                 ty = table.getEntry("ty").getDouble(0.0)
                 when (visionState) {
                     VisionState.AIMING -> {
-                        if (tx > 1.0) {
-                            steeringAdjust = Constants.Vision.Kp * tx - Constants.Vision.minCommand
-                        } else if (tx < 1.0) {
-                            steeringAdjust = Constants.Vision.Kp * tx + Constants.Vision.minCommand
+                        if (tv == 0.0) {
+
+                        } else {
+                            if (tx > 1.0) {
+                                // right
+                                steeringAdjust = Constants.Vision.Kp * tx - Constants.Vision.minCommand
+                            } else if (tx < 1.0) {
+                                // left
+                                steeringAdjust = Constants.Vision.Kp * tx + Constants.Vision.minCommand }
                         }
+
                         steeringAdjust = -steeringAdjust
 
                     }
                     VisionState.SEEKING -> {
-                        if (tv == 0.0) {
-                            steeringAdjust = 0.3
-                        } else {
-                            steeringAdjust = Constants.Vision.Kp * tx
-                        }
+
                     }
 
                     VisionState.INACTIVE -> steeringAdjust = 0.0
