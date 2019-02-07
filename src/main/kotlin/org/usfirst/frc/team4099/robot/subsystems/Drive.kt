@@ -25,7 +25,7 @@ class Drive private constructor() : Subsystem {
     private val rightSlave1SRX: TalonSRX = CANMotorControllerFactory.createPermanentSlaveTalon(Constants.Drive.RIGHT_SLAVE_1_ID, Constants.Drive.RIGHT_MASTER_ID)
     private val rightSlave2SPX: VictorSPX = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Drive.RIGHT_SLAVE_2_ID, rightMasterSRX)
 
-    private val pneumaticShifter: DoubleSolenoid = DoubleSolenoid(Constants.Drive.SHIFTER_FORWARD_ID, Constants.Drive.SHIFTER_REVERSE_ID)
+  //  private val pneumaticShifter: DoubleSolenoid = DoubleSolenoid(Constants.Drive.SHIFTER_FORWARD_ID, Constants.Drive.SHIFTER_REVERSE_ID)
 
     private val ahrs: AHRS
 
@@ -43,7 +43,7 @@ class Drive private constructor() : Subsystem {
 
     var highGear: Boolean = true
         set(wantsHighGear) {
-            pneumaticShifter.set(if (wantsHighGear) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
+            //pneumaticShifter.set(if (wantsHighGear) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
             field = wantsHighGear
         }
 
@@ -126,7 +126,7 @@ class Drive private constructor() : Subsystem {
      */
     @Synchronized
     public fun setLeftRightPower(left: Double, right: Double) {
-        //        println("power: $left, $right")
+//                println("power: $left, $right")
         leftMasterSRX.set(ControlMode.PercentOutput, left)
         rightMasterSRX.set(ControlMode.PercentOutput, right)
         //        println("left out: $left, left speed: ${leftMasterSRX.getSelectedSensorVelocity(0)}")

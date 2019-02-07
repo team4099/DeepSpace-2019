@@ -3,6 +3,10 @@ package org.usfirst.frc.team4099.robot
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.TimedRobot
+import edu.wpi.first.wpilibj.CameraServer
+import edu.wpi.first.wpilibj.TimedRobot
+import org.usfirst.frc.team4099.DashboardConfigurator
+//import org.usfirst.frc.team4099.auto.AutoModeExecuter
 import org.usfirst.frc.team4099.lib.util.CrashTracker
 
 import org.usfirst.frc.team4099.robot.drive.CheesyDriveHelper
@@ -14,8 +18,10 @@ import org.usfirst.frc.team4099.robot.loops.Looper
 import org.usfirst.frc.team4099.robot.loops.VoltageEstimator
 
 import org.usfirst.frc.team4099.robot.subsystems.*
+import src.main.kotlin.org.usfirst.frc.team4099.robot.subsystems.Superstructure
 
 class Robot : TimedRobot() {
+    private val vision = Vision.instance
 
 
     //private val climber = Climber.instance
@@ -25,6 +31,8 @@ class Robot : TimedRobot() {
     private val controlBoard = ControlBoard.instance
     private val disabledLooper = Looper("disabledLooper")
     private val enabledLooper = Looper("enabledLooper")
+   // private val elevator = Elevator.instance
+    private val superstructure = Superstructure.instance
     private val cheesyDriveHelper = CheesyDriveHelper()
   
 
@@ -43,8 +51,12 @@ class Robot : TimedRobot() {
         try {
             CrashTracker.logRobotInit()
 
-//            DashboardConfigurator.initDashboard()
+            DashboardConfigurator.initDashboard()
+//            enabledLooper.register(drive.loop)
 
+      //      enabledLooper.register(intake.loop)
+            //enabledLooper.register(intake.loop)
+//            enabledLooper.register(superstructure.loop)
 
            // enabledLooper.register(grabber.loop)
 
@@ -55,6 +67,7 @@ class Robot : TimedRobot() {
             enabledLooper.register(BrownoutDefender.instance)
 
             disabledLooper.register(VoltageEstimator.instance)
+
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("robotInit", t)
             throw t
@@ -84,9 +97,10 @@ class Robot : TimedRobot() {
 
     override fun teleopInit() {
         try {
-
-
-
+            enabledLooper.register(superstructure.loop)
+            enabledLooper.register(drive.loop)
+            enabledLooper.register(vision.loop)
+            enabledLooper.start()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopInit", t)
             throw t
