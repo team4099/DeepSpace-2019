@@ -35,7 +35,7 @@ class Constants {
     }
 
     object Gains {
-        val LEFT_LOW_KP = 0.0000
+        val LEFT_LOW_KP = .1 * 1500 / 70
         val LEFT_LOW_KI = 0.0000
         val LEFT_LOW_KD = 0.0000
         val LEFT_LOW_KF = 1023.0 / 2220.0
@@ -71,6 +71,8 @@ class Constants {
 
     object Elevator {
         val ELEVATOR_TALON_ID = 0
+        val MAX_SPEED = 2400
+        val MIN_TRIGGER = 0.1
     }
 
 
@@ -94,7 +96,7 @@ class Constants {
     }
 
     object Vision {
-        val Kp = -0.1
+        val Kp = -0.02
         val minCommand = 0.05
         val CAMERA_TO_TARGET_HEIGHT = 20;
         val CAMERA_ANGLE = 0;

@@ -187,7 +187,6 @@ class Elevator private constructor(): Subsystem {
                 elevatorPower = -talon.motorOutputPercent
 
                 println("elevatorPos: $observedElevatorPosition")
-
                 when (elevatorState){
                     ElevatorState.OPEN_LOOP -> {
                         return

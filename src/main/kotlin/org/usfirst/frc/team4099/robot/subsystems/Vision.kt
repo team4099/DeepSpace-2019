@@ -17,9 +17,7 @@ class Vision private constructor(): Subsystem {
     var ty = table.getEntry("ty").getDouble(0.0)
 
     var visionState = VisionState.INACTIVE
-        set(value) {
-            visionState = value
-        }
+
 
     enum class VisionState {
         AIMING, INACTIVE, SEEKING
@@ -30,10 +28,10 @@ class Vision private constructor(): Subsystem {
         SmartDashboard.putNumber("LimelightTarget: ", tv)
         SmartDashboard.putNumber("LimelightY: ", ty)
     }
-
-    @Synchronized override fun stop() {
-        visionState = VisionState.INACTIVE
-    }
+//
+//    @Synchronized override fun stop() {
+//        visionState = VisionState.INACTIVE
+//    }
 
     val loop: Loop = object : Loop {
         override fun onStart() {
@@ -42,22 +40,30 @@ class Vision private constructor(): Subsystem {
 
         override fun onLoop() {
             synchronized(this@Vision) {
+//                println("vision loop")
                 distance = (Math.tan(ty + Constants.Vision.CAMERA_ANGLE) / Constants.Vision.CAMERA_TO_TARGET_HEIGHT).toInt()
+                tx = table.getEntry("tx").getDouble(0.0
+                )
+                tv = table.getEntry("tv").getDouble(0.0)
+                ty = table.getEntry("ty").getDouble(0.0)
                 when (visionState) {
                     VisionState.AIMING -> {
-                        if (tx > 0.0) {
-                            steeringAdjust = Constants.Vision.Kp * tx - Constants.Vision.minCommand
-                        } else if (tx < 0.0) {
-                            steeringAdjust = Constants.Vision.Kp * tx + Constants.Vision.minCommand
+                        if (tv == 0.0) {
+
+                        } else {
+                            if (tx > 1.0) {
+                                // right
+                                steeringAdjust = Constants.Vision.Kp * tx - Constants.Vision.minCommand
+                            } else if (tx < 1.0) {
+                                // left
+                                steeringAdjust = Constants.Vision.Kp * tx + Constants.Vision.minCommand }
                         }
+
+                        steeringAdjust = -steeringAdjust
 
                     }
                     VisionState.SEEKING -> {
-                        if (tv == 0.0) {
-                            steeringAdjust = 0.3
-                        } else {
-                            steeringAdjust = Constants.Vision.Kp * tx
-                        }
+
                     }
 
                     VisionState.INACTIVE -> steeringAdjust = 0.0
@@ -65,13 +71,13 @@ class Vision private constructor(): Subsystem {
                 }
             }
         }
-        override fun onStop() = stop()
+        override fun onStop() {}
 
     }
 
     companion object {
         val instance = Vision()
     }
-
+    override fun stop() {}
     override fun zeroSensors() { }
 }
