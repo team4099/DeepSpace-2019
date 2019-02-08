@@ -27,11 +27,11 @@ class ControlBoard private constructor() {
         get() = operator.dPadUp
 
 
-/*    val reverseIntakeSlow: Boolean
+    val reverseIntakeSlow: Boolean
         get() = operator.bButton
 
     val reverseIntakeFast: Boolean
-        get() = operator.yButton*/
+        get() = operator.yButton
 
     val intakePower : Double
         get() = operator.leftYAxis
@@ -65,8 +65,6 @@ class ControlBoard private constructor() {
     val elevatorPower: Double
         get() = (operator.rightTriggerAxis - operator.leftTriggerAxis) * 1
 
-    val toggleWrist : Boolean
-        get() = operator.leftJoystickButton
 //
 //    val moveUp: Boolean
 //        get() = operator.dPadUp

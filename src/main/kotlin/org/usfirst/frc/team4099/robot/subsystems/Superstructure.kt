@@ -21,8 +21,8 @@ class Superstructure : Subsystem {
     private val drive = Drive.instance
     private val elevator = Elevator.instance
     private val vision = Vision.instance
-    private val led = LED.instance
-    private val grabber = Grabber.instance
+    //private val led = LED.instance
+    //private val grabber = Grabber.instance
     private val climber = Climber.instance
 
     enum class SystemState {
