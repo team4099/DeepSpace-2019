@@ -60,15 +60,15 @@ class Elevator private constructor(): Subsystem {
         talon.configReverseSoftLimitThreshold(-ElevatorConversion.inchesToPulses(70.0).toInt(), 0)
         talon.overrideSoftLimitsEnable(true)
 
-        SmartDashboard.putNumber("elevator/pidPDown", Constants.Gains.ELEVATOR_DOWN_KP)
-        SmartDashboard.putNumber("elevator/pidIDown", Constants.Gains.ELEVATOR_DOWN_KI)
-        SmartDashboard.putNumber("elevator/pidDDown", Constants.Gains.ELEVATOR_DOWN_KD)
-        SmartDashboard.putNumber("elevator/pidFDown", Constants.Gains.ELEVATOR_DOWN_KF)
+        //SmartDashboard.putNumber("elevator/pidPDown", Constants.Gains.ELEVATOR_DOWN_KP)
+        //SmartDashboard.putNumber("elevator/pidIDown", Constants.Gains.ELEVATOR_DOWN_KI)
+        //SmartDashboard.putNumber("elevator/pidDDown", Constants.Gains.ELEVATOR_DOWN_KD)
+        //SmartDashboard.putNumber("elevator/pidFDown", Constants.Gains.ELEVATOR_DOWN_KF)
 
-        SmartDashboard.putNumber("elevator/pidPUP", Constants.Gains.ELEVATOR_UP_KP)
-        SmartDashboard.putNumber("elevator/pidIUP", Constants.Gains.ELEVATOR_UP_KI)
-        SmartDashboard.putNumber("elevator/pidDUP", Constants.Gains.ELEVATOR_UP_KD)
-        SmartDashboard.putNumber("elevator/pidFUP", Constants.Gains.ELEVATOR_UP_KF)
+        //SmartDashboard.putNumber("elevator/pidPUP", Constants.Gains.ELEVATOR_UP_KP)
+        //SmartDashboard.putNumber("elevator/pidIUP", Constants.Gains.ELEVATOR_UP_KI)
+        //SmartDashboard.putNumber("elevator/pidDUP", Constants.Gains.ELEVATOR_UP_KD)
+        //SmartDashboard.putNumber("elevator/pidFUP", Constants.Gains.ELEVATOR_UP_KF)
     }
 
     fun setOpenLoop(power: Double) {
@@ -96,10 +96,10 @@ class Elevator private constructor(): Subsystem {
 
 
     override fun outputToSmartDashboard() {
-        SmartDashboard.putNumber("elevator/elevatorVoltage", talon.motorOutputVoltage)
-        SmartDashboard.putNumber("elevator/elevatorVelocity", talon.sensorCollection.quadratureVelocity.toDouble())
-        SmartDashboard.putNumber("elevator/elevatorHeight", observedElevatorPosition)
-        SmartDashboard.putNumber("elevator/closedLoopError", talon.getClosedLoopError(0).toDouble())
+        //SmartDashboard.putNumber("elevator/elevatorVoltage", talon.motorOutputVoltage)
+        //SmartDashboard.putNumber("elevator/elevatorVelocity", talon.sensorCollection.quadratureVelocity.toDouble())
+        //SmartDashboard.putNumber("elevator/elevatorHeight", observedElevatorPosition)
+        //SmartDashboard.putNumber("elevator/closedLoopError", talon.getClosedLoopError(0).toDouble())
 
 
 //        talon.config_kP(1, SmartDashboard.getNumber("elevator/pidPDown", Constants.Gains.ELEVATOR_DOWN_KP), 0)

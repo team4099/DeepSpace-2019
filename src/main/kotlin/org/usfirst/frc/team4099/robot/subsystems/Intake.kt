@@ -25,7 +25,7 @@ class Intake private constructor() : Subsystem {
 
     var intakeState = IntakeState.IN
     private var intakePower = 0.0
-    var up = false
+    var pistonsOut = false
         set (wantsUp) {
             pneumaticShifter.set(if (wantsUp) DoubleSolenoid.Value.kReverse else DoubleSolenoid.Value.kForward)
             field = wantsUp
@@ -37,9 +37,9 @@ class Intake private constructor() : Subsystem {
     }
 
     override fun outputToSmartDashboard() {
-        SmartDashboard.putNumber("intake/intakePower", intakePower)
-        SmartDashboard.putBoolean("intake/isUp", up)
-        SmartDashboard.putNumber("intake/current", BrownoutDefender.instance.getCurrent(7))
+        //SmartDashboard.putNumber("intake/intakePower", intakePower)
+        //SmartDashboard.putBoolean("intake/isUp", up)
+        //SmartDashboard.putNumber("intake/current", BrownoutDefender.instance.getCurrent(7))
     }
 
     /**
@@ -64,7 +64,7 @@ class Intake private constructor() : Subsystem {
      */
     val loop: Loop = object : Loop {
         override fun onStart() {
-            up = false
+            pistonsOut = false
             intakeState = IntakeState.STOP
         }
 

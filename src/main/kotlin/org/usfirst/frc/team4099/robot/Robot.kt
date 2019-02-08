@@ -25,13 +25,15 @@ class Robot : TimedRobot() {
 
 
     //private val climber = Climber.instance
+
+    private val wrist = Wrist.instance
+    private val intake = Intake.instance
+
     private val elevator = Elevator.instance
     private val drive = Drive.instance
-    //private val grabber = Grabber.instance
     private val controlBoard = ControlBoard.instance
     private val disabledLooper = Looper("disabledLooper")
     private val enabledLooper = Looper("enabledLooper")
-   // private val elevator = Elevator.instance
     private val superstructure = Superstructure.instance
     private val cheesyDriveHelper = CheesyDriveHelper()
   
@@ -54,15 +56,12 @@ class Robot : TimedRobot() {
             DashboardConfigurator.initDashboard()
 //            enabledLooper.register(drive.loop)
 
-      //      enabledLooper.register(intake.loop)
-            //enabledLooper.register(intake.loop)
-//            enabledLooper.register(superstructure.loop)
+            enabledLooper.register(intake.loop)
 
-           // enabledLooper.register(grabber.loop)
 
-            //enabledLooper.register(intake.loop)
+            enabledLooper.register(wrist.loop)
 
-            enabledLooper.register(drive.loop)
+            //enabledLooper.register(drive.loop)
 
             enabledLooper.register(BrownoutDefender.instance)
 
@@ -132,6 +131,26 @@ class Robot : TimedRobot() {
 
     override fun teleopPeriodic() {
         try {
+
+
+            if (!intake.pistonsOut && controlBoard.togglePistons) {
+                intake.pistonsOut = true
+                println("Pushing the hatch-ey boi")
+            } else {
+                intake.pistonsOut = false
+            }
+
+            intake.intakeState = when {
+                controlBoard.reverseIntakeFast -> Intake.IntakeState.FAST_OUT
+                controlBoard.reverseIntakeSlow -> Intake.IntakeState.SLOW_OUT
+                controlBoard.runIntake -> Intake.IntakeState.IN
+                intake.intakeState != Intake.IntakeState.SLOW -> Intake.IntakeState.STOP
+                else -> intake.intakeState
+            }
+
+            if(controlBoard.toggleWrist){
+                wrist.setWristMode(if(wrist.wristState == Wrist.WristState.VERTICAL) Wrist.WristState.HORIZONTAL else Wrist.WristState.VERTICAL)
+            }
 
 //            val wantedVelocity = controlBoard.elevatorPower * Constants.Elevator.MAX_SPEED
 //            if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER) {
@@ -240,11 +259,11 @@ class Robot : TimedRobot() {
     }
 
     private fun startLiveWindowMode() {
-        drive.startLiveWindowMode()
+        //drive.startLiveWindowMode()
     }
 
     private fun updateLiveWindowTables() {
-        drive.updateLiveWindowTables()
+        //drive.updateLiveWindowTables()
     }
 
     private fun updateDashboardFeedback() {
