@@ -42,6 +42,7 @@ class Intake private constructor() : Subsystem {
         //SmartDashboard.putNumber("intake/current", BrownoutDefender.instance.getCurrent(7))
     }
 
+
     /**
      * stops intake
      */

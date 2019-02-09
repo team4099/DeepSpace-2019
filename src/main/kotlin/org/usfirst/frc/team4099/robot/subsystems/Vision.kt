@@ -42,8 +42,7 @@ class Vision private constructor(): Subsystem {
             synchronized(this@Vision) {
 //                println("vision loop")
                 distance = (Math.tan(ty + Constants.Vision.CAMERA_ANGLE) / Constants.Vision.CAMERA_TO_TARGET_HEIGHT).toInt()
-                tx = table.getEntry("tx").getDouble(0.0
-                )
+                tx = table.getEntry("tx").getDouble(0.0)
                 tv = table.getEntry("tv").getDouble(0.0)
                 ty = table.getEntry("ty").getDouble(0.0)
                 when (visionState) {
@@ -59,7 +58,7 @@ class Vision private constructor(): Subsystem {
                                 steeringAdjust = Constants.Vision.Kp * tx + Constants.Vision.minCommand }
                         }
 
-                        steeringAdjust = -steeringAdjust
+//                        steeringAdjust = -steeringAdjust
 
                     }
                     VisionState.SEEKING -> {
@@ -73,6 +72,10 @@ class Vision private constructor(): Subsystem {
         }
         override fun onStop() {}
 
+    }
+
+    fun setState (state: VisionState) {
+        visionState = state
     }
 
     companion object {

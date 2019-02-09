@@ -136,20 +136,20 @@ class Robot : TimedRobot() {
         try {
 
 
-            if (!intake.pistonsOut && controlBoard.togglePistons) {
-                intake.pistonsOut = true
-                println("Pushing the hatch-ey boi")
-            } else {
-                intake.pistonsOut = false
-            }
-
-            intake.intakeState = when {
-//                controlBoard.reverseIntakeFast -> Intake.IntakeState.FAST_OUT
+//            if (!intake.pistonsOut && controlBoard.togglePistons) {
+//                intake.pistonsOut = true
+//                println("Pushing the hatch-ey boi")
+//            } else {
+//                intake.pistonsOut = false
+//            }
+//
+//            intake.intakeState = when {
+//               controlBoard.reverseIntakeFast -> Intake.IntakeState.FAST_OUT
 //                controlBoard.reverseIntakeSlow -> Intake.IntakeState.SLOW_OUT
-                controlBoard.runIntake -> Intake.IntakeState.IN
-                intake.intakeState != Intake.IntakeState.SLOW -> Intake.IntakeState.STOP
-                else -> intake.intakeState
-            }
+//                controlBoard.runIntake -> Intake.IntakeState.IN
+//                intake.intakeState != Intake.IntakeState.SLOW -> Intake.IntakeState.STOP
+//                else -> intake.intakeState
+//            }
 
 //            if(controlBoard.toggleWrist){
 //                wrist.setWristMode(if(wrist.wristState == Wrist.WristState.VERTICAL) Wrist.WristState.HORIZONTAL else Wrist.WristState.VERTICAL)
@@ -230,8 +230,24 @@ class Robot : TimedRobot() {
 //                drive.highGear = true
 //                println("Shifting to high gear")
 //            }
-            drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
+            if (controlBoard.turnVisionOn) {
+                println("Activating vision")
+                println(vision.visionState)
+                vision.setState(Vision.VisionState.AIMING)
+                println(vision.visionState)
+            }
+            if (controlBoard.turnVisionOff) {
+                println("Deactivating vision")
+                println(vision.visionState)
+                vision.setState(Vision.VisionState.INACTIVE)
+                println(vision.visionState)
+            }
 
+            if (vision.visionState != Vision.VisionState.AIMING) {
+                drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
+            } else {
+                drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
+            }
             //outputAllToSmartDashboard()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)

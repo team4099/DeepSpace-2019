@@ -65,6 +65,7 @@ class ControlBoard private constructor() {
     val elevatorPower: Double
         get() = (operator.rightTriggerAxis - operator.leftTriggerAxis) * 1
 
+
 //
 //    val moveUp: Boolean
 //        get() = operator.dPadUp
@@ -79,6 +80,11 @@ class ControlBoard private constructor() {
     val toggleWrist : Boolean
         get() = operator.leftJoystickButton
 
+    val turnVisionOn: Boolean
+        get() = driver.bButton
+
+    val turnVisionOff: Boolean
+        get() = driver.aButton
 
     companion object {
         val instance = ControlBoard()

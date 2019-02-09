@@ -41,7 +41,7 @@ class Superstructure : Subsystem {
         IDLE, CLIMB, UNJAM, INTAKE_CARGO, ALIGN
     }
 
-    private var systemState = SystemState.ALIGNING_VISION
+    private var systemState = SystemState.IDLE
     private val wantedState = WantedState.IDLE
 
     private fun isAlignedVision(): Boolean {
@@ -52,7 +52,7 @@ class Superstructure : Subsystem {
     }
     val loop: Loop = object : Loop {
         override fun onStart() {
-            systemState = SystemState.ALIGNING_VISION
+            systemState = SystemState.IDLE
         }
         override fun onStop(){
 
@@ -81,15 +81,15 @@ class Superstructure : Subsystem {
 
     private fun handleIdle() {
         // TODO
-        vision.visionState = Vision.VisionState.INACTIVE
-        elevator.elevatorState = Elevator.ElevatorState.PORTLOW
+//        vision.visionState = Vision.VisionState.INACTIVE
+//        elevator.elevatorState = Elevator.ElevatorState.PORTLOW
         //led.setState(LED.SystemState.OFF)
     }
 
     private fun handleVision() {
-        vision.visionState = Vision.VisionState.AIMING
+//        vision.visionState = Vision.VisionState.AIMING
 //        println("vision handled")
-        drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
+
         //led.setStateColors("PURPLE", LED.SystemState.SOLID)
     }
 
@@ -124,6 +124,9 @@ class Superstructure : Subsystem {
 //        }
 //    }
 
+    fun setState (state: SystemState) {
+        systemState = state
+    }
 
     override fun outputToSmartDashboard() { }
 
