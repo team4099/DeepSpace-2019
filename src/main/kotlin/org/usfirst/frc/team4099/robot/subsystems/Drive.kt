@@ -19,11 +19,11 @@ import org.usfirst.frc.team4099.robot.loops.Loop
 class Drive private constructor() : Subsystem {
 
     private val leftMasterSRX: TalonSRX = CANMotorControllerFactory.createDefaultTalon(Constants.Drive.LEFT_MASTER_ID)
-    private val leftSlave1SRX: TalonSRX = CANMotorControllerFactory.createPermanentSlaveTalon(Constants.Drive.LEFT_SLAVE_1_ID, Constants.Drive.LEFT_MASTER_ID)
-    private val leftSlave2SPX: VictorSPX = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Drive.LEFT_SLAVE_2_ID, leftMasterSRX)
+    private val leftSlave1SPX: VictorSPX = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Drive.LEFT_SLAVE_1_ID, leftMasterSRX)
+    private val leftSlave2SRX: TalonSRX = CANMotorControllerFactory.createPermanentSlaveTalon(Constants.Drive.LEFT_SLAVE_2_ID, Constants.Drive.LEFT_MASTER_ID)
     private val rightMasterSRX: TalonSRX = CANMotorControllerFactory.createDefaultTalon(Constants.Drive.RIGHT_MASTER_ID)
-    private val rightSlave1SRX: TalonSRX = CANMotorControllerFactory.createPermanentSlaveTalon(Constants.Drive.RIGHT_SLAVE_1_ID, Constants.Drive.RIGHT_MASTER_ID)
-    private val rightSlave2SPX: VictorSPX = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Drive.RIGHT_SLAVE_2_ID, rightMasterSRX)
+    private val rightSlave1SPX: VictorSPX = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Drive.RIGHT_SLAVE_1_ID, rightMasterSRX)
+    private val rightSlave2SRX: TalonSRX = CANMotorControllerFactory.createPermanentSlaveTalon(Constants.Drive.RIGHT_SLAVE_2_ID, Constants.Drive.RIGHT_MASTER_ID)
 
   //  private val pneumaticShifter: DoubleSolenoid = DoubleSolenoid(Constants.Drive.SHIFTER_FORWARD_ID, Constants.Drive.SHIFTER_REVERSE_ID)
 
@@ -33,11 +33,11 @@ class Drive private constructor() : Subsystem {
         set(type) {
             if (brakeMode != type) {
                 rightMasterSRX.setNeutralMode(type)
-                rightSlave1SRX.setNeutralMode(type)
-                rightSlave2SPX.setNeutralMode(type)
+                rightSlave1SPX.setNeutralMode(type)
+                rightSlave2SRX.setNeutralMode(type)
                 leftMasterSRX.setNeutralMode(type)
-                leftSlave1SRX.setNeutralMode(type)
-                leftSlave2SPX.setNeutralMode(type)
+                leftSlave1SPX.setNeutralMode(type)
+                leftSlave2SRX.setNeutralMode(type)
             }
         }
 
@@ -90,11 +90,11 @@ class Drive private constructor() : Subsystem {
         rightMasterSRX.configVelocityMeasurementWindow(32, 10)
 
         leftMasterSRX.inverted = true
-        leftSlave1SRX.inverted = true
-        leftSlave2SPX.inverted = true
+        leftSlave1SPX.inverted = true
+        leftSlave2SRX.inverted = true
         rightMasterSRX.inverted = false
-        rightSlave1SRX.inverted = false
-        rightSlave2SPX.inverted = false
+        rightSlave1SPX.inverted = false
+        rightSlave2SRX.inverted = false
 
         highGear = false
 
@@ -145,12 +145,12 @@ class Drive private constructor() : Subsystem {
     fun resetEncoders() {
         leftMasterSRX.setSelectedSensorPosition(0, 0, 0)
         leftMasterSRX.sensorCollection.setPulseWidthPosition(0, 0)
-        leftSlave1SRX.setSelectedSensorPosition(0, 0, 0)
-        leftSlave2SPX.setSelectedSensorPosition(0, 0, 0)
+        leftSlave1SPX.setSelectedSensorPosition(0, 0, 0)
+        leftSlave2SRX.setSelectedSensorPosition(0, 0, 0)
         rightMasterSRX.setSelectedSensorPosition(0, 0, 0)
         rightMasterSRX.sensorCollection.setPulseWidthPosition(0, 0)
-        rightSlave1SRX.setSelectedSensorPosition(0, 0, 0)
-        rightSlave2SPX.setSelectedSensorPosition(0, 0, 0)
+        rightSlave1SPX.setSelectedSensorPosition(0, 0, 0)
+        rightSlave2SRX.setSelectedSensorPosition(0, 0, 0)
 
     }
 
