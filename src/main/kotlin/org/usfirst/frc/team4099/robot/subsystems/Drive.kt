@@ -269,7 +269,7 @@ class Drive private constructor() : Subsystem {
             rightMasterSRX.selectProfileSlot(Constants.Velocity.LOW_GEAR_VELOCITY_CONTROL_SLOT, 0)
             rightMasterSRX.configPeakOutputForward(Constants.Velocity.DRIVE_LOW_GEAR_MAX_FORWARD_OUTPUT, 0)
             rightMasterSRX.configPeakOutputReverse(Constants.Velocity.DRIVE_LOW_GEAR_MAX_REVERSE_OUTPUT, 0)
-            brakeMode = NeutralMode.Brake
+            brakeMode = NeutralMode.Coast
         }
     }
 
@@ -289,7 +289,7 @@ class Drive private constructor() : Subsystem {
             rightMasterSRX.selectProfileSlot(Constants.Velocity.LOW_GEAR_VELOCITY_CONTROL_SLOT, 0)
             rightMasterSRX.configPeakOutputForward(Constants.Velocity.DRIVE_LOW_GEAR_MAX_FORWARD_OUTPUT, 0)
             rightMasterSRX.configPeakOutputReverse(Constants.Velocity.DRIVE_LOW_GEAR_MAX_REVERSE_OUTPUT, 0)
-            brakeMode = NeutralMode.Brake
+            brakeMode = NeutralMode.Coast
         }
     }
 

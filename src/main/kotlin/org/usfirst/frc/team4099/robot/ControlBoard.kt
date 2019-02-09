@@ -65,8 +65,6 @@ class ControlBoard private constructor() {
     val elevatorPower: Double
         get() = (operator.rightTriggerAxis - operator.leftTriggerAxis) * 1
 
-    val toggleWrist : Boolean
-        get() = operator.leftJoystickButton
 //
 //    val moveUp: Boolean
 //        get() = operator.dPadUp

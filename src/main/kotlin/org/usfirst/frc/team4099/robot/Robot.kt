@@ -4,14 +4,12 @@ import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj.CameraServer
-import edu.wpi.first.wpilibj.TimedRobot
 import org.usfirst.frc.team4099.DashboardConfigurator
 //import org.usfirst.frc.team4099.auto.AutoModeExecuter
 import org.usfirst.frc.team4099.lib.util.CrashTracker
 
 import org.usfirst.frc.team4099.robot.drive.CheesyDriveHelper
 import org.usfirst.frc.team4099.robot.drive.TankDriveHelper
-import org.usfirst.frc.team4099.DashboardConfigurator
 import org.usfirst.frc.team4099.lib.util.Utils
 import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
 import org.usfirst.frc.team4099.robot.loops.Looper
@@ -34,6 +32,7 @@ class Robot : TimedRobot() {
     private val controlBoard = ControlBoard.instance
     private val disabledLooper = Looper("disabledLooper")
     private val enabledLooper = Looper("enabledLooper")
+   // private val elevator = Elevator.instance
     private val superstructure = Superstructure.instance
     private val cheesyDriveHelper = CheesyDriveHelper()
   
@@ -57,6 +56,10 @@ class Robot : TimedRobot() {
 //            enabledLooper.register(drive.loop)
 
             enabledLooper.register(intake.loop)
+      //      enabledLooper.register(intake.loop)
+            //enabledLooper.register(intake.loop)
+//            enabledLooper.register(superstructure.loop)
+
 
 
             enabledLooper.register(wrist.loop)
@@ -141,16 +144,16 @@ class Robot : TimedRobot() {
             }
 
             intake.intakeState = when {
-                controlBoard.reverseIntakeFast -> Intake.IntakeState.FAST_OUT
-                controlBoard.reverseIntakeSlow -> Intake.IntakeState.SLOW_OUT
+//                controlBoard.reverseIntakeFast -> Intake.IntakeState.FAST_OUT
+//                controlBoard.reverseIntakeSlow -> Intake.IntakeState.SLOW_OUT
                 controlBoard.runIntake -> Intake.IntakeState.IN
                 intake.intakeState != Intake.IntakeState.SLOW -> Intake.IntakeState.STOP
                 else -> intake.intakeState
             }
 
-            if(controlBoard.toggleWrist){
-                wrist.setWristMode(if(wrist.wristState == Wrist.WristState.VERTICAL) Wrist.WristState.HORIZONTAL else Wrist.WristState.VERTICAL)
-            }
+//            if(controlBoard.toggleWrist){
+//                wrist.setWristMode(if(wrist.wristState == Wrist.WristState.VERTICAL) Wrist.WristState.HORIZONTAL else Wrist.WristState.VERTICAL)
+//            }
 
 //            val wantedVelocity = controlBoard.elevatorPower * Constants.Elevator.MAX_SPEED
 //            if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER) {
