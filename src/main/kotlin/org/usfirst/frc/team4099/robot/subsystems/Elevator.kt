@@ -178,12 +178,14 @@ class Elevator private constructor(): Subsystem {
     val loop: Loop = object : Loop {
         override fun onStart() {
             elevatorState = ElevatorState.HATCHLOW
+            observedElevatorPosition = 0.0
         }
 
         override fun onLoop() {
             synchronized(this@Elevator) {
                 observedElevatorVelocity = -ElevatorConversion.nativeSpeedToInchesPerSecond(talon.sensorCollection.quadratureVelocity.toDouble())
-                observedElevatorPosition = -ElevatorConversion.pulsesToInches(talon.sensorCollection.quadraturePosition.toDouble())
+//                observedElevatorPosition = -ElevatorConversion.pulsesToInches(talon.sensorCollection.quadraturePosition.toDouble())
+                observedElevatorPosition += 1
                 elevatorPower = -talon.motorOutputPercent
 
                 println("elevatorPos: $observedElevatorPosition")

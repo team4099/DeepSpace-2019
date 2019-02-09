@@ -46,20 +46,20 @@ class Robot : TimedRobot() {
 
     override fun robotInit() {
         try {
-            CrashTracker.logRobotInit()
-
-//            DashboardConfigurator.initDashboard()
-
-
-           // enabledLooper.register(grabber.loop)
-
-            //enabledLooper.register(intake.loop)
-
-            enabledLooper.register(drive.loop)
-
-            enabledLooper.register(BrownoutDefender.instance)
-
-            disabledLooper.register(VoltageEstimator.instance)
+//            CrashTracker.logRobotInit()
+//
+////            DashboardConfigurator.initDashboard()
+//
+//
+//           // enabledLooper.register(grabber.loop)
+//
+//            //enabledLooper.register(intake.loop)
+//
+//            enabledLooper.register(drive.loop)
+//
+//            enabledLooper.register(BrownoutDefender.instance)
+//
+//            disabledLooper.register(VoltageEstimator.instance)
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("robotInit", t)
             throw t
@@ -90,7 +90,20 @@ class Robot : TimedRobot() {
     override fun teleopInit() {
         try {
 
+            CrashTracker.logRobotInit()
 
+//            DashboardConfigurator.initDashboard()
+
+
+             enabledLooper.register(elevator.loop)
+
+//            enabledLooper.register(intake.loop)
+
+            enabledLooper.register(drive.loop)
+
+            enabledLooper.register(BrownoutDefender.instance)
+
+            disabledLooper.register(VoltageEstimator.instance)
 
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopInit", t)
@@ -200,6 +213,7 @@ class Robot : TimedRobot() {
 //                println("Shifting to high gear")
 //            }
             drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
+            DashboardConfigurator.updateValues()
 
             //outputAllToSmartDashboard()
         } catch (t: Throwable) {
