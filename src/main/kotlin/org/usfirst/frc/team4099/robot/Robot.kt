@@ -56,15 +56,11 @@ class Robot : TimedRobot() {
 //            enabledLooper.register(drive.loop)
 
             enabledLooper.register(intake.loop)
-      //      enabledLooper.register(intake.loop)
-            //enabledLooper.register(intake.loop)
 //            enabledLooper.register(superstructure.loop)
 
 
 
             enabledLooper.register(wrist.loop)
-
-            //enabledLooper.register(drive.loop)
 
             enabledLooper.register(BrownoutDefender.instance)
 
@@ -136,11 +132,11 @@ class Robot : TimedRobot() {
         try {
 
 
-//            if (!intake.pistonsOut && controlBoard.togglePistons) {
-//                intake.pistonsOut = true
+//            if (!intake.intakeOut && controlBoard.togglePistons) {
+//                intake.intakeOut = true
 //                println("Pushing the hatch-ey boi")
 //            } else {
-//                intake.pistonsOut = false
+//                intake.intakeOut = false
 //            }
 //
 //            intake.intakeState = when {
@@ -207,13 +203,13 @@ class Robot : TimedRobot() {
 //            }
 //
 //
-//            if (intake.up && controlBoard.toggleIntake) {
-//                intake.up = false
-//                println("Lowering intake")
-//            } else if (!intake.up && controlBoard.toggleIntake) {
-//                intake.up = true
-//                println("Raising intake")
-//            }
+            if (intake.intakeOut && controlBoard.toggleIntake) {
+                intake.intakeOut = false
+                println("Lowering intake")
+            } else if (!intake.intakeOut && controlBoard.toggleIntake) {
+                intake.intakeOut = true
+                println("Raising intake")
+            }
 //
 //            intake.intakeState = when {
 //                controlBoard.reverseIntakeFast -> Intake.IntakeState.FAST_OUT

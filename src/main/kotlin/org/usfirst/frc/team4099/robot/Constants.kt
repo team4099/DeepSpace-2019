@@ -13,7 +13,7 @@ class Constants {
         val HIGH_GEAR_MAX_SETPOINT = 17.0  //17 fps
 
         val SHIFTER_FORWARD_ID = 0
-        val SHIFTER_REVERSE_ID = 1
+        val SHIFTER_REVERSE_ID = 4
     }
 
     object Wheels {
@@ -78,8 +78,10 @@ class Constants {
 
     object Intake {
         val INTAKE_TALON_ID = 0
-        val SHIFTER_FORWARD_ID = 2
-        val SHIFTER_REVERSE_ID = 3
+        val EXTENDER_FORWARD_ID = 1
+        val EXTENDER_REVERSE_ID = 5
+        val DEPLOY_FORWARD_ID = 2
+        val DEPLOY_REVERSE_ID = 6
     }
 
     object Autonomous {
