@@ -130,6 +130,19 @@ class Robot : TimedRobot() {
 
     override fun teleopPeriodic() {
         try {
+                if (controlBoard.elevatorPower> 0){
+                    elevator.setOpenLoop(0.5);
+                }
+                else if (controlBoard.elevatorPower< 0) {
+                    elevator.setOpenLoop(-0.5);
+                }
+                else{
+                    elevator.setOpenLoop(-0.5);
+                }
+
+
+
+
 
                 if(controlBoard.hatchPExtend){
                     test3.set(DoubleSolenoid.Value.kForward)
