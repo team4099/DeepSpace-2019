@@ -25,7 +25,11 @@ class Drive private constructor() : Subsystem {
     private val rightSlave1SPX: VictorSPX = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Drive.RIGHT_SLAVE_1_ID, rightMasterSRX)
     private val rightSlave2SRX: TalonSRX = CANMotorControllerFactory.createPermanentSlaveTalon(Constants.Drive.RIGHT_SLAVE_2_ID, Constants.Drive.RIGHT_MASTER_ID)
 
-  //  private val pneumaticShifter: DoubleSolenoid = DoubleSolenoid(Constants.Drive.EXTENDER_FORWARD_ID, Constants.Drive.EXTENDER_REVERSE_ID)
+    private val pneumaticShifter: DoubleSolenoid = DoubleSolenoid(Constants.Drive.SHIFTER_FORWARD_ID, Constants.Drive.SHIFTER_REVERSE_ID)
+
+    private val test1 : DoubleSolenoid = DoubleSolenoid(2,5)
+    private val test2 : DoubleSolenoid = DoubleSolenoid(3,4)
+   // private val test3 : DoubleSolenoid = DoubleSolenoid(1,6)
 
     private val ahrs: AHRS
 
@@ -43,7 +47,11 @@ class Drive private constructor() : Subsystem {
 
     var highGear: Boolean = true
         set(wantsHighGear) {
-            //pneumaticShifter.set(if (wantsHighGear) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
+            pneumaticShifter.set(if (wantsHighGear) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
+            test1.set(if (wantsHighGear) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
+            test2.set(if (wantsHighGear) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
+            //test3.set(if (wantsHighGear) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
+
             field = wantsHighGear
         }
 

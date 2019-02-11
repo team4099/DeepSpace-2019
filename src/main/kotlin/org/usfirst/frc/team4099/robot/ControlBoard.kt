@@ -21,10 +21,10 @@ class ControlBoard private constructor() {
         get() = driver.leftShoulderButton
 
     val hatchPExtend : Boolean
-        get() = operator.dPadDown
+        get() = driver.dPadDown //change back to operator
 
-    val hatchPOut: Boolean
-        get() = operator.dPadUp
+    val hatchPOut: Boolean      //refactor
+        get() = driver.dPadUp
 
 
     val reverseIntakeSlow: Boolean

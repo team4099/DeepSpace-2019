@@ -17,22 +17,22 @@ import org.usfirst.frc.team4099.robot.loops.Loop
 class Intake private constructor() : Subsystem {
 
     private val talon = Talon(Constants.Intake.INTAKE_TALON_ID)
-    private val extender: DoubleSolenoid = DoubleSolenoid(Constants.Intake.EXTENDER_FORWARD_ID,
-            Constants.Intake.EXTENDER_REVERSE_ID)
-    private val deployer: DoubleSolenoid = DoubleSolenoid(Constants.Intake.DEPLOY_FORWARD_ID,
-            Constants.Intake.DEPLOY_REVERSE_ID)
+//    private val extender: DoubleSolenoid = DoubleSolenoid(Constants.Intake.EXTENDER_FORWARD_ID,
+//            Constants.Intake.EXTENDER_REVERSE_ID)
+//    private val deployer: DoubleSolenoid = DoubleSolenoid(Constants.Intake.DEPLOY_FORWARD_ID,
+//            Constants.Intake.DEPLOY_REVERSE_ID)
 
     var intakeState = IntakeState.IN
     private var intakePower = 0.0
     var intakeOut = false
         set (wantsUp) {
-            extender.set(if (wantsUp) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
+            //extender.set(if (wantsUp) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
             field = wantsUp
         }
 
     var deploying = false
         set (wantsOut) {
-            deployer.set(if (wantsOut) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
+            //deployer.set(if (wantsOut) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
             field = wantsOut
         }
 

@@ -21,7 +21,7 @@ import src.main.kotlin.org.usfirst.frc.team4099.robot.subsystems.Superstructure
 class Robot : TimedRobot() {
     private val vision = Vision.instance
 
-
+    private val test3 : DoubleSolenoid = DoubleSolenoid(1,6)
     //private val climber = Climber.instance
 
     private val wrist = Wrist.instance
@@ -131,6 +131,12 @@ class Robot : TimedRobot() {
     override fun teleopPeriodic() {
         try {
 
+                if(controlBoard.hatchPExtend){
+                    test3.set(DoubleSolenoid.Value.kForward)
+                }
+                if(controlBoard.hatchPOut){
+                    test3.set(DoubleSolenoid.Value.kReverse)
+                }
 
 //            if (!intake.intakeOut && controlBoard.togglePistons) {
 //                intake.intakeOut = true
@@ -219,13 +225,13 @@ class Robot : TimedRobot() {
 //                else -> intake.intakeState
 //            }
 //
-//            if (drive.highGear && controlBoard.switchToLowGear) {
-//                drive.highGear = false
-//                println("Shifting to low gear")
-//            } else if (!drive.highGear && controlBoard.switchToHighGear) {
-//                drive.highGear = true
-//                println("Shifting to high gear")
-//            }
+            if (drive.highGear && controlBoard.switchToLowGear) {
+                drive.highGear = false
+                println("Shifting to low gear")
+            } else if (!drive.highGear && controlBoard.switchToHighGear) {
+                drive.highGear = true
+                println("Shifting to high gear")
+            }
             if (controlBoard.turnVisionOn) {
                 println("Activating vision")
                 println(vision.visionState)
