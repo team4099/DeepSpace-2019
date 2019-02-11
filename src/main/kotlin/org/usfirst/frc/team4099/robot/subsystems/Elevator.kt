@@ -73,6 +73,9 @@ class Elevator private constructor(): Subsystem {
 
     fun setOpenLoop(power: Double) {
         elevatorState = ElevatorState.OPEN_LOOP
+        if(observedElevatorPosition < Constants.Elevator.BOTTOM_SOFT_LIMIT && power < 0.0){ //CHANGE SOFT LIMIT
+            talon.set(ControlMode.PercentOutput, 0.0)
+        }
         talon.set(ControlMode.PercentOutput, -power)
     }
 
@@ -177,7 +180,7 @@ class Elevator private constructor(): Subsystem {
 
     val loop: Loop = object : Loop {
         override fun onStart() {
-            elevatorState = ElevatorState.HATCHLOW
+            elevatorState = ElevatorState.OPEN_LOOP
         }
 
         override fun onLoop() {
@@ -189,7 +192,7 @@ class Elevator private constructor(): Subsystem {
                 println("elevatorPos: $observedElevatorPosition")
                 when (elevatorState){
                     ElevatorState.OPEN_LOOP -> {
-                        return
+                        setOpenLoop(elevatorPower)
                     }
                     ElevatorState.VELOCITY_CONTROL -> {
                         return

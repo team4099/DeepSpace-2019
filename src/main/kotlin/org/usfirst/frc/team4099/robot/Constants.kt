@@ -67,12 +67,14 @@ class Constants {
         val ELEVATOR_DOWN_KI = 0.002
         val ELEVATOR_DOWN_KD = 60.0
         val ELEVATOR_DOWN_KF = 0.78
+
     }
 
     object Elevator {
         val ELEVATOR_TALON_ID = 0
         val MAX_SPEED = 2400
         val MIN_TRIGGER = 0.1
+        val BOTTOM_SOFT_LIMIT = 0.0 //set later
     }
 
 
