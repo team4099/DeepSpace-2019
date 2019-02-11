@@ -88,7 +88,7 @@ class Robot : TimedRobot() {
             enabledLooper.start() // start EnabledLooper
 
             autoModeExecuter = AutoModeExecuter()
-            autoModeExecuter?.setAutoMode(HatchPanelOnly(DashboardConfigurator.StartingPosition.RIGHT, 0.0))
+            autoModeExecuter?.setAutoMode(HatchPanelOnly(DashboardConfigurator.StartingPosition.LEFT, 0.0))
             autoModeExecuter?.start()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("autonomousInit", t)

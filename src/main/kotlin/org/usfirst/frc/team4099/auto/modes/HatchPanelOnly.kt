@@ -1,7 +1,9 @@
 package org.usfirst.frc.team4099.auto.modes
 
 import org.usfirst.frc.team4099.DashboardConfigurator
+import org.usfirst.frc.team4099.auto.actions.BackwardsDistanceAction
 import org.usfirst.frc.team4099.auto.actions.FollowPathAction
+import org.usfirst.frc.team4099.auto.actions.WaitAction
 import org.usfirst.frc.team4099.auto.paths.FieldPaths
 
 class HatchPanelOnly(private val startingPosition: DashboardConfigurator.StartingPosition, private val delay: Double) : AutoModeBase() {
@@ -12,5 +14,8 @@ class HatchPanelOnly(private val startingPosition: DashboardConfigurator.Startin
         else if (startingPosition == DashboardConfigurator.StartingPosition.RIGHT){
             runAction(FollowPathAction(FieldPaths.RIGHTH2_TO_RIGHTROCKET3))
         }
+//        runAction(WaitAction(2.0))
+//        runAction(BackwardsDistanceAction(24.0))
+//        runAction(FollowPathAction(FieldPaths.RIGHTROCKET3_TO_LOADSTATION))
     }
 }

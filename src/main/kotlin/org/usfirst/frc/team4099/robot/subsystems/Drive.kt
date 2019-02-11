@@ -61,7 +61,8 @@ class Drive private constructor() : Subsystem {
         OPEN_LOOP,
         VELOCITY_SETPOINT,
         PATH_FOLLOWING,
-        TURN_TO_HEADING //turn in place
+        TURN_TO_HEADING, //turn in place
+        MOTION_MAGIC
     }
 
     private var currentState = DriveControlState.OPEN_LOOP
@@ -99,12 +100,12 @@ class Drive private constructor() : Subsystem {
         rightMasterSRX.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_10Ms, 0)
         rightMasterSRX.configVelocityMeasurementWindow(32, 0)
 
-        leftMasterSRX.inverted = false
-        leftSlave1SRX.inverted = false
-        leftSlave2SPX.inverted = false
-        rightMasterSRX.inverted = true
-        rightSlave1SRX.inverted = true
-        rightSlave2SPX.inverted = true
+        leftMasterSRX.inverted = true
+        leftSlave1SRX.inverted = true
+        leftSlave2SPX.inverted = true
+        rightMasterSRX.inverted = false
+        rightSlave1SRX.inverted = false
+        rightSlave2SPX.inverted = false
 
         highGear = false
 
@@ -241,7 +242,7 @@ class Drive private constructor() : Subsystem {
 
     @Synchronized
     fun usesTalonPositionControl(state: DriveControlState): Boolean {
-        if (state == DriveControlState.TURN_TO_HEADING) {
+        if (state == DriveControlState.TURN_TO_HEADING || state == DriveControlState.MOTION_MAGIC) {
             return true
         }
         return false
@@ -259,6 +260,21 @@ class Drive private constructor() : Subsystem {
             configureTalonsForVelocityControl()
             currentState = DriveControlState.VELOCITY_SETPOINT
             setVelocitySetpoint(leftInchesPerSec, rightInchesPerSec)
+
+        }
+    }
+    @Synchronized
+    fun setPositionSetpoint(leftInches: Double, rightInches: Double) {
+        if (usesTalonPositionControl(currentState)) {
+            leftMasterSRX.set(ControlMode.MotionMagic, leftInches)
+            rightMasterSRX.set(ControlMode.MotionMagic, rightInches)
+            // println("left err: ${leftMasterSRX.getClosedLoopError(0)} trg: $leftInchesPerSec actual: ${leftMasterSRX.getSelectedSensorVelocity(0)}")
+            //println("right err: ${rightMasterSRX.getClosedLoopError(0)} trg: $rightInchesPerSec actual: ${rightMasterSRX.getSelectedSensorVelocity(0)}")
+        }
+        else {
+            configureTalonsforPositionControl()
+            currentState = DriveControlState.MOTION_MAGIC
+            setPositionSetpoint(leftInches, rightInches)
 
         }
     }
@@ -329,30 +345,30 @@ class Drive private constructor() : Subsystem {
     fun updatePathFollowing(){
         //note *12 is to convert ft to inches
         if (segment < trajLength) {
-            var leftTurn: Double = path.getLeftVelocityIndex(segment) * 12 * 10
-            var rightTurn: Double = path.getRightVelocityIndex(segment) * 12 * 10
+            var leftTurn: Double = path.getLeftVelocityIndex(segment) * 12 *2
+            var rightTurn: Double = path.getRightVelocityIndex(segment) * 12*2
             val gyroHeading: Float = ahrs.yaw
             val desiredHeading: Double = radiansToDegrees(path.getHeadingIndex(segment))
             val angleDifference: Double = boundHalfDegrees(desiredHeading - gyroHeading)
             val turn: Double = 0.8 * 12 * (-1.0 / 80.0) * angleDifference
 
-            val leftDistance: Double = getLeftDistanceInches()
-            val rightDistance: Double = getRightDistanceInches()
+            //val leftDistance: Double = getLeftDistanceInches()
+            //val rightDistance: Double = getRightDistanceInches()
 
-            val leftErrorDistance: Double = path.getLeftDistanceIndex(segment)*12 - leftDistance
-            val rightErrorDistance: Double = path.getRightDistanceIndex(segment)*12 - rightDistance
+            //val leftErrorDistance: Double = path.getLeftDistanceIndex(segment)*12 - leftDistance
+            //val rightErrorDistance: Double = path.getRightDistanceIndex(segment)*12 - rightDistance
 
-            val leftVelocityAdjustment = Constants.Gains.LEFT_LOW_KP * leftErrorDistance + Constants.Gains.LEFT_LOW_KD * ((leftErrorDistance - lastLeftError)/path.getDeltaTime())
-            val rightVelocityAdjustment = Constants.Gains.RIGHT_LOW_KP * rightErrorDistance + Constants.Gains.RIGHT_LOW_KD * ((rightErrorDistance - lastRightError)/path.getDeltaTime())
+            //val leftVelocityAdjustment = Constants.Gains.LEFT_LOW_KP * leftErrorDistance + Constants.Gains.LEFT_LOW_KD * ((leftErrorDistance - lastLeftError)/path.getDeltaTime())
+            //val rightVelocityAdjustment = Constants.Gains.RIGHT_LOW_KP * rightErrorDistance + Constants.Gains.RIGHT_LOW_KD * ((rightErrorDistance - lastRightError)/path.getDeltaTime())
 
-           // leftTurn = leftTurn + leftVelocityAdjustment
-           // rightTurn = rightTurn + rightVelocityAdjustment
+            //leftTurn = leftTurn + leftVelocityAdjustment
+            //rightTurn = rightTurn + rightVelocityAdjustment
 
-            lastLeftError = leftErrorDistance
+            //lastLeftError = leftErrorDistance
 
 
-            //leftTurn = leftTurn + turn
-            //rightTurn = rightTurn - turn
+            leftTurn = leftTurn + turn
+            rightTurn = rightTurn - turn
 
             setVelocitySetpoint(leftTurn, rightTurn)
             println(" " +segment  + " " +leftTurn+" " + rightTurn)
