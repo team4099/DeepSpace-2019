@@ -34,6 +34,7 @@ class Robot : TimedRobot() {
     private val controlBoard = ControlBoard.instance
     private val disabledLooper = Looper("disabledLooper")
     private val enabledLooper = Looper("enabledLooper")
+    private val leds = LED.instance
     private val cheesyDriveHelper = CheesyDriveHelper()
   
 
@@ -57,6 +58,7 @@ class Robot : TimedRobot() {
             //enabledLooper.register(intake.loop)
 
             enabledLooper.register(drive.loop)
+            enabledLooper.register(leds.loop)
 
             enabledLooper.register(BrownoutDefender.instance)
 
@@ -133,6 +135,7 @@ class Robot : TimedRobot() {
 
     override fun teleopPeriodic() {
         try {
+            leds.handleCargo()
 
 //            val wantedVelocity = controlBoard.elevatorPower * Constants.Elevator.MAX_SPEED
 //            if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER) {
@@ -209,6 +212,7 @@ class Robot : TimedRobot() {
 //                drive.highGear = true
 //                println("Shifting to high gear")
 //            }
+
             drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
 
             //outputAllToSmartDashboard()
