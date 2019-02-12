@@ -27,12 +27,11 @@ class Robot : TimedRobot() {
     private val wrist = Wrist.instance
     private val intake = Intake.instance
 
-    private val elevator = Elevator.instance
     private val drive = Drive.instance
     private val controlBoard = ControlBoard.instance
     private val disabledLooper = Looper("disabledLooper")
     private val enabledLooper = Looper("enabledLooper")
-   // private val elevator = Elevator.instance
+    private val elevator = Elevator.instance
     private val superstructure = Superstructure.instance
     private val cheesyDriveHelper = CheesyDriveHelper()
   
@@ -222,13 +221,13 @@ class Robot : TimedRobot() {
 //            }
 //
 //
-            if (intake.intakeOut && controlBoard.toggleIntake) {
-                intake.intakeOut = false
-                println("Lowering intake")
-            } else if (!intake.intakeOut && controlBoard.toggleIntake) {
-                intake.intakeOut = true
-                println("Raising intake")
-            }
+//            if (intake.intakeOut && controlBoard.toggleIntake) {
+////                intake.intakeOut = false
+////                println("Lowering intake")
+////            } else if (!intake.intakeOut && controlBoard.toggleIntake) {
+////                intake.intakeOut = true
+////                println("Raising intake")
+////            }
 //
 //            intake.intakeState = when {
 //                controlBoard.reverseIntakeFast -> Intake.IntakeState.FAST_OUT
@@ -258,11 +257,11 @@ class Robot : TimedRobot() {
                 println(vision.visionState)
             }
 
-            if (vision.visionState != Vision.VisionState.AIMING) {
-                drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
-            } else {
-                drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
-            }
+//            if (vision.visionState != Vision.VisionState.AIMING) {
+//                drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
+//            } else {
+//                drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
+//            }
             //outputAllToSmartDashboard()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)
