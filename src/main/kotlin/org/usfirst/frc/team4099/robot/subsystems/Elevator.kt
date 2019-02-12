@@ -11,6 +11,7 @@ import org.usfirst.frc.team4099.robot.loops.Loop
 
 class Elevator private constructor(): Subsystem {
     private val talon = CANMotorControllerFactory.createDefaultTalon(Constants.Elevator.ELEVATOR_TALON_ID)
+    private val slave = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Elevator.SLAVE_VICTOR_ID, talon)
 
     private var elevatorPower = 0.0
     var wantedElevatorPower = 0.0
@@ -35,6 +36,7 @@ class Elevator private constructor(): Subsystem {
 
     init {
         talon.inverted = false
+        slave.inverted = false
         talon.clearStickyFaults(0)
         talon.setSensorPhase(false)
         talon.set(ControlMode.MotionMagic, 0.0)
@@ -58,7 +60,7 @@ class Elevator private constructor(): Subsystem {
         talon.configMotionAcceleration(0, 0)
 
         talon.configReverseSoftLimitEnable(true, 0)
-        talon.configReverseSoftLimitThreshold(-ElevatorConversion.inchesToPulses(70.0).toInt(), 0)
+        talon.configReverseSoftLimitThreshold(-ElevatorConversion.inchesToPulses(Constants.Elevator.BOTTOM_SOFT_LIMIT).toInt(), 0)
         talon.overrideSoftLimitsEnable(true)
 
         //SmartDashboard.putNumber("elevator/pidPDown", Constants.Gains.ELEVATOR_DOWN_KP)
@@ -242,5 +244,6 @@ class Elevator private constructor(): Subsystem {
 
     override fun zeroSensors() {
         talon.sensorCollection.setQuadraturePosition(0, 0)
+        slave.setSelectedSensorPosition(0,0,0)
     }
 }

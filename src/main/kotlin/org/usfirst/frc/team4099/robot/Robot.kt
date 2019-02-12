@@ -126,7 +126,7 @@ class Robot : TimedRobot() {
 
     override fun teleopPeriodic() {
         try {
-                if (Math.abs(controlBoard.elevatorPower) > 0.1){
+                if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER){
                     elevator.wantedElevatorPower = controlBoard.elevatorPower
                 }
                 else{
