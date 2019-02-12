@@ -1,15 +1,12 @@
 package org.usfirst.frc.team4099.robot
 
 import edu.wpi.first.wpilibj.DoubleSolenoid
-import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.TimedRobot
-import edu.wpi.first.wpilibj.CameraServer
 import org.usfirst.frc.team4099.DashboardConfigurator
 //import org.usfirst.frc.team4099.auto.AutoModeExecuter
 import org.usfirst.frc.team4099.lib.util.CrashTracker
 
 import org.usfirst.frc.team4099.robot.drive.CheesyDriveHelper
-import org.usfirst.frc.team4099.robot.drive.TankDriveHelper
 import org.usfirst.frc.team4099.lib.util.Utils
 import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
 import org.usfirst.frc.team4099.robot.loops.Looper
@@ -129,14 +126,11 @@ class Robot : TimedRobot() {
 
     override fun teleopPeriodic() {
         try {
-                if (controlBoard.elevatorPower> 0){
-                    elevator.setOpenLoop(0.5);
-                }
-                else if (controlBoard.elevatorPower< 0) {
-                    elevator.setOpenLoop(-0.5);
+                if (Math.abs(controlBoard.elevatorPower) > 0.1){
+                    elevator.wantedElevatorPower = controlBoard.elevatorPower
                 }
                 else{
-                    elevator.setOpenLoop(-0.5);
+                    elevator.wantedElevatorPower = 0.0
                 }
 
 
@@ -149,13 +143,6 @@ class Robot : TimedRobot() {
                 if(controlBoard.hatchPOut){
                     test3.set(DoubleSolenoid.Value.kReverse)
                 }
-
-//            if (!intake.intakeOut && controlBoard.togglePistons) {
-//                intake.intakeOut = true
-//                println("Pushing the hatch-ey boi")
-//            } else {
-//                intake.intakeOut = false
-//            }
 //
 //            intake.intakeState = when {
 //               controlBoard.reverseIntakeFast -> Intake.IntakeState.FAST_OUT
@@ -204,30 +191,6 @@ class Robot : TimedRobot() {
 //            if (toggle) {
 //                elevator.toggleOuttakeMode()
 //            }
-//            if (!grabber.push && controlBoard.toggleGrabber) {
-//                grabber.push = true
-//                println("Pushing the hatch-ey boi")
-//            } else {
-//                grabber.push = false
-//            }
-//            if(controlBoard.grab) {
-//                grabber.intakeState = Grabber.IntakeState.IN
-//            }
-//            if(controlBoard.eject){
-//                grabber.intakeState = Grabber.IntakeState.OUT
-//            }
-//            if(controlBoard.stopGrabber){
-//                grabber.intakeState = Grabber.IntakeState.NEUTRAL
-//            }
-//
-//
-//            if (intake.intakeOut && controlBoard.toggleIntake) {
-////                intake.intakeOut = false
-////                println("Lowering intake")
-////            } else if (!intake.intakeOut && controlBoard.toggleIntake) {
-////                intake.intakeOut = true
-////                println("Raising intake")
-////            }
 //
 //            intake.intakeState = when {
 //                controlBoard.reverseIntakeFast -> Intake.IntakeState.FAST_OUT
@@ -244,25 +207,25 @@ class Robot : TimedRobot() {
                 drive.highGear = true
                 println("Shifting to high gear")
             }
-            if (controlBoard.turnVisionOn) {
+            if (controlBoard.aimingOn) {
                 println("Activating vision")
                 println(vision.visionState)
                 vision.setState(Vision.VisionState.AIMING)
                 println(vision.visionState)
             }
-            if (controlBoard.turnVisionOff) {
+            if (controlBoard.aimingOff) {
                 println("Deactivating vision")
                 println(vision.visionState)
                 vision.setState(Vision.VisionState.INACTIVE)
                 println(vision.visionState)
             }
 
-//            if (vision.visionState != Vision.VisionState.AIMING) {
-//                drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
-//            } else {
-//                drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
-//            }
-            //outputAllToSmartDashboard()
+            if (vision.visionState != Vision.VisionState.AIMING) {
+                drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
+            } else {
+                drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
+            }
+            outputAllToSmartDashboard()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)
             throw t

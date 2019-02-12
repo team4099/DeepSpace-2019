@@ -1,7 +1,6 @@
 package org.usfirst.frc.team4099.robot
 
 import org.usfirst.frc.team4099.lib.joystick.Gamepad
-import org.usfirst.frc.team4099.lib.joystick.JoystickUtils
 import org.usfirst.frc.team4099.lib.joystick.XboxOneGamepad
 
 class ControlBoard private constructor() {
@@ -9,7 +8,7 @@ class ControlBoard private constructor() {
     private val operator: Gamepad = XboxOneGamepad(Constants.Joysticks.SHOTGUN_PORT)
 
     val throttle: Double
-        get() = -driver.rightTriggerAxis + driver.leftTriggerAxis
+        get() = (-driver.rightTriggerAxis + driver.leftTriggerAxis) * -1.0
 
     val turn: Double
         get() = -driver.leftXAxis
@@ -21,10 +20,10 @@ class ControlBoard private constructor() {
         get() = driver.leftShoulderButton
 
     val hatchPExtend : Boolean
-        get() = driver.dPadDown //change back to operator
+        get() = operator.dPadDown //change back to operator
 
     val hatchPOut: Boolean      //refactor
-        get() = driver.dPadUp
+        get() = operator.dPadUp
 
 
     val reverseIntakeSlow: Boolean
@@ -80,10 +79,10 @@ class ControlBoard private constructor() {
     val toggleWrist : Boolean
         get() = operator.leftJoystickButton
 
-    val turnVisionOn: Boolean
+    val aimingOn: Boolean
         get() = driver.bButton
 
-    val turnVisionOff: Boolean
+    val aimingOff: Boolean
         get() = driver.aButton
 
     companion object {
