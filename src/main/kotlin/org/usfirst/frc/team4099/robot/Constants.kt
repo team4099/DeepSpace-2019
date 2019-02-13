@@ -86,8 +86,9 @@ class Constants {
     object Vision {
         val Kp = -0.02
         val minCommand = 0
-        val CAMERA_TO_TARGET_HEIGHT = 20;
-        val CAMERA_ANGLE = 0;
+        val HATCH_PANEL_HEIGHT = 20 // inches
+        val CARGO_HEIGHT = 20 // inches
+        val CAMERA_ANGLE = 0 // degrees
     }
     object Velocity {
         val HIGH_GEAR_VELOCITY_CONTROL_SLOT = 0

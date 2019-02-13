@@ -19,11 +19,15 @@ class Vision private constructor(): Subsystem {
     var steeringAdjust = 0.0
     var distance = 0
 
+
     private val table: NetworkTable = NetworkTableInstance.getDefault().getTable("limelight")
     var tx = table.getEntry("tx").getDouble(0.0)
     var tv = table.getEntry("tv").getDouble(0.0)
     var ty = table.getEntry("ty").getDouble(0.0)
     var ta = table.getEntry("ta").getDouble(0.0)
+
+    var led = table.getEntry("ledMode")
+
 
     var visionState = VisionState.INACTIVE
 
@@ -57,21 +61,7 @@ class Vision private constructor(): Subsystem {
                 ta = table.getEntry("ta").getDouble(0.0)
                 when (visionState) {
                     VisionState.AIMING -> {
-                        if (tv == 0.0) {
-
-                        } else {
-                            if (tx > 1.0) {
-                                // right
-                                steeringAdjust = Constants.Vision.Kp * tx - Constants.Vision.minCommand
-                            } else if (tx < 1.0) {
-                                // left
-                                steeringAdjust = Constants.Vision.Kp * tx + Constants.Vision.minCommand }
-                        }
-
-//                        steeringAdjust = -steeringAdjust
-
-                    }
-                    VisionState.SEEKING -> {
+                        led.setNumber(3)
                         if (tv == 0.0) {
 
                         } else {
@@ -81,13 +71,35 @@ class Vision private constructor(): Subsystem {
                             } else if (tx < 1.0) {
                                 // left
                                 steeringAdjust = Constants.Vision.Kp * tx + Constants.Vision.minCommand
+                            }
+                            else {}
+                        }
+
+
+//                        steeringAdjust = -steeringAdjust
+
+                    }
+                    VisionState.SEEKING -> {
+                        led.setNumber(3)
+                        if (tv == 0.0) {
+
+                        } else {
+                            if (tx > 0.0) {
+                                // right
+                                steeringAdjust = Constants.Vision.Kp * tx - Constants.Vision.minCommand
+                            } else if (tx < 0.0) {
+                                // left
+                                steeringAdjust = Constants.Vision.Kp * tx + Constants.Vision.minCommand
                             } else if (tx == 1.0) {
                                 onTarget = ta < 0.8
-                            }
+                            } else {}
                         }
                     }
 
-                    VisionState.INACTIVE -> steeringAdjust = 0.0
+                    VisionState.INACTIVE -> {
+                        steeringAdjust = 0.0
+                        led.setNumber(1)
+                    }
 
                 }
             }
