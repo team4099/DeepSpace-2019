@@ -72,10 +72,10 @@ class Constants {
 
     object Elevator {
         val ELEVATOR_TALON_ID = 0   //CHANGE
-        val SLAVE_VICTOR_ID = 0 //CHANGE
+        val SLAVE_VICTOR_ID = 15 //CHANGE
         val MAX_SPEED = 2400 //CHANGE
         val MIN_TRIGGER = 0.1
-        val BOTTOM_SOFT_LIMIT = 70.0 //set later - CHANGE
+        val BOTTOM_SOFT_LIMIT = 10.0 //set later - CHANGE
     }
 
 

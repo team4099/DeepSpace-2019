@@ -36,7 +36,7 @@ class Elevator private constructor(): Subsystem {
 
     init {
         talon.inverted = false
-        slave.inverted = false
+        slave.inverted = true
         talon.clearStickyFaults(0)
         talon.setSensorPhase(false)
         talon.set(ControlMode.MotionMagic, 0.0)
@@ -60,7 +60,7 @@ class Elevator private constructor(): Subsystem {
         talon.configMotionAcceleration(0, 0)
 
         talon.configReverseSoftLimitEnable(true, 0)
-        talon.configReverseSoftLimitThreshold(-ElevatorConversion.inchesToPulses(Constants.Elevator.BOTTOM_SOFT_LIMIT).toInt(), 0)
+        //talon.configReverseSoftLimitThreshold(ElevatorConversion.inchesToPulses(Constants.Elevator.BOTTOM_SOFT_LIMIT).toInt(), 0)
         talon.overrideSoftLimitsEnable(true)
 
         //SmartDashboard.putNumber("elevator/pidPDown", Constants.Gains.ELEVATOR_DOWN_KP)
@@ -76,6 +76,7 @@ class Elevator private constructor(): Subsystem {
 
     fun setOpenLoop(power: Double) {
         elevatorState = ElevatorState.OPEN_LOOP
+        println(observedElevatorPosition)
         if(observedElevatorPosition < Constants.Elevator.BOTTOM_SOFT_LIMIT && power < 0.0){ //CHANGE SOFT LIMIT
             talon.set(ControlMode.PercentOutput, 0.0)
         }
@@ -188,8 +189,8 @@ class Elevator private constructor(): Subsystem {
 
         override fun onLoop() {
             synchronized(this@Elevator) {
-                observedElevatorVelocity = -ElevatorConversion.nativeSpeedToInchesPerSecond(talon.sensorCollection.quadratureVelocity.toDouble())
-                observedElevatorPosition = -ElevatorConversion.pulsesToInches(talon.sensorCollection.quadraturePosition.toDouble())
+                observedElevatorVelocity = ElevatorConversion.nativeSpeedToInchesPerSecond(talon.sensorCollection.quadratureVelocity.toDouble())
+                observedElevatorPosition = ElevatorConversion.pulsesToInches(talon.sensorCollection.quadraturePosition.toDouble())
                 elevatorPower = -talon.motorOutputPercent
 
                 println("elevatorPos: $observedElevatorPosition")

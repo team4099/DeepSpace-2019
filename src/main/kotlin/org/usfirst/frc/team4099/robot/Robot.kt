@@ -58,6 +58,8 @@ class Robot : TimedRobot() {
 
             enabledLooper.register(wrist.loop)
 
+            enabledLooper.register(elevator.loop)
+
             enabledLooper.register(BrownoutDefender.instance)
 
             disabledLooper.register(VoltageEstimator.instance)
@@ -94,6 +96,7 @@ class Robot : TimedRobot() {
             enabledLooper.register(superstructure.loop)
             enabledLooper.register(drive.loop)
             enabledLooper.register(vision.loop)
+            enabledLooper.register(elevator.loop)
             enabledLooper.start()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopInit", t)
