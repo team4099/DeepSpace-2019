@@ -11,6 +11,7 @@ import org.usfirst.frc.team4099.robot.loops.Loop
 
 class Elevator private constructor(): Subsystem {
     private val talon = CANMotorControllerFactory.createDefaultTalon(Constants.Elevator.ELEVATOR_TALON_ID)
+    private val slave = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Elevator.SLAVE_VICTOR_ID, talon)
 
     private var elevatorPower = 0.0
     var wantedElevatorPower = 0.0
@@ -35,6 +36,7 @@ class Elevator private constructor(): Subsystem {
 
     init {
         talon.inverted = false
+        slave.inverted = true
         talon.clearStickyFaults(0)
         talon.setSensorPhase(false)
         talon.set(ControlMode.MotionMagic, 0.0)
@@ -57,9 +59,9 @@ class Elevator private constructor(): Subsystem {
         talon.configMotionCruiseVelocity(0, 0)
         talon.configMotionAcceleration(0, 0)
 
-        talon.configReverseSoftLimitEnable(true, 0)
-        talon.configReverseSoftLimitThreshold(-ElevatorConversion.inchesToPulses(70.0).toInt(), 0)
-        talon.overrideSoftLimitsEnable(true)
+        //talon.configReverseSoftLimitEnable(true, 0)
+        //talon.configReverseSoftLimitThreshold(ElevatorConversion.inchesToPulses(Constants.Elevator.BOTTOM_SOFT_LIMIT).toInt(), 0)
+        //talon.overrideSoftLimitsEnable(true)
 
         //SmartDashboard.putNumber("elevator/pidPDown", Constants.Gains.ELEVATOR_DOWN_KP)
         //SmartDashboard.putNumber("elevator/pidIDown", Constants.Gains.ELEVATOR_DOWN_KI)
@@ -74,10 +76,13 @@ class Elevator private constructor(): Subsystem {
 
     fun setOpenLoop(power: Double) {
         elevatorState = ElevatorState.OPEN_LOOP
+        println(observedElevatorPosition)
         if(observedElevatorPosition < Constants.Elevator.BOTTOM_SOFT_LIMIT && power < 0.0){ //CHANGE SOFT LIMIT
             talon.set(ControlMode.PercentOutput, 0.0)
         }
-        talon.set(ControlMode.PercentOutput, -power)
+        else {
+            talon.set(ControlMode.PercentOutput, -power)
+        }
     }
 
 
@@ -186,8 +191,8 @@ class Elevator private constructor(): Subsystem {
 
         override fun onLoop() {
             synchronized(this@Elevator) {
-                observedElevatorVelocity = -ElevatorConversion.nativeSpeedToInchesPerSecond(talon.sensorCollection.quadratureVelocity.toDouble())
-                observedElevatorPosition = -ElevatorConversion.pulsesToInches(talon.sensorCollection.quadraturePosition.toDouble())
+                observedElevatorVelocity = ElevatorConversion.nativeSpeedToInchesPerSecond(talon.sensorCollection.quadratureVelocity.toDouble())
+                observedElevatorPosition = ElevatorConversion.pulsesToInches(talon.sensorCollection.quadraturePosition.toDouble())
                 elevatorPower = -talon.motorOutputPercent
 
                 println("elevatorPos: $observedElevatorPosition")
@@ -242,5 +247,6 @@ class Elevator private constructor(): Subsystem {
 
     override fun zeroSensors() {
         talon.sensorCollection.setQuadraturePosition(0, 0)
+        slave.setSelectedSensorPosition(0,0,0)
     }
 }

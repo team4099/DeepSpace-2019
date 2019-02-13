@@ -69,6 +69,8 @@ class Robot : TimedRobot() {
             enabledLooper.register(leds.loop)
             enabledLooper.register(wrist.loop)
 
+            enabledLooper.register(elevator.loop)
+
             enabledLooper.register(BrownoutDefender.instance)
 
             disabledLooper.register(VoltageEstimator.instance)
@@ -114,6 +116,7 @@ class Robot : TimedRobot() {
             enabledLooper.register(superstructure.loop)
             enabledLooper.register(drive.loop)
             enabledLooper.register(vision.loop)
+            enabledLooper.register(elevator.loop)
             enabledLooper.start()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopInit", t)
@@ -147,7 +150,7 @@ class Robot : TimedRobot() {
     override fun teleopPeriodic() {
         try {
             leds.handleBackDown()
-                if (Math.abs(controlBoard.elevatorPower) > 0.1){
+                if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER){
                     elevator.wantedElevatorPower = controlBoard.elevatorPower
                 }
                 else{
@@ -179,7 +182,7 @@ class Robot : TimedRobot() {
             if (controlBoard.aimingOn) {
                 println("Activating vision")
                 println(vision.visionState)
-                vision.setState(Vision.VisionState.AIMING)
+                vision.setState(Vision.VisionState.SEEKING)
                 println(vision.visionState)
             }
             if (controlBoard.aimingOff) {
@@ -191,8 +194,14 @@ class Robot : TimedRobot() {
 
             if (vision.visionState != Vision.VisionState.AIMING) {
                 drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
+            } else if (vision.visionState == Vision.VisionState.SEEKING) {
+                if (vision.onTarget) {
+                    drive.setLeftRightPower(0.3, 0.3)
+                } else {
+                    drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
+                }
             } else {
-                drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
+                drive.setLeftRightPower(vision.steeringAdjust, - vision.steeringAdjust)
             }
             outputAllToSmartDashboard()
         } catch (t: Throwable) {

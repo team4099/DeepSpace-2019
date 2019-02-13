@@ -6,8 +6,16 @@ import edu.wpi.first.networktables.NetworkTableInstance
 import org.usfirst.frc.team4099.robot.loops.Loop
 import org.usfirst.frc.team4099.robot.Constants
 
-class Vision private constructor(): Subsystem {
 
+
+/*
+Vision Processing for FRC 2019
+Written by Rithvik Bhogavilli and Jason Liu
+
+ */
+
+class Vision private constructor(): Subsystem {
+    var onTarget = false
     var steeringAdjust = 0.0
     var distance = 0
 
@@ -15,6 +23,7 @@ class Vision private constructor(): Subsystem {
     var tx = table.getEntry("tx").getDouble(0.0)
     var tv = table.getEntry("tv").getDouble(0.0)
     var ty = table.getEntry("ty").getDouble(0.0)
+    var ta = table.getEntry("ta").getDouble(0.0)
 
     var visionState = VisionState.INACTIVE
 
@@ -45,6 +54,7 @@ class Vision private constructor(): Subsystem {
                 tx = table.getEntry("tx").getDouble(0.0)
                 tv = table.getEntry("tv").getDouble(0.0)
                 ty = table.getEntry("ty").getDouble(0.0)
+                ta = table.getEntry("ta").getDouble(0.0)
                 when (visionState) {
                     VisionState.AIMING -> {
                         if (tv == 0.0) {
@@ -62,7 +72,19 @@ class Vision private constructor(): Subsystem {
 
                     }
                     VisionState.SEEKING -> {
+                        if (tv == 0.0) {
 
+                        } else {
+                            if (tx > 1.0) {
+                                // right
+                                steeringAdjust = Constants.Vision.Kp * tx - Constants.Vision.minCommand
+                            } else if (tx < 1.0) {
+                                // left
+                                steeringAdjust = Constants.Vision.Kp * tx + Constants.Vision.minCommand
+                            } else if (tx == 1.0) {
+                                onTarget = ta < 0.8
+                            }
+                        }
                     }
 
                     VisionState.INACTIVE -> steeringAdjust = 0.0
