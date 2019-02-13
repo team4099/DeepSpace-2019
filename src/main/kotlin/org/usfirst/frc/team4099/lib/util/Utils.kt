@@ -58,7 +58,7 @@ object Utils {
 //        } catch (e: Exception) {
 //            return "-1"
 //        }
-
+//
 //    }
 
     fun getAverageFromList(list: List<Double>): Double {

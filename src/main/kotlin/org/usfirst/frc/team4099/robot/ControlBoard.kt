@@ -1,7 +1,6 @@
 package org.usfirst.frc.team4099.robot
 
 import org.usfirst.frc.team4099.lib.joystick.Gamepad
-import org.usfirst.frc.team4099.lib.joystick.JoystickUtils
 import org.usfirst.frc.team4099.lib.joystick.XboxOneGamepad
 
 
@@ -10,7 +9,7 @@ class ControlBoard private constructor() {
     private val operator: Gamepad = XboxOneGamepad(Constants.Joysticks.SHOTGUN_PORT)
 
     val throttle: Double
-        get() = -driver.rightTriggerAxis + driver.leftTriggerAxis
+        get() = (-driver.rightTriggerAxis + driver.leftTriggerAxis) * -1.0
 
     val turn: Double
         get() = -driver.leftXAxis
@@ -22,17 +21,17 @@ class ControlBoard private constructor() {
         get() = driver.leftShoulderButton
 
     val hatchPExtend : Boolean
-        get() = operator.dPadDown
+        get() = operator.dPadDown //change back to operator
 
-    val hatchPOut: Boolean
+    val hatchPOut: Boolean      //refactor
         get() = operator.dPadUp
 
 
-/*    val reverseIntakeSlow: Boolean
+    val reverseIntakeSlow: Boolean
         get() = operator.bButton
 
     val reverseIntakeFast: Boolean
-        get() = operator.yButton*/
+        get() = operator.yButton
 
     val intakePower : Double
         get() = operator.leftYAxis
@@ -45,7 +44,9 @@ class ControlBoard private constructor() {
 
     val actuateBackClimb: Boolean
         get() = driver.dPadDown
-
+  
+    val moveUp: Boolean
+        get() = operator.dPadUp
 /*    val eject : Boolean
         get() = operator.leftShoulderButton*/
 
@@ -64,8 +65,7 @@ class ControlBoard private constructor() {
     val elevatorPower: Double
         get() = (operator.rightTriggerAxis - operator.leftTriggerAxis) * 1
 
-    val toggleWrist : Boolean
-        get() = operator.leftJoystickButton
+
 //
 //    val moveUp: Boolean
 //        get() = operator.dPadUp
@@ -73,6 +73,18 @@ class ControlBoard private constructor() {
 //    val moveDown: Boolean
 //        get() = operator.dPadDown
 //
+
+    val togglePistons : Boolean
+        get() = operator.aButton
+
+    val toggleWrist : Boolean
+        get() = operator.leftJoystickButton
+
+    val aimingOn: Boolean
+        get() = driver.bButton
+
+    val aimingOff: Boolean
+        get() = driver.aButton
 
     companion object {
         val instance = ControlBoard()

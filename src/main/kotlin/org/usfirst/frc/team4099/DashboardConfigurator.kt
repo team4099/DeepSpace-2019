@@ -32,5 +32,5 @@ object DashboardConfigurator {
     fun initDashboard() {
 
     }
-
+    
 }

@@ -13,6 +13,7 @@ class Elevator private constructor(): Subsystem {
     private val talon = CANMotorControllerFactory.createDefaultTalon(Constants.Elevator.ELEVATOR_TALON_ID)
 
     private var elevatorPower = 0.0
+    var wantedElevatorPower = 0.0
     var elevatorState = ElevatorState.OPEN_LOOP
     var movementState = MovementState.STILL
         private set
@@ -60,19 +61,22 @@ class Elevator private constructor(): Subsystem {
         talon.configReverseSoftLimitThreshold(-ElevatorConversion.inchesToPulses(70.0).toInt(), 0)
         talon.overrideSoftLimitsEnable(true)
 
-        SmartDashboard.putNumber("elevator/pidPDown", Constants.Gains.ELEVATOR_DOWN_KP)
-        SmartDashboard.putNumber("elevator/pidIDown", Constants.Gains.ELEVATOR_DOWN_KI)
-        SmartDashboard.putNumber("elevator/pidDDown", Constants.Gains.ELEVATOR_DOWN_KD)
-        SmartDashboard.putNumber("elevator/pidFDown", Constants.Gains.ELEVATOR_DOWN_KF)
+        //SmartDashboard.putNumber("elevator/pidPDown", Constants.Gains.ELEVATOR_DOWN_KP)
+        //SmartDashboard.putNumber("elevator/pidIDown", Constants.Gains.ELEVATOR_DOWN_KI)
+        //SmartDashboard.putNumber("elevator/pidDDown", Constants.Gains.ELEVATOR_DOWN_KD)
+        //SmartDashboard.putNumber("elevator/pidFDown", Constants.Gains.ELEVATOR_DOWN_KF)
 
-        SmartDashboard.putNumber("elevator/pidPUP", Constants.Gains.ELEVATOR_UP_KP)
-        SmartDashboard.putNumber("elevator/pidIUP", Constants.Gains.ELEVATOR_UP_KI)
-        SmartDashboard.putNumber("elevator/pidDUP", Constants.Gains.ELEVATOR_UP_KD)
-        SmartDashboard.putNumber("elevator/pidFUP", Constants.Gains.ELEVATOR_UP_KF)
+        //SmartDashboard.putNumber("elevator/pidPUP", Constants.Gains.ELEVATOR_UP_KP)
+        //SmartDashboard.putNumber("elevator/pidIUP", Constants.Gains.ELEVATOR_UP_KI)
+        //SmartDashboard.putNumber("elevator/pidDUP", Constants.Gains.ELEVATOR_UP_KD)
+        //SmartDashboard.putNumber("elevator/pidFUP", Constants.Gains.ELEVATOR_UP_KF)
     }
 
     fun setOpenLoop(power: Double) {
         elevatorState = ElevatorState.OPEN_LOOP
+        if(observedElevatorPosition < Constants.Elevator.BOTTOM_SOFT_LIMIT && power < 0.0){ //CHANGE SOFT LIMIT
+            talon.set(ControlMode.PercentOutput, 0.0)
+        }
         talon.set(ControlMode.PercentOutput, -power)
     }
 
@@ -96,10 +100,10 @@ class Elevator private constructor(): Subsystem {
 
 
     override fun outputToSmartDashboard() {
-        SmartDashboard.putNumber("elevator/elevatorVoltage", talon.motorOutputVoltage)
-        SmartDashboard.putNumber("elevator/elevatorVelocity", talon.sensorCollection.quadratureVelocity.toDouble())
-        SmartDashboard.putNumber("elevator/elevatorHeight", observedElevatorPosition)
-        SmartDashboard.putNumber("elevator/closedLoopError", talon.getClosedLoopError(0).toDouble())
+        //SmartDashboard.putNumber("elevator/elevatorVoltage", talon.motorOutputVoltage)
+        //SmartDashboard.putNumber("elevator/elevatorVelocity", talon.sensorCollection.quadratureVelocity.toDouble())
+        //SmartDashboard.putNumber("elevator/elevatorHeight", observedElevatorPosition)
+        //SmartDashboard.putNumber("elevator/closedLoopError", talon.getClosedLoopError(0).toDouble())
 
 
 //        talon.config_kP(1, SmartDashboard.getNumber("elevator/pidPDown", Constants.Gains.ELEVATOR_DOWN_KP), 0)
@@ -177,7 +181,7 @@ class Elevator private constructor(): Subsystem {
 
     val loop: Loop = object : Loop {
         override fun onStart() {
-            elevatorState = ElevatorState.HATCHLOW
+            elevatorState = ElevatorState.OPEN_LOOP
         }
 
         override fun onLoop() {
@@ -189,7 +193,7 @@ class Elevator private constructor(): Subsystem {
                 println("elevatorPos: $observedElevatorPosition")
                 when (elevatorState){
                     ElevatorState.OPEN_LOOP -> {
-                        return
+                        setOpenLoop(wantedElevatorPower)
                     }
                     ElevatorState.VELOCITY_CONTROL -> {
                         return

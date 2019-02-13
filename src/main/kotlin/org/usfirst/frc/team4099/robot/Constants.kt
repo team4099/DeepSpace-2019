@@ -1,6 +1,41 @@
 package org.usfirst.frc.team4099.robot
 
 class Constants {
+
+
+    object Drive {
+        val LEFT_MASTER_ID = 7
+        val LEFT_SLAVE_1_ID = 6
+        val LEFT_SLAVE_2_ID = 5
+        val RIGHT_MASTER_ID = 8
+        val RIGHT_SLAVE_1_ID = 9
+        val RIGHT_SLAVE_2_ID = 10
+
+        val HIGH_GEAR_MAX_SETPOINT = 17.0  //17 fps
+
+        val SHIFTER_FORWARD_ID = 0
+        val SHIFTER_REVERSE_ID = 7 //4, change back
+    }
+
+    object Wheels {
+        val DRIVE_WHEEL_DIAMETER_INCHES = 6
+    }
+
+    object Grabber {
+        val TALON_ID = 0
+        val SHIFTER_FORWARD_ID = 1
+        val SHIFTER_REVERSE_ID = 2
+    }
+
+    object Climber {
+        val CLIMBER_F1_FORWARD_ID = 4
+        val CLIMBER_F1_REVERSE_ID = 5
+
+        val CLIMBER_B1_FORWARD_ID = 6
+        val CLIMBER_B1_REVERSE_ID = 7
+    }
+
+
     object Gains {
         val LEFT_LOW_KP = .1 * 1500 / 70
         val LEFT_LOW_KI = 0.0000
@@ -33,37 +68,15 @@ class Constants {
         val ELEVATOR_DOWN_KI = 0.002
         val ELEVATOR_DOWN_KD = 60.0
         val ELEVATOR_DOWN_KF = 0.78
-    }
-    object Drive {
-        val LEFT_MASTER_ID = 7
-        val LEFT_SLAVE_1_ID = 5
-        val LEFT_SLAVE_2_ID = 6
-        val RIGHT_MASTER_ID = 8
-        val RIGHT_SLAVE_1_ID = 9
-        val RIGHT_SLAVE_2_ID = 10
 
-        val HIGH_GEAR_MAX_SETPOINT = 17.0  //17 fps
-
-        val SHIFTER_FORWARD_ID = 0
-        val SHIFTER_REVERSE_ID = 1
-
-        val MAX_HIGH_VELOCITY = 72 //change
-        val MAX_HIGH_ACCEL =  78.2//change
-        val MAX_HIGH_JERK = 2000 //change
-
-        val MAX_LOW_VELOCITY = 72 //change
-        val MAX_LOW_ACCEL = 78.2 //change
-        val MAX_LOW_JERK = 2000 //change
-
-        val HIGH_KV = 1/MAX_HIGH_VELOCITY
-        val HIGH_KA = 0
-
-        val LOW_KV = 1/ MAX_LOW_VELOCITY
-        val LOW_KA = 0
     }
 
-    object Wheels {
-        val DRIVE_WHEEL_DIAMETER_INCHES = 6
+
+    object Vision {
+        val Kp = -0.02
+        val minCommand = 0
+        val CAMERA_TO_TARGET_HEIGHT = 20;
+        val CAMERA_ANGLE = 0;
     }
     object Velocity {
         val HIGH_GEAR_VELOCITY_CONTROL_SLOT = 0
@@ -77,6 +90,19 @@ class Constants {
 
         val SHIFTER_CHANNEL = 0
         val SHIFTER_MODULE = 0
+        val MAX_HIGH_VELOCITY = 72 //change
+        val MAX_HIGH_ACCEL =  78.2//change
+        val MAX_HIGH_JERK = 2000 //change
+
+        val MAX_LOW_VELOCITY = 72 //change
+        val MAX_LOW_ACCEL = 78.2 //change
+        val MAX_LOW_JERK = 2000 //change
+
+        val HIGH_KV = 1/MAX_HIGH_VELOCITY
+        val HIGH_KA = 0
+
+        val LOW_KV = 1/ MAX_LOW_VELOCITY
+        val LOW_KA = 0
     }
     object Loopers {
         val LOOPER_DT = 0.02 // 50 Hz
@@ -106,19 +132,8 @@ class Constants {
 
 
 
-    object Grabber {
-        val TALON_ID = 0
-        val SHIFTER_FORWARD_ID = 1
-        val SHIFTER_REVERSE_ID = 2
-    }
 
-    object Climber {
-        val CLIMBER_F1_FORWARD_ID = 4
-        val CLIMBER_F1_REVERSE_ID = 5
 
-        val CLIMBER_B1_FORWARD_ID = 6
-        val CLIMBER_B1_REVERSE_ID = 7
-    }
 
 
     object Elevator {
@@ -135,12 +150,17 @@ class Constants {
     }
 
 
-    object Vision {
-        val Kp = -0.1
-        val minCommand = 0.05
-        val CAMERA_TO_TARGET_HEIGHT = 20;
-        val CAMERA_ANGLE = 0;
+    object Wrist {
+        val WRIST_TALON_ID = 0
+
+        val WRIST_UP_KP = 0.0
+        val WRIST_UP_KI = 0.0
+        val WRIST_UP_KD = 0.0
+        val WRIST_UP_KF = 0.0
+
+        val WRIST_DOWN_KP = 0.0
+        val WRIST_DOWN_KI = 0.0
+        val WRIST_DOWN_KD = 0.0
+        val WRIST_DOWN_KF = 0.0
     }
-
-
 }

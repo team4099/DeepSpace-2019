@@ -1,5 +1,7 @@
 package src.main.kotlin.org.usfirst.frc.team4099.robot.subsystems
 
+import org.usfirst.frc.team4099.lib.drive.DriveSignal
+import org.usfirst.frc.team4099.robot.loops.Loop
 import org.usfirst.frc.team4099.robot.subsystems.*
 
 /**
@@ -12,15 +14,16 @@ import org.usfirst.frc.team4099.robot.subsystems.*
  */
 
 class Superstructure : Subsystem {
-    val mInstance = Superstructure()
+  //  val mInstance = Superstructure()
 
     // Put Subsystem instantiation here:
-    private val intake = Intake.instance
+    //private val intake = Intake.instance
     private val drive = Drive.instance
     private val elevator = Elevator.instance
     private val vision = Vision.instance
-    private val led = LED.instance
-    private val grabber = Grabber.instance
+//    private val led = LED.instance
+//    private val grabber = Grabber.instance
+
     private val climber = Climber.instance
 
     enum class SystemState {
@@ -47,64 +50,82 @@ class Superstructure : Subsystem {
         }
         return false
     }
+    val loop: Loop = object : Loop {
+        override fun onStart() {
+            systemState = SystemState.IDLE
+        }
+        override fun onStop(){
 
-    fun onLoop() {
-        synchronized(this@Superstructure) {
-            led.systemState = if (elevator.isHatchPanel) LED.SystemState.HATCH else LED.SystemState.CARGO
-            when(systemState) {
-                SystemState.IDLE -> handleIdle()
-                SystemState.ALIGNING_VISION -> handleVision()
-                SystemState.INTAKE_UP -> handleElevatorUp()
-                SystemState.CLIMBING -> handleClimb()
-                SystemState.INTAKE_CARGO -> handleCargoIntake()
-                SystemState.UNJAMMING -> handleUnjam()
-                SystemState.BLINK -> handleBlink()
+        }
+
+        override fun onLoop() {
+            synchronized(this@Superstructure) {
+                if (elevator.isHatchPanel) {
+                    //led.setStateColors("WHITE", LED.SystemState.SOLID)
+                } else {
+                    //led.setStateColors("ORANGE", LED.SystemState.SOLID)
+                }
+
+                when (systemState) {
+                    SystemState.IDLE -> handleIdle()
+                    SystemState.ALIGNING_VISION -> handleVision()
+//                SystemState.INTAKE_UP -> handleElevatorUp()
+//                SystemState.CLIMBING -> handleClimb()
+//                SystemState.INTAKE_CARGO -> handleCargoIntake()
+//                SystemState.UNJAMMING -> handleUnjam()
+//                SystemState.BLINK -> handleBlink()
+                }
             }
         }
     }
 
     private fun handleIdle() {
         // TODO
-        vision.visionState = Vision.VisionState.INACTIVE
-        elevator.elevatorState = Elevator.ElevatorState.PORTLOW
-        led.systemState = LED.SystemState.OFF
+//        vision.visionState = Vision.VisionState.INACTIVE
+//        elevator.elevatorState = Elevator.ElevatorState.PORTLOW
+        //led.setState(LED.SystemState.OFF)
     }
 
     private fun handleVision() {
-        vision.visionState = Vision.VisionState.AIMING
-        drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
-        led.systemState = LED.SystemState.ALIGNING
+//        vision.visionState = Vision.VisionState.AIMING
+//        println("vision handled")
+
+        //led.setStateColors("PURPLE", LED.SystemState.SOLID)
     }
 
-    private fun handleElevatorUp() {
-        intake.up = false // Move intake down
-         // Move elevator up
-        elevator.updatePosition(true)
-    }
+//    private fun handleElevatorUp() {
+//        intake.up = false // Move intake down
+//         // Move elevator up
+//        elevator.updatePosition(true)
+//    }
+//
+//    private fun handleClimb() {
+//        when(climber.climberState){
+//            Climber.ClimberState.FRONT_DOWN -> led.setState(LED.SystemState.FRONT_DOWN)
+//            Climber.ClimberState.BACK_DOWN -> led.setState(LED.SystemState.BACK_DOWN)
+//        }
+//    }
+//
+//    private fun handleCargoIntake() {
+//        when(intake.intakeState) {
+//            Intake.IntakeState.IN, Intake.IntakeState.SLOW -> led.setState(LED.SystemState.INTAKE_IN)
+//        }
+//    }
+//
+//    private fun handleUnjam() {
+//        if (intake.intakeState == Intake.IntakeState.FAST_OUT && grabber.intakeState == Grabber.IntakeState.OUT) {
+//            led.setState(LED.SystemState.UNJAM)
+//        }
+//    }
+//
+//    private fun handleBlink() {
+//        if (isAlignedVision()) {
+//            led.setState(LED.SystemState.ALIGNING)
+//        }
+//    }
 
-    private fun handleClimb() {
-        when(climber.climberState){
-            Climber.ClimberState.FRONT_DOWN -> led.setState(LED.SystemState.FRONT_DOWN)
-            Climber.ClimberState.BACK_DOWN -> led.setState(LED.SystemState.BACK_DOWN)
-        }
-    }
-
-    private fun handleCargoIntake() {
-        when(intake.intakeState) {
-            Intake.IntakeState.IN, Intake.IntakeState.SLOW -> led.setState(LED.SystemState.INTAKE_IN)
-        }
-    }
-
-    private fun handleUnjam() {
-        if (intake.intakeState == Intake.IntakeState.FAST_OUT && grabber.intakeState == Grabber.IntakeState.OUT) {
-            led.setState(LED.SystemState.UNJAM)
-        }
-    }
-
-    private fun handleBlink() {
-        if (isAlignedVision()) {
-            led.setState(LED.SystemState.ALIGNING)
-        }
+    fun setState (state: SystemState) {
+        systemState = state
     }
 
     override fun outputToSmartDashboard() { }
@@ -112,4 +133,8 @@ class Superstructure : Subsystem {
     override fun stop() { }
 
     override fun zeroSensors() { }
+    companion object {
+        val instance = Superstructure()
+    }
+
 }
