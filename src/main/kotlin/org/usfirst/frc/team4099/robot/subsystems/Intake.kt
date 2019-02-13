@@ -1,11 +1,8 @@
 package org.usfirst.frc.team4099.robot.subsystems
 
-import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.Talon
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import org.usfirst.frc.team4099.robot.Constants
-import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
 import org.usfirst.frc.team4099.robot.loops.Loop
 
 
@@ -19,16 +16,24 @@ import org.usfirst.frc.team4099.robot.loops.Loop
  */
 class Intake private constructor() : Subsystem {
 
-    private val Talon = Talon(Constants.Intake.INTAKE_TALON_ID)
-    private val pneumaticShifter: DoubleSolenoid = DoubleSolenoid(Constants.Intake.SHIFTER_FORWARD_ID,
-            Constants.Intake.SHIFTER_REVERSE_ID)
+    private val talon = Talon(Constants.Intake.INTAKE_TALON_ID)
+//    private val extender: DoubleSolenoid = DoubleSolenoid(Constants.Intake.EXTENDER_FORWARD_ID,
+//            Constants.Intake.EXTENDER_REVERSE_ID)
+//    private val deployer: DoubleSolenoid = DoubleSolenoid(Constants.Intake.DEPLOY_FORWARD_ID,
+//            Constants.Intake.DEPLOY_REVERSE_ID)
 
     var intakeState = IntakeState.IN
     private var intakePower = 0.0
-    var up = false
+    var intakeOut = false
         set (wantsUp) {
-            pneumaticShifter.set(if (wantsUp) DoubleSolenoid.Value.kReverse else DoubleSolenoid.Value.kForward)
+            //extender.set(if (wantsUp) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
             field = wantsUp
+        }
+
+    var deploying = false
+        set (wantsOut) {
+            //deployer.set(if (wantsOut) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
+            field = wantsOut
         }
 
 
@@ -37,10 +42,11 @@ class Intake private constructor() : Subsystem {
     }
 
     override fun outputToSmartDashboard() {
-        SmartDashboard.putNumber("intake/intakePower", intakePower)
-        SmartDashboard.putBoolean("intake/isUp", up)
-        SmartDashboard.putNumber("intake/current", BrownoutDefender.instance.getCurrent(7))
+        //SmartDashboard.putNumber("intake/intakePower", intakePower)
+        //SmartDashboard.putBoolean("intake/isUp", up)
+        //SmartDashboard.putNumber("intake/current", BrownoutDefender.instance.getCurrent(7))
     }
+
 
     /**
      * stops intake
@@ -55,7 +61,7 @@ class Intake private constructor() : Subsystem {
      * @param power a double that is the power for the intake
      */
     private fun setIntakePower(power: Double) {
-        Talon.set(power)
+        talon.set(power)
     }
 
     /**
@@ -64,7 +70,7 @@ class Intake private constructor() : Subsystem {
      */
     val loop: Loop = object : Loop {
         override fun onStart() {
-            up = false
+            intakeOut = false
             intakeState = IntakeState.STOP
         }
 
@@ -73,14 +79,6 @@ class Intake private constructor() : Subsystem {
          */
         override fun onLoop() {
             synchronized(this@Intake) {
-                //                println("Ribbon switch pressed: $switchPressed")
-                if (intakeState == IntakeState.IN) {
-//                if (intakeState == IntakeState.IN && (
-//                                BrownoutDefender.instance.getCurrent(11) > 10
-//                                || BrownoutDefender.instance.getCurrent(7) > 10)) {
-                    intakeState = IntakeState.SLOW
-                    up = false
-                }
                 when (intakeState) {
                     IntakeState.IN -> setIntakePower(-1.0)
                     IntakeState.STOP -> setIntakePower(0.0)

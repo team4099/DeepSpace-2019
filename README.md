@@ -1,4 +1,3 @@
-# DeepSpace-2019
 ![Deep Space 2019](assets/deepspace_logo.png)
 
 # The Falcons (#4099)
