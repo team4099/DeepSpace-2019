@@ -213,7 +213,7 @@ class Robot : TimedRobot() {
             if (controlBoard.aimingOn) {
                 println("Activating vision")
                 println(vision.visionState)
-                vision.setState(Vision.VisionState.AIMING)
+                vision.setState(Vision.VisionState.SEEKING)
                 println(vision.visionState)
             }
             if (controlBoard.aimingOff) {
@@ -225,8 +225,14 @@ class Robot : TimedRobot() {
 
             if (vision.visionState != Vision.VisionState.AIMING) {
                 drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
+            } else if (vision.visionState == Vision.VisionState.SEEKING) {
+                if (vision.onTarget) {
+                    drive.setLeftRightPower(0.3, 0.3)
+                } else {
+                    drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
+                }
             } else {
-                drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
+                drive.setLeftRightPower(vision.steeringAdjust, - vision.steeringAdjust)
             }
             outputAllToSmartDashboard()
         } catch (t: Throwable) {
