@@ -1,13 +1,21 @@
 package org.usfirst.frc.team4099.robot
 
+import org.usfirst.frc.team4099.lib.util.Utils
+
+
+import edu.wpi.first.wpilibj.CameraServer
+import edu.wpi.first.wpilibj.IterativeRobot
+import edu.wpi.first.wpilibj.livewindow.LiveWindow
+import org.usfirst.frc.team4099.DashboardConfigurator
+import org.usfirst.frc.team4099.auto.AutoModeExecuter
+import org.usfirst.frc.team4099.auto.modes.HatchPanelOnly
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.TimedRobot
-import org.usfirst.frc.team4099.DashboardConfigurator
 //import org.usfirst.frc.team4099.auto.AutoModeExecuter
 import org.usfirst.frc.team4099.lib.util.CrashTracker
 
 import org.usfirst.frc.team4099.robot.drive.CheesyDriveHelper
-import org.usfirst.frc.team4099.lib.util.Utils
+import org.usfirst.frc.team4099.robot.drive.TankDriveHelper
 import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
 import org.usfirst.frc.team4099.robot.loops.Looper
 import org.usfirst.frc.team4099.robot.loops.VoltageEstimator
@@ -17,6 +25,9 @@ import src.main.kotlin.org.usfirst.frc.team4099.robot.subsystems.Superstructure
 
 class Robot : TimedRobot() {
     private val vision = Vision.instance
+
+    private var autoModeExecuter: AutoModeExecuter? = null
+
 
     private val test3 : DoubleSolenoid = DoubleSolenoid(1,6)
     //private val climber = Climber.instance
@@ -28,14 +39,13 @@ class Robot : TimedRobot() {
     private val controlBoard = ControlBoard.instance
     private val disabledLooper = Looper("disabledLooper")
     private val enabledLooper = Looper("enabledLooper")
+    private val leds = LED.instance
     private val elevator = Elevator.instance
     private val superstructure = Superstructure.instance
     private val cheesyDriveHelper = CheesyDriveHelper()
   
 
    // private val intake = Intake.instance
-
-
 
 
 
@@ -46,7 +56,6 @@ class Robot : TimedRobot() {
 
     override fun robotInit() {
         try {
-            CrashTracker.logRobotInit()
 
             DashboardConfigurator.initDashboard()
 //            enabledLooper.register(drive.loop)
@@ -56,6 +65,8 @@ class Robot : TimedRobot() {
 
 
 
+            enabledLooper.register(drive.loop)
+            enabledLooper.register(leds.loop)
             enabledLooper.register(wrist.loop)
 
             enabledLooper.register(elevator.loop)
@@ -72,6 +83,8 @@ class Robot : TimedRobot() {
 
     override fun disabledInit() {
         try {
+            enabledLooper.stop() // end EnabledLooper
+            disabledLooper.start() // start DisabledLooper
 
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("disabledInit", t)
@@ -82,8 +95,15 @@ class Robot : TimedRobot() {
 
     override fun autonomousInit() {
         try {
+            autoModeExecuter?.stop()
+            autoModeExecuter = null
 
+            disabledLooper.stop() // end DisabledLooper
+            enabledLooper.start() // start EnabledLooper
 
+            autoModeExecuter = AutoModeExecuter()
+            autoModeExecuter?.setAutoMode(HatchPanelOnly(DashboardConfigurator.StartingPosition.LEFT, 0.0))
+            autoModeExecuter?.start()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("autonomousInit", t)
             throw t
@@ -129,6 +149,7 @@ class Robot : TimedRobot() {
 
     override fun teleopPeriodic() {
         try {
+            leds.handleBackDown()
                 if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER){
                     elevator.wantedElevatorPower = controlBoard.elevatorPower
                 }
@@ -146,63 +167,11 @@ class Robot : TimedRobot() {
                 if(controlBoard.hatchPOut){
                     test3.set(DoubleSolenoid.Value.kReverse)
                 }
-//
-//            intake.intakeState = when {
-//               controlBoard.reverseIntakeFast -> Intake.IntakeState.FAST_OUT
-//                controlBoard.reverseIntakeSlow -> Intake.IntakeState.SLOW_OUT
-//                controlBoard.runIntake -> Intake.IntakeState.IN
-//                intake.intakeState != Intake.IntakeState.SLOW -> Intake.IntakeState.STOP
-//                else -> intake.intakeState
-//            }
 
-//            if(controlBoard.toggleWrist){
-//                wrist.setWristMode(if(wrist.wristState == Wrist.WristState.VERTICAL) Wrist.WristState.HORIZONTAL else Wrist.WristState.VERTICAL)
-//            }
 
-//            val wantedVelocity = controlBoard.elevatorPower * Constants.Elevator.MAX_SPEED
-//            if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER) {
-//                elevator.setElevatorVelocity(wantedVelocity)
-//                elevator.elevatorState = Elevator.ElevatorState.VELOCITY_CONTROL
-//            }
-//            else {
-//                elevator.setElevatorVelocity(0)
-//            }
-//            val frontToggle = controlBoard.actuateFrontClimb
-//            val backToggle = controlBoard.actuateBackClimb
-//            if (frontToggle && climber.climberState == Climber.ClimberState.FRONT_DOWN) {
-//                climber.climberState = Climber.ClimberState.BOTH_UP
-//
-//            } else if (frontToggle && climber.climberState == Climber.ClimberState.BOTH_UP) {
-//                climber.climberState = Climber.ClimberState.FRONT_DOWN
-//
-//            } else if (backToggle && climber.climberState == Climber.ClimberState.BOTH_UP) {
-//                climber.climberState = Climber.ClimberState.BACK_DOWN
-//
-//            } else if (backToggle && climber.climberState == Climber.ClimberState.BACK_DOWN) {
-//                climber.climberState = Climber.ClimberState.BOTH_UP
-//            }
-//
-//            val moveUp = controlBoard.moveUp
-//            var moveDown = controlBoard.moveDown
-//            val toggle = controlBoard.toggle
-//
-//            if (controlBoard.moveDown && moveUp) {
-//                elevator.updatePosition(true)
-//            } else if (!controlBoard.moveDown && moveDown) {
-//                elevator.updatePosition(false)
-//            }
-//            if (toggle) {
-//                elevator.toggleOuttakeMode()
-//            }
-//
-//            intake.intakeState = when {
-//                controlBoard.reverseIntakeFast -> Intake.IntakeState.FAST_OUT
-//                controlBoard.reverseIntakeSlow -> Intake.IntakeState.SLOW_OUT
-//                controlBoard.runIntake -> Intake.IntakeState.IN
-//                intake.intakeState != Intake.IntakeState.SLOW -> Intake.IntakeState.STOP
-//                else -> intake.intakeState
-//            }
-//
+            drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
+
+            //outputAllToSmartDashboard()
             if (drive.highGear && controlBoard.switchToLowGear) {
                 drive.highGear = false
                 println("Shifting to low gear")
