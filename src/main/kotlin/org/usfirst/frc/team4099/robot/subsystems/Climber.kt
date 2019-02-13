@@ -2,7 +2,7 @@ package org.usfirst.frc.team4099.robot.subsystems
 
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import com.ctre.phoenix.motorcontrol.ControlMode
-import edu.wpi.first.wpilibj.Talon
+import edu.wpi.first.wpilibj.Spark
 import org.usfirst.frc.team4099.lib.util.CANMotorControllerFactory
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import org.usfirst.frc.team4099.robot.Constants
