@@ -24,7 +24,7 @@ class LED private constructor() : Subsystem  {
             "WHITE" to Photon.Color.WHITE
     )
 
-    var colors = arrayListOf<Photon.Color?>()
+    var colors = arrayListOf<Photon.Color>()
 
     var systemState = SystemState.OFF
 
@@ -140,13 +140,13 @@ class LED private constructor() : Subsystem  {
 
     private fun setColors(color: String) {
         colors.clear()
-        colors.add(colorMap[color])
+        colorMap[color]?.let { colors.add(it) }
     }
 
     private fun setColors(color1: String, color2: String) {
         colors.clear()
-        colors.add(colorMap[color1])
-        colors.add(colorMap[color2])
+        colorMap[color1]?.let { colors.add(it) }
+        colorMap[color2]?.let { colors.add(it) }
     }
 
 
