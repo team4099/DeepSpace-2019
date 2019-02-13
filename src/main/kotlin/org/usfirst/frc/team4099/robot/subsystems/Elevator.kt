@@ -59,9 +59,9 @@ class Elevator private constructor(): Subsystem {
         talon.configMotionCruiseVelocity(0, 0)
         talon.configMotionAcceleration(0, 0)
 
-        talon.configReverseSoftLimitEnable(true, 0)
+        //talon.configReverseSoftLimitEnable(true, 0)
         //talon.configReverseSoftLimitThreshold(ElevatorConversion.inchesToPulses(Constants.Elevator.BOTTOM_SOFT_LIMIT).toInt(), 0)
-        talon.overrideSoftLimitsEnable(true)
+        //talon.overrideSoftLimitsEnable(true)
 
         //SmartDashboard.putNumber("elevator/pidPDown", Constants.Gains.ELEVATOR_DOWN_KP)
         //SmartDashboard.putNumber("elevator/pidIDown", Constants.Gains.ELEVATOR_DOWN_KI)
@@ -80,7 +80,9 @@ class Elevator private constructor(): Subsystem {
         if(observedElevatorPosition < Constants.Elevator.BOTTOM_SOFT_LIMIT && power < 0.0){ //CHANGE SOFT LIMIT
             talon.set(ControlMode.PercentOutput, 0.0)
         }
-        talon.set(ControlMode.PercentOutput, -power)
+        else {
+            talon.set(ControlMode.PercentOutput, -power)
+        }
     }
 
 
