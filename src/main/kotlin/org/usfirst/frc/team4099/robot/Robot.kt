@@ -193,17 +193,19 @@ class Robot : TimedRobot() {
                 println(vision.visionState)
             }
 
-            if (vision.visionState != Vision.VisionState.AIMING) {
-                drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
-            } else if (vision.visionState == Vision.VisionState.SEEKING) {
+//            if (vision.visionState != Vision.VisionState.AIMING) {
+//                drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
+//            } else if (vision.visionState == Vision.VisionState.SEEKING) {
                 if (vision.onTarget) {
                     drive.setLeftRightPower(0.3, 0.3)
-                } else {
+                } else if (vision.visionState != Vision.VisionState.INACTIVE) {
                     drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
+                } else {
+                    drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
                 }
-            } else {
-                drive.setLeftRightPower(vision.steeringAdjust, - vision.steeringAdjust)
-            }
+//            } else {
+//                drive.setLeftRightPower(vision.steeringAdjust, - vision.steeringAdjust)
+//            }
             outputAllToSmartDashboard()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)
