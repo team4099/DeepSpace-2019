@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Joystick
 /**
  * Controller Settings for Correct Mappings
  * ----------------------------------------
- * X Emulation Mode (switch on back = X)
+ * X Emulation Mode (switch on actuateBackClimb = X)
  * Flight Mode (Mode Light = Off)
  */
 

@@ -6,15 +6,28 @@ import edu.wpi.first.networktables.NetworkTableInstance
 import org.usfirst.frc.team4099.robot.loops.Loop
 import org.usfirst.frc.team4099.robot.Constants
 
-class Vision private constructor(): Subsystem {
 
+
+/*
+Vision Processing for FRC 2019
+Written by Rithvik Bhogavilli and Jason Liu
+
+ */
+
+class Vision private constructor(): Subsystem {
+    var onTarget = false
     var steeringAdjust = 0.0
     var distance = 0
+
 
     private val table: NetworkTable = NetworkTableInstance.getDefault().getTable("limelight")
     var tx = table.getEntry("tx").getDouble(0.0)
     var tv = table.getEntry("tv").getDouble(0.0)
     var ty = table.getEntry("ty").getDouble(0.0)
+    var ta = table.getEntry("ta").getDouble(0.0)
+
+    var led = table.getEntry("ledMode")
+
 
     var visionState = VisionState.INACTIVE
 
@@ -42,12 +55,13 @@ class Vision private constructor(): Subsystem {
             synchronized(this@Vision) {
 //                println("vision loop")
                 distance = (Math.tan(ty + Constants.Vision.CAMERA_ANGLE) / Constants.Vision.CAMERA_TO_TARGET_HEIGHT).toInt()
-                tx = table.getEntry("tx").getDouble(0.0
-                )
+                tx = table.getEntry("tx").getDouble(0.0)
                 tv = table.getEntry("tv").getDouble(0.0)
                 ty = table.getEntry("ty").getDouble(0.0)
+                ta = table.getEntry("ta").getDouble(0.0)
                 when (visionState) {
                     VisionState.AIMING -> {
+                        led.setNumber(3)
                         if (tv == 0.0) {
 
                         } else {
@@ -56,23 +70,46 @@ class Vision private constructor(): Subsystem {
                                 steeringAdjust = Constants.Vision.Kp * tx - Constants.Vision.minCommand
                             } else if (tx < 1.0) {
                                 // left
-                                steeringAdjust = Constants.Vision.Kp * tx + Constants.Vision.minCommand }
+                                steeringAdjust = Constants.Vision.Kp * tx + Constants.Vision.minCommand
+                            }
+                            else {}
                         }
 
-                        steeringAdjust = -steeringAdjust
+
+//                        steeringAdjust = -steeringAdjust
 
                     }
                     VisionState.SEEKING -> {
+                        led.setNumber(3)
+                        if (tv == 0.0) {
 
+                        } else {
+                            if (tx > 0.0) {
+                                // right
+                                steeringAdjust = Constants.Vision.Kp * tx - Constants.Vision.minCommand
+                            } else if (tx < 0.0) {
+                                // left
+                                steeringAdjust = Constants.Vision.Kp * tx + Constants.Vision.minCommand
+                            } else if (tx == 1.0) {
+                                onTarget = ta < 0.8
+                            } else {}
+                        }
                     }
 
-                    VisionState.INACTIVE -> steeringAdjust = 0.0
+                    VisionState.INACTIVE -> {
+                        steeringAdjust = 0.0
+                        led.setNumber(1)
+                    }
 
                 }
             }
         }
         override fun onStop() {}
 
+    }
+
+    fun setState (state: VisionState) {
+        visionState = state
     }
 
     companion object {

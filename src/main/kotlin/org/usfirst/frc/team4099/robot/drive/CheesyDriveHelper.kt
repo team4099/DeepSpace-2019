@@ -104,7 +104,7 @@ class CheesyDriveHelper {
             if (Math.abs(throttle) < 0.2) {
                 val alpha = 0.1
                 quickStopAccumulator = (1 - alpha) * quickStopAccumulator + // used for "negative inertia"
-                                       alpha * Utils.limit(wheel, 1.0) * 2.0
+                        alpha * Utils.limit(wheel, 1.0) * 2.0
             }
             overPower = 0.5
             angularPower = wheel
@@ -149,7 +149,7 @@ class CheesyDriveHelper {
 
         private val kThrottleDeadband = 0.02
         private val kWheelDeadband = 0.02
-        private val kTurnSensitivity = 0.6
-        private val kMaxThrottleDelta = 1.0 / 40.0
+        private val kTurnSensitivity = 0.7
+        private val kMaxThrottleDelta = 2.0 / 40.0
     }
 }
