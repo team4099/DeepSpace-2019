@@ -46,20 +46,6 @@ class Robot : TimedRobot() {
 
     override fun robotInit() {
         try {
-//            CrashTracker.logRobotInit()
-//
-////            DashboardConfigurator.initDashboard()
-//
-//
-//           // enabledLooper.register(grabber.loop)
-//
-//            //enabledLooper.register(intake.loop)
-//
-//            enabledLooper.register(drive.loop)
-//
-//            enabledLooper.register(BrownoutDefender.instance)
-//
-//            disabledLooper.register(VoltageEstimator.instance)
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("robotInit", t)
             throw t
@@ -136,82 +122,11 @@ class Robot : TimedRobot() {
 
     override fun teleopPeriodic() {
         try {
-
-//            val wantedVelocity = controlBoard.elevatorPower * Constants.Elevator.MAX_SPEED
-//            if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER) {
-//                elevator.setElevatorVelocity(wantedVelocity)
-//                elevator.elevatorState = Elevator.ElevatorState.VELOCITY_CONTROL
-//            }
-//            else {
-//                elevator.setElevatorVelocity(0)
-//            }
-//            val frontToggle = controlBoard.actuateFrontClimb
-//            val backToggle = controlBoard.actuateBackClimb
-//            if (frontToggle && climber.climberState == Climber.ClimberState.FRONT_DOWN) {
-//                climber.climberState = Climber.ClimberState.BOTH_UP
-//
-//            } else if (frontToggle && climber.climberState == Climber.ClimberState.BOTH_UP) {
-//                climber.climberState = Climber.ClimberState.FRONT_DOWN
-//
-//            } else if (backToggle && climber.climberState == Climber.ClimberState.BOTH_UP) {
-//                climber.climberState = Climber.ClimberState.BACK_DOWN
-//
-//            } else if (backToggle && climber.climberState == Climber.ClimberState.BACK_DOWN) {
-//                climber.climberState = Climber.ClimberState.BOTH_UP
-//            }
-//
-//            val moveUp = controlBoard.moveUp
-//            var moveDown = controlBoard.moveDown
-//            val toggle = controlBoard.toggle
-//
-//            if (controlBoard.moveDown && moveUp) {
-//                elevator.updatePosition(true)
-//            } else if (!controlBoard.moveDown && moveDown) {
-//                elevator.updatePosition(false)
-//            }
-//            if (toggle) {
-//                elevator.toggleOuttakeMode()
-//            }
-//            if (!grabber.push && controlBoard.toggleGrabber) {
-//                grabber.push = true
-//                println("Pushing the hatch-ey boi")
-//            } else {
-//                grabber.push = false
-//            }
-//            if(controlBoard.grab) {
-//                grabber.intakeState = Grabber.IntakeState.IN
-//            }
-//            if(controlBoard.eject){
-//                grabber.intakeState = Grabber.IntakeState.OUT
-//            }
-//            if(controlBoard.stopGrabber){
-//                grabber.intakeState = Grabber.IntakeState.NEUTRAL
-//            }
-//
-//
-//            if (intake.up && controlBoard.toggleIntake) {
-//                intake.up = false
-//                println("Lowering intake")
-//            } else if (!intake.up && controlBoard.toggleIntake) {
-//                intake.up = true
-//                println("Raising intake")
-//            }
-//
-//            intake.intakeState = when {
-//                controlBoard.reverseIntakeFast -> Intake.IntakeState.FAST_OUT
-//                controlBoard.reverseIntakeSlow -> Intake.IntakeState.SLOW_OUT
-//                controlBoard.runIntake -> Intake.IntakeState.IN
-//                intake.intakeState != Intake.IntakeState.SLOW -> Intake.IntakeState.STOP
-//                else -> intake.intakeState
-//            }
-//
-//            if (drive.highGear && controlBoard.switchToLowGear) {
-//                drive.highGear = false
-//                println("Shifting to low gear")
-//            } else if (!drive.highGear && controlBoard.switchToHighGear) {
-//                drive.highGear = true
-//                println("Shifting to high gear")
-//            }
+//            climberStateEntry.setString(climber.climberState.toString)
+//            elevatorPositionEntry.setDouble(elevator.observedElevatorPosition)
+//            intakeStateEntry.setString(if(intake.intakeState == Intake.IntakeState.IN) "In" else "Out")
+//            intakeModeEntry.setString(if(elevator.isHatchPanel) "Hatch" else "Cargo")
+//            value ++
             drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
             DashboardConfigurator.updateValues()
 

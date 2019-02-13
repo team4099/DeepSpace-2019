@@ -39,7 +39,7 @@ object DashboardConfigurator {
     var intakeStateEntry = table.getEntry("Intake State")
     var intakeModeEntry = table.getEntry("Intake Mode")
     var hatchPanelStateEntry = table.getEntry("Hatch Panel State")
-    var value = 1
+    var value = 1.0
 
     enum class StartingPosition(val dashboardName: String)  { //TODO: Investigate starting locations
         LEFT("LEFT"),
@@ -58,31 +58,28 @@ object DashboardConfigurator {
         elevatorPositionEntry.setDouble(elevator.observedElevatorPosition)
         intakeStateEntry.setString(if(intake.intakeState == Intake.IntakeState.IN) "In" else "Out")
         intakeModeEntry.setString(if(elevator.isHatchPanel) "Hatch" else "Cargo")
-        value ++
 
         //hatchPanelStateEntry.setString()
 
-        override fun outputToSmartDashboard() {
-            /*SmartDashboard.putString("climber/climberState", climberState.toString())
-            SmartDashboard.putNumber("intake/intakePower", intakePower)
-            SmartDashboard.putNumber("elevator/elevatorHeight", observedElevatorPosition)*/
+        fun outputToSmartDashboard() {
+            SmartDashboard.putString("climber/climberState", climber.climberState.toString())
+            SmartDashboard.putString("intake/intakePower", intake.intakeState.toString())
+            SmartDashboard.putNumber("elevator/elevatorHeight", elevator.observedElevatorPosition)
 
-            SmartDashboard.putString("climber/climberState", climberStateEntry)
-            SmartDashboard.putNumber("intake/intakePower", elevatorPositionEntry)
-            SmartDashboard.putNumber("elevator/elevatorHeight", elevatorPositionEntry)
-
-            SmartDashboard.putNumber("number", 1)
+            SmartDashboard.putNumber("number", 1.0)
             SmartDashboard.putNumber("value", value)
         }
+        outputToSmartDashboard()
 
     }
 
 
+
 }
 
-override fun outputToSmartDashboard() {
-    SmartDashboard.putString("climber/climberState", climberState)
-    SmartDashboard.putNumber("intake/intakePower", elevatorPositionEntry)
-    SmartDashboard.putNumber("elevator/elevatorHeight", elevatorPositionEntry)
-    //SmartDashboard.putNumber("number", 1)
-}
+//override fun outputToSmartDashboard() {
+//    SmartDashboard.putString("climber/climberState", climberState)
+//    SmartDashboard.putNumber("intake/intakePower", elevatorPositionEntry)
+//    SmartDashboard.putNumber("elevator/elevatorHeight", elevatorPositionEntry)
+//    //SmartDashboard.putNumber("number", 1)
+//}
