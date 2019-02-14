@@ -5,6 +5,7 @@ import edu.wpi.first.networktables.NetworkTable
 import edu.wpi.first.networktables.NetworkTableInstance
 import org.usfirst.frc.team4099.robot.loops.Loop
 import org.usfirst.frc.team4099.robot.Constants
+import org.usfirst.frc.team4099.robot.subsystems.Elevator
 
 
 
@@ -15,9 +16,11 @@ Written by Rithvik Bhogavilli and Jason Liu
  */
 
 class Vision private constructor(): Subsystem {
+    val elevator = Elevator.instance
     var onTarget = false
     var steeringAdjust = 0.0
     var distance = 0
+    var dHeight = 0.0
 
 
     private val table: NetworkTable = NetworkTableInstance.getDefault().getTable("limelight")
@@ -54,7 +57,13 @@ class Vision private constructor(): Subsystem {
         override fun onLoop() {
             synchronized(this@Vision) {
 //                println("vision loop")
-                distance = (Math.tan(ty + Constants.Vision.CAMERA_ANGLE) / Constants.Vision.CAMERA_TO_TARGET_HEIGHT).toInt()
+                if(elevator.isHatchPanel){
+                    dHeight = Constants.Vision.HATCH_PANEL_HEIGHT - Constants.Vision.TARGET_HEIGHT_ADJUST - elevator.observedElevatorPosition
+                }
+                else{
+                    dHeight = Constants.Vision.CARGO_HEIGHT - Constants.Vision.TARGET_HEIGHT_ADJUST - elevator.observedElevatorPosition
+                }
+                distance = (dHeight / Math.tan(ty + Constants.Vision.CAMERA_ANGLE)).toInt()
                 tx = table.getEntry("tx").getDouble(0.0)
                 tv = table.getEntry("tv").getDouble(0.0)
                 ty = table.getEntry("ty").getDouble(0.0)

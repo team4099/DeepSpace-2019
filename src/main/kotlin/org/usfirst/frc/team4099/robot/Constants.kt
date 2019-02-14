@@ -88,7 +88,8 @@ class Constants {
         val minCommand = 0
         val HATCH_PANEL_HEIGHT = 20 // inches
         val CARGO_HEIGHT = 20 // inches
-        val CAMERA_ANGLE = 0 // degrees
+        val CAMERA_ANGLE = 0 // degrees, NOT SET
+        val TARGET_HEIGHT_ADJUST = 10 //inches, NOT SET
     }
     object Velocity {
         val HIGH_GEAR_VELOCITY_CONTROL_SLOT = 0
