@@ -28,6 +28,7 @@ class Drive private constructor() : Subsystem {
     private val pneumaticShifter: DoubleSolenoid = DoubleSolenoid(Constants.Drive.SHIFTER_FORWARD_ID, Constants.Drive.SHIFTER_REVERSE_ID)
 
     private val ahrs: AHRS
+    private val pulsesToInches = 1/(128 * 3 * 64/(Constants.Wheels.DRIVE_WHEEL_DIAMETER_INCHES * 34 * Math.PI))
 
     var brakeMode: NeutralMode = NeutralMode.Coast //sets whether the break mode should be coast (no resistance) or by force
         set(type) {
@@ -345,7 +346,11 @@ class Drive private constructor() : Subsystem {
     }
 
     private fun pulsesToInches(pulses: Double): Double {
-        return pulses*12/2336
+        return pulses * pulsesToInches
+    }
+
+    private fun inchesToPulses(inches: Double): Double {
+        return inches/pulsesToInches
     }
 
     private fun rpmToInchesPerSecond(rpm: Double): Double {

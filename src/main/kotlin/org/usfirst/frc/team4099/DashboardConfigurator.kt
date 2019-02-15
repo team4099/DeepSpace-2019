@@ -82,7 +82,7 @@ object DashboardConfigurator {
         */
         //hatchPanelStateEntry.setString()
 
-=======
+
 
         //hatchPanelStateEntry.setString()
 
@@ -95,7 +95,7 @@ object DashboardConfigurator {
             SmartDashboard.putNumber("value", value)
         }
         outputToSmartDashboard()
->>>>>>> bcf89dd4fb1a81c809ce9424e135059fb524179f
+
 
     }
 

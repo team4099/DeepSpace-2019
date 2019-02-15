@@ -17,7 +17,7 @@ class Constants {
     }
 
     object Wheels {
-        val DRIVE_WHEEL_DIAMETER_INCHES = 6
+        val DRIVE_WHEEL_DIAMETER_INCHES = 12
     }
 
     object Grabber {
