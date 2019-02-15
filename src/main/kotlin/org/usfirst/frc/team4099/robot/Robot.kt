@@ -163,10 +163,11 @@ class Robot : TimedRobot() {
 
 
                 if(controlBoard.hatchPExtend){
-                    test3.set(DoubleSolenoid.Value.kForward)
+                    intake.extended = true
                 }
                 if(controlBoard.hatchPOut){
-                    test3.set(DoubleSolenoid.Value.kReverse)
+                    intake.hatchOut = true
+
                 }
 
 

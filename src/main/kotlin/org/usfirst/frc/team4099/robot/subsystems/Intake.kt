@@ -2,8 +2,11 @@ package org.usfirst.frc.team4099.robot.subsystems
 
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.Talon
+import edu.wpi.first.wpilibj.Timer
 import org.usfirst.frc.team4099.robot.Constants
 import org.usfirst.frc.team4099.robot.loops.Loop
+import java.sql.Time
+import kotlin.system.measureTimeMillis
 
 
 /**
@@ -17,23 +20,27 @@ import org.usfirst.frc.team4099.robot.loops.Loop
 class Intake private constructor() : Subsystem {
 
     private val talon = Talon(Constants.Intake.INTAKE_TALON_ID)
-//    private val extender: DoubleSolenoid = DoubleSolenoid(Constants.Intake.EXTENDER_FORWARD_ID,
-//            Constants.Intake.EXTENDER_REVERSE_ID)
-//    private val deployer: DoubleSolenoid = DoubleSolenoid(Constants.Intake.DEPLOY_FORWARD_ID,
-//            Constants.Intake.DEPLOY_REVERSE_ID)
+    private val extender: DoubleSolenoid = DoubleSolenoid(Constants.Intake.EXTENDER_FORWARD_ID,
+            Constants.Intake.EXTENDER_REVERSE_ID)
+    private val deployer: DoubleSolenoid = DoubleSolenoid(Constants.Intake.DEPLOYER_FORWARD_ID,
+            Constants.Intake.DEPLOYER_REVERSE_ID)
 
     var intakeState = IntakeState.IN
+    private var hatchOutStart = 0.0
     private var intakePower = 0.0
-    var intakeOut = false
-        set (wantsUp) {
-            //extender.set(if (wantsUp) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
-            field = wantsUp
+    var hatchOut = false
+        set (wantsOut) {
+            deployer.set(if (wantsOut) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
+            field = wantsOut
         }
 
-    var deploying = false
-        set (wantsOut) {
-            //deployer.set(if (wantsOut) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
-            field = wantsOut
+    var extended = false
+        set (wantsExtended) {
+            if(wantsExtended){
+                hatchOutStart = Timer.getFPGATimestamp()
+            }
+            extender.set(if (wantsExtended) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
+            field = wantsExtended
         }
 
 
@@ -70,7 +77,8 @@ class Intake private constructor() : Subsystem {
      */
     val loop: Loop = object : Loop {
         override fun onStart() {
-            intakeOut = false
+            hatchOut = false
+            extended = false
             intakeState = IntakeState.STOP
         }
 
@@ -86,6 +94,10 @@ class Intake private constructor() : Subsystem {
                     IntakeState.FAST_OUT -> setIntakePower(1.0)
                     IntakeState.SLOW -> setIntakePower(-0.5)
                 }
+            }
+            if(hatchOut && Timer.getFPGATimestamp() - hatchOutStart > 0.2){
+                extended = false
+                hatchOut = false
             }
         }
 
