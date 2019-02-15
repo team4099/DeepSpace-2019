@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.NetworkTable
 import edu.wpi.first.networktables.NetworkTableEntry
 import edu.wpi.first.networktables.NetworkTableInstance
 import edu.wpi.first.wpilibj.DriverStation
+import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 //import main.java.org.usfirst.frc.team4099.lib.util.AutoModeCreator
 import org.usfirst.frc.team4099.auto.modes.*
@@ -30,6 +31,7 @@ object DashboardConfigurator {
     private val climber = Climber.instance
     private val elevator = Elevator.instance
     private val intake = Intake.instance
+
     //private val wrist = Wrist.instance
 
     var inst: NetworkTableInstance = NetworkTableInstance.getDefault()
@@ -39,6 +41,9 @@ object DashboardConfigurator {
     var intakeStateEntry = table.getEntry("Intake State")
     var intakeModeEntry = table.getEntry("Intake Mode")
     var hatchPanelStateEntry = table.getEntry("Hatch Panel State")
+    var startTime = Timer.getFPGATimestamp()
+
+
 
     enum class StartingPosition(val dashboardName: String)  { //TODO: Investigate starting locations
         LEFT("LEFT"),
@@ -53,11 +58,26 @@ object DashboardConfigurator {
     }
 
     fun updateValues() {
+        if (Timer.getFPGATimestamp() - startTime < 3) {
+            climberStateEntry.setString("Hi")
+
+        } else {
+            climberStateEntry.setString("Bye")
+            startTime = Timer.getFPGATimestamp()
+
+        }
+
+
+
+            /*
         climberStateEntry.setString(climber.climberState.toString)
         elevatorPositionEntry.setDouble(elevator.observedElevatorPosition)
         intakeStateEntry.setString(if(intake.intakeState == Intake.IntakeState.IN) "In" else "Out")
         intakeModeEntry.setString(if(elevator.isHatchPanel) "Hatch" else "Cargo")
+        */
         //hatchPanelStateEntry.setString()
+
+
     }
 
 
