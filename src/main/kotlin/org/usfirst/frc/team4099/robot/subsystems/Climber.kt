@@ -5,13 +5,14 @@ import com.ctre.phoenix.motorcontrol.ControlMode
 import edu.wpi.first.wpilibj.Spark
 import org.usfirst.frc.team4099.lib.util.CANMotorControllerFactory
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
+import com.revrobotics.CANSparkMax
 import org.usfirst.frc.team4099.robot.Constants
 import org.usfirst.frc.team4099.robot.loops.Loop
 
-class
-Climber private constructor() : Subsystem {
-//    private val pneumaticPiston_F1: DoubleSolenoid = DoubleSolenoid(Constants.Climber.CLIMBER_F1_FORWARD_ID, Constants.Climber.CLIMBER_F1_REVERSE_ID)
-//    private val pneumaticPiston_B1: DoubleSolenoid = DoubleSolenoid(Constants.Climber.CLIMBER_B1_FORWARD_ID, Constants.Climber.CLIMBER_B1_REVERSE_ID)
+
+class Climber private constructor() : Subsystem {
+    private val motor1: CANSparkMax = CANSparkMax(deviceID1, MotorType.kBrushless)
+    private val motor2: CANSparkMax = CANSparkMax(deviceID2, MotorType.kBrushless)
 
     enum class ClimberState {
         FRONT_DOWN, BACK_DOWN, BOTH_UP
