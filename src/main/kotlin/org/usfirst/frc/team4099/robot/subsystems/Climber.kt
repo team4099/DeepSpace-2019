@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax
 import org.usfirst.frc.team4099.robot.Constants
 import org.usfirst.frc.team4099.robot.loops.Loop
 
+
 class Climber private constructor() : Subsystem {
     private val motor1: CANSparkMax = CANSparkMax(deviceID1, MotorType.kBrushless)
     private val motor2: CANSparkMax = CANSparkMax(deviceID2, MotorType.kBrushless)
@@ -36,21 +37,16 @@ class Climber private constructor() : Subsystem {
         override fun onLoop() {
             synchronized(this@Climber) {
                 when(climberState) {
-                    ClimberState.FRONT_DOWN -> {
-                        pneumaticPiston_F1.set(DoubleSolenoid.Value.kForward)
-                        pneumaticPiston_F2.set(DoubleSolenoid.Value.kForward)
-                    }
-                    ClimberState.BACK_DOWN -> {
-                        pneumaticPiston_B1.set(DoubleSolenoid.Value.kForward)
-                        pneumaticPiston_B2.set(DoubleSolenoid.Value.kForward)
-                    }
-                    ClimberState.BOTH_UP -> {
-                        pneumaticPiston_F1.set(DoubleSolenoid.Value.kReverse)
-                        pneumaticPiston_F2.set(DoubleSolenoid.Value.kReverse)
-                        pneumaticPiston_B1.set(DoubleSolenoid.Value.kReverse)
-                        pneumaticPiston_B2.set(DoubleSolenoid.Value.kReverse)
-
-                    }
+//                    ClimberState.FRONT_DOWN -> {
+//                        pneumaticPiston_F1.set(DoubleSolenoid.Value.kForward)
+//                    }
+//                    ClimberState.BACK_DOWN -> {
+//                        pneumaticPiston_B1.set(DoubleSolenoid.Value.kForward)
+//                    }
+//                    ClimberState.BOTH_UP -> {
+//                        pneumaticPiston_F1.set(DoubleSolenoid.Value.kReverse)
+//                        pneumaticPiston_B1.set(DoubleSolenoid.Value.kReverse)
+//                    }
 
                 }
             }

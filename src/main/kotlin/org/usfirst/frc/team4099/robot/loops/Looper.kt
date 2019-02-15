@@ -17,7 +17,7 @@ class Looper(private val name: String) {
     private val loops: MutableList<Loop> = ArrayList()
 
     private var timestamp = 0.0
-    private var dt = 0.0
+    private var dt = 0.02 //50 hz
 
     // define the thread (runnable) that will be repeated continuously
     private val runnable = object : CrashTrackingRunnable() {
@@ -86,7 +86,7 @@ class Looper(private val name: String) {
 
     companion object {
 
-        private val kPeriod = Constants.Loopers.LOOPER_DT
+        private val kPeriod = 0.05
     }
 
 }

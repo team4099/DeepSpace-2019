@@ -1,21 +1,54 @@
 package org.usfirst.frc.team4099.robot
 
+import org.usfirst.frc.team4099.lib.util.Utils
+
+
+import edu.wpi.first.wpilibj.CameraServer
 import edu.wpi.first.wpilibj.IterativeRobot
+import edu.wpi.first.wpilibj.livewindow.LiveWindow
+import org.usfirst.frc.team4099.DashboardConfigurator
+import org.usfirst.frc.team4099.auto.AutoModeExecuter
+import org.usfirst.frc.team4099.auto.modes.HatchPanelOnly
+import edu.wpi.first.wpilibj.DoubleSolenoid
+import edu.wpi.first.wpilibj.TimedRobot
+//import org.usfirst.frc.team4099.auto.AutoModeExecuter
 import org.usfirst.frc.team4099.lib.util.CrashTracker
+
+import org.usfirst.frc.team4099.robot.drive.CheesyDriveHelper
+import org.usfirst.frc.team4099.robot.drive.TankDriveHelper
+import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
+import org.usfirst.frc.team4099.robot.loops.Looper
+import org.usfirst.frc.team4099.robot.loops.VoltageEstimator
+
 import org.usfirst.frc.team4099.robot.subsystems.*
-import org.usfirst.frc.team4099.robot.ControlBoard.*
+import src.main.kotlin.org.usfirst.frc.team4099.robot.subsystems.Superstructure
 
-class Robot : IterativeRobot() {
+class Robot : TimedRobot() {
+    private val vision = Vision.instance
 
-    private val climber = Climber.instance
-    private val controls = ControlBoard.instance
-    private val elevator = Elevator.instance
+    private var autoModeExecuter: AutoModeExecuter? = null
+
+
+    private val test3 : DoubleSolenoid = DoubleSolenoid(1,6)
+    //private val climber = Climber.instance
+
+    private val wrist = Wrist.instance
+    private val intake = Intake.instance
+
     private val drive = Drive.instance
-    private val grabber = Grabber.instance
-    private val controlboard = ControlBoard.instance
+    private val controlBoard = ControlBoard.instance
     private val disabledLooper = Looper("disabledLooper")
     private val enabledLooper = Looper("enabledLooper")
+    private val leds = LED.instance
+    private val elevator = Elevator.instance
+    private val superstructure = Superstructure.instance
+    private val cheesyDriveHelper = CheesyDriveHelper()
   
+
+   // private val intake = Intake.instance
+
+
+
     init {
         CrashTracker.logRobotConstruction()
     }
@@ -23,16 +56,25 @@ class Robot : IterativeRobot() {
 
     override fun robotInit() {
         try {
-            CameraServer.getInstance().startAutomaticCapture()
-            CrashTracker.logRobotInit()
 
             DashboardConfigurator.initDashboard()
+//            enabledLooper.register(drive.loop)
 
-            enabledLooper.register(grabber.loop)
+            enabledLooper.register(intake.loop)
+//            enabledLooper.register(superstructure.loop)
+
+
+
+            enabledLooper.register(drive.loop)
+            enabledLooper.register(leds.loop)
+            enabledLooper.register(wrist.loop)
+
+            enabledLooper.register(elevator.loop)
 
             enabledLooper.register(BrownoutDefender.instance)
 
             disabledLooper.register(VoltageEstimator.instance)
+
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("robotInit", t)
             throw t
@@ -41,6 +83,8 @@ class Robot : IterativeRobot() {
 
     override fun disabledInit() {
         try {
+            enabledLooper.stop() // end EnabledLooper
+            disabledLooper.start() // start DisabledLooper
 
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("disabledInit", t)
@@ -51,8 +95,15 @@ class Robot : IterativeRobot() {
 
     override fun autonomousInit() {
         try {
+            autoModeExecuter?.stop()
+            autoModeExecuter = null
 
+            disabledLooper.stop() // end DisabledLooper
+            enabledLooper.start() // start EnabledLooper
 
+            autoModeExecuter = AutoModeExecuter()
+            autoModeExecuter?.setAutoMode(HatchPanelOnly(DashboardConfigurator.StartingPosition.LEFT, 0.0))
+            autoModeExecuter?.start()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("autonomousInit", t)
             throw t
@@ -62,9 +113,11 @@ class Robot : IterativeRobot() {
 
     override fun teleopInit() {
         try {
-
-
-
+            enabledLooper.register(superstructure.loop)
+            enabledLooper.register(drive.loop)
+            enabledLooper.register(vision.loop)
+            enabledLooper.register(elevator.loop)
+            enabledLooper.start()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopInit", t)
             throw t
@@ -96,44 +149,64 @@ class Robot : IterativeRobot() {
 
     override fun teleopPeriodic() {
         try {
-            val frontToggle = controls.front
-            val backToggle = controls.back
-            if (frontToggle && climber.climberState == Climber.ClimberState.FRONT_DOWN) {
-                climber.climberState = Climber.ClimberState.BOTH_UP
+            leds.handleFrontDown()
+            println("Period")
+                if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER){
+                    elevator.wantedElevatorPower = controlBoard.elevatorPower
+                }
+                else{
+                    elevator.wantedElevatorPower = 0.0
+                }
 
-            } else if (frontToggle && climber.climberState == Climber.ClimberState.BOTH_UP) {
-                climber.climberState = Climber.ClimberState.FRONT_DOWN
 
-            } else if (backToggle && climber.climberState == Climber.ClimberState.BOTH_UP) {
-                climber.climberState = Climber.ClimberState.BACK_DOWN
 
-            } else if (backToggle && climber.climberState == Climber.ClimberState.BACK_DOWN) {
-                climber.climberState = Climber.ClimberState.BOTH_UP
+
+
+                if(controlBoard.hatchPExtend){
+                    intake.extended = true
+                }
+                if(controlBoard.hatchPOut){
+                    intake.hatchOut = true
+
+                }
+
+
+            drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
+
+            //outputAllToSmartDashboard()
+            if (drive.highGear && controlBoard.switchToLowGear) {
+                drive.highGear = false
+                println("Shifting to low gear")
+            } else if (!drive.highGear && controlBoard.switchToHighGear) {
+                drive.highGear = true
+                println("Shifting to high gear")
+            }
+            if (controlBoard.aimingOn) {
+                println("Activating vision")
+                println(vision.visionState)
+                vision.setState(Vision.VisionState.SEEKING)
+                println(vision.visionState)
+            }
+            if (controlBoard.aimingOff) {
+                println("Deactivating vision")
+                println(vision.visionState)
+                vision.setState(Vision.VisionState.INACTIVE)
+                println(vision.visionState)
             }
 
-            val moveUp = controls.moveUp
-            val moveDown = controls.moveDown
-            val toggle = controls.toggle
-            if (operator.moveDown && moveUp) {
-                operator.moveDown = false
-                elevator.updatePosition(true)
-            } else if (!operator.moveDown && moveDown) {
-                operator.moveDown = true
-                elevator.updatePosition(false)
-            }
-            if (toggle) {
-                elevator.toggleOuttakeMode()
-            }
-            if (!grabber.push && controlboard.toggleGrabber) {
-                grabber.push = true
-                println("Pushing the hatch-ey boi")
-            } else {
-                grabber.push = false
-            }
-
-
-
-
+//            if (vision.visionState != Vision.VisionState.AIMING) {
+//                drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
+//            } else if (vision.visionState == Vision.VisionState.SEEKING) {
+                if (vision.onTarget) {
+                    drive.setLeftRightPower(0.3, 0.3)
+                } else if (vision.visionState != Vision.VisionState.INACTIVE) {
+                    drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
+                } else {
+                    drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
+                }
+//            } else {
+//                drive.setLeftRightPower(vision.steeringAdjust, - vision.steeringAdjust)
+//            }
             outputAllToSmartDashboard()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)
@@ -164,11 +237,11 @@ class Robot : IterativeRobot() {
     }
 
     private fun startLiveWindowMode() {
-        drive.startLiveWindowMode()
+        //drive.startLiveWindowMode()
     }
 
     private fun updateLiveWindowTables() {
-        drive.updateLiveWindowTables()
+        //drive.updateLiveWindowTables()
     }
 
     private fun updateDashboardFeedback() {
