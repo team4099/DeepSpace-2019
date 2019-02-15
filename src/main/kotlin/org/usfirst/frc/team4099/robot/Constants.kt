@@ -155,6 +155,7 @@ class Constants {
 
     object Wrist {
         val WRIST_TALON_ID = 0
+        val WRIST_SLAVE_VICTOR_ID = 0
 
         val WRIST_UP_KP = 0.0
         val WRIST_UP_KI = 0.0

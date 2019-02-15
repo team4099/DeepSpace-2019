@@ -207,6 +207,7 @@ class Robot : TimedRobot() {
 //            } else {
 //                drive.setLeftRightPower(vision.steeringAdjust, - vision.steeringAdjust)
 //            }
+            wrist.setOpenLoop(controlBoard.wristPower)
             outputAllToSmartDashboard()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)

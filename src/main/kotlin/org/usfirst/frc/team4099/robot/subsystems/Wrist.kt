@@ -20,6 +20,7 @@ import kotlin.math.*
 
 class Wrist private constructor(): Subsystem {
     private val talon = CANMotorControllerFactory.createDefaultTalon(Constants.Wrist.WRIST_TALON_ID)
+    private val slave = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, talon)
 //    private val arm = Arm.instance
 
     var wristState = WristState.HORIZONTAL
@@ -28,9 +29,6 @@ class Wrist private constructor(): Subsystem {
 //    private var outOfBounds: Boolean = true
 //        get() = talon.motorOutputPercent > 0 && talon.sensorCollection.quadraturePosition < 0 ||
 //                talon.motorOutputPercent < 0 && talon.sensorCollection.quadraturePosition > 1600
-
-    private var tooHigh = false
-    private var tooLow = false
 
     enum class WristState(val targetAngle: Double) {
         HORIZONTAL(0.0),
@@ -128,7 +126,7 @@ class Wrist private constructor(): Subsystem {
 
         override fun onLoop() {
             synchronized(this@Wrist) {
-                wristAngle = WristConversion.pulsesToRadians(talon.sensorCollection.quadraturePosition.toDouble())
+                wristAngle = WristConversion.pulsesToRadians(talon.sensorCollection.pulseWidthPosition.toDouble())
                 if (wristState == WristState.OPEN_LOOP || wristState == WristState.VELOCITY_CONTROL) {
                     return
                 }
@@ -137,7 +135,9 @@ class Wrist private constructor(): Subsystem {
 //                    talon.set(ControlMode.PercentOutput, 0.0)
 //                    return
 //                }
-                talon.set(ControlMode.MotionMagic, WristConversion.radiansToPulses(wristState.targetAngle).toDouble())
+                else {
+                    talon.set(ControlMode.MotionMagic, WristConversion.radiansToPulses(wristState.targetAngle).toDouble())
+                }
 
             }
         }
