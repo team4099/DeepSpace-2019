@@ -44,7 +44,7 @@ class Wrist private constructor(): Subsystem {
         talon.set(ControlMode.PercentOutput, 0.0)
         talon.inverted = true
         talon.setSensorPhase(true)
-        talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0)
+        talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0)
         talon.configNominalOutputForward(0.0, 0)
         talon.configNominalOutputReverse(0.0, 0)
         talon.configPeakOutputReverse(-1.0, 0)
@@ -62,11 +62,11 @@ class Wrist private constructor(): Subsystem {
 
         talon.configMotionCruiseVelocity(0, 0)
         talon.configMotionAcceleration(0, 0)
-        talon.configForwardSoftLimitEnable(false, 0)
+        talon.configForwardSoftLimitEnable(true, 0)
         talon.configForwardSoftLimitThreshold(100, 0)
-        talon.configReverseSoftLimitEnable(false, 0)
+        talon.configReverseSoftLimitEnable(true, 0)
         talon.configReverseSoftLimitThreshold(0, 0)
-        talon.overrideSoftLimitsEnable(false)
+        talon.overrideSoftLimitsEnable(true)
         talon.overrideLimitSwitchesEnable(true)
     }
 
@@ -93,7 +93,7 @@ class Wrist private constructor(): Subsystem {
     }
 
     fun getWristPosition() : Double {
-        return WristConversion.pulsesToRadians(talon.sensorCollection.quadraturePosition.toDouble())
+        return WristConversion.pulsesToRadians(talon.sensorCollection.pulseWidthPosition.toDouble())
     }
 
     fun setOpenLoop(power: Double) {
@@ -116,7 +116,7 @@ class Wrist private constructor(): Subsystem {
             talon.selectProfileSlot(0, 0)
         }
         talon.set(ControlMode.Velocity, radiansPerSecond)
-        println("nativeVel: $radiansPerSecond, observedVel: ${talon.sensorCollection.quadratureVelocity}, error: ${talon.sensorCollection.quadratureVelocity - radiansPerSecond}")
+        //println("nativeVel: $radiansPerSecond, observedVel: ${talon.sensorCollection.quadratureVelocity}, error: ${talon.sensorCollection.quadratureVelocity - radiansPerSecond}")
 
     }
 
