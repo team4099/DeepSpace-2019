@@ -41,8 +41,12 @@ object DashboardConfigurator {
     var intakeStateEntry = table.getEntry("Intake State")
     var intakeModeEntry = table.getEntry("Intake Mode")
     var hatchPanelStateEntry = table.getEntry("Hatch Panel State")
+
     var startTime = Timer.getFPGATimestamp()
 
+
+
+    var value = 1.0
 
 
     enum class StartingPosition(val dashboardName: String)  { //TODO: Investigate starting locations
@@ -74,11 +78,34 @@ object DashboardConfigurator {
         elevatorPositionEntry.setDouble(elevator.observedElevatorPosition)
         intakeStateEntry.setString(if(intake.intakeState == Intake.IntakeState.IN) "In" else "Out")
         intakeModeEntry.setString(if(elevator.isHatchPanel) "Hatch" else "Cargo")
+<<<<<<< HEAD
         */
         //hatchPanelStateEntry.setString()
 
+=======
+
+        //hatchPanelStateEntry.setString()
+
+        fun outputToSmartDashboard() {
+            SmartDashboard.putString("climber/climberState", climber.climberState.toString())
+            SmartDashboard.putString("intake/intakePower", intake.intakeState.toString())
+            SmartDashboard.putNumber("elevator/elevatorHeight", elevator.observedElevatorPosition)
+
+            SmartDashboard.putNumber("number", 1.0)
+            SmartDashboard.putNumber("value", value)
+        }
+        outputToSmartDashboard()
+>>>>>>> bcf89dd4fb1a81c809ce9424e135059fb524179f
 
     }
 
 
+
 }
+
+//override fun outputToSmartDashboard() {
+//    SmartDashboard.putString("climber/climberState", climberState)
+//    SmartDashboard.putNumber("intake/intakePower", elevatorPositionEntry)
+//    SmartDashboard.putNumber("elevator/elevatorHeight", elevatorPositionEntry)
+//    //SmartDashboard.putNumber("number", 1)
+//}
