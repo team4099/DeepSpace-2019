@@ -1,23 +1,36 @@
 package org.usfirst.frc.team4099.robot.subsystems
 
-import edu.wpi.first.wpilibj.DoubleSolenoid
-import com.ctre.phoenix.motorcontrol.ControlMode
-import edu.wpi.first.wpilibj.Spark
-import org.usfirst.frc.team4099.lib.util.CANMotorControllerFactory
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
+import com.revrobotics.CANEncoder
+import com.revrobotics.CANPIDController
 import com.revrobotics.CANSparkMax
+import com.revrobotics.CANSparkMaxLowLevel.MotorType
+import com.revrobotics.ControlType
 import org.usfirst.frc.team4099.robot.Constants
 import org.usfirst.frc.team4099.robot.loops.Loop
 
 
 class Climber private constructor() : Subsystem {
-    private val motor1: CANSparkMax = CANSparkMax(deviceID1, MotorType.kBrushless)
-    private val motor2: CANSparkMax = CANSparkMax(deviceID2, MotorType.kBrushless)
+    private val climbMotor: CANSparkMax = CANSparkMax(Constants.Climber.CLIMBER_SPARK_ID, MotorType.kBrushless)
+    private val driveMotor: CANSparkMax = CANSparkMax(Constants.Climber.DRIVE_SPARK_ID, MotorType.kBrushless)
+    private val climbEncoder: CANEncoder = climbMotor.encoder
+    private val driveEncoder: CANEncoder = driveMotor.encoder
+    private val climbPIDController :CANPIDController = climbMotor.pidController
+
+    init{
+        climbPIDController.setP(Constants.Climber.CLIMBER_KP)
+        climbPIDController.setI(Constants.Climber.CLIMBER_KI)
+        climbPIDController.setD(Constants.Climber.CLIMBER_KD)
+        climbPIDController.setIZone(Constants.Climber.CLIMBER_KIz)
+        climbPIDController.setFF(Constants.Climber.CLIMBER_KF)
+        climbPIDController.setOutputRange(-Constants.Climber.MAX_OUTPUT, Constants.Climber.MAX_OUTPUT)
+    }
 
     enum class ClimberState {
-        FRONT_DOWN, BACK_DOWN, BOTH_UP
+        UP, DOWN, FORWARD
     }
-    var climberState = ClimberState.BOTH_UP
+    var climberState = ClimberState.UP
+
     override fun outputToSmartDashboard() {
         SmartDashboard.putString("climber/climberState", climberState.toString())
     }
@@ -31,22 +44,21 @@ class Climber private constructor() : Subsystem {
 
     val loop: Loop = object : Loop {
         override fun onStart() {
-            climberState = ClimberState.BOTH_UP
+            climberState = ClimberState.UP
 
         }
         override fun onLoop() {
             synchronized(this@Climber) {
                 when(climberState) {
-//                    ClimberState.FRONT_DOWN -> {
-//                        pneumaticPiston_F1.set(DoubleSolenoid.Value.kForward)
-//                    }
-//                    ClimberState.BACK_DOWN -> {
-//                        pneumaticPiston_B1.set(DoubleSolenoid.Value.kForward)
-//                    }
-//                    ClimberState.BOTH_UP -> {
-//                        pneumaticPiston_F1.set(DoubleSolenoid.Value.kReverse)
-//                        pneumaticPiston_B1.set(DoubleSolenoid.Value.kReverse)
-//                    }
+                    ClimberState.DOWN -> {
+                        climberDown()
+                    }
+                    ClimberState.UP -> {
+                        climberUp()
+                    }
+                    ClimberState.FORWARD -> {
+                        drive(1.0)
+                    }
 
                 }
             }
@@ -54,12 +66,24 @@ class Climber private constructor() : Subsystem {
 
         }
         override fun onStop() {
-            climberState = ClimberState.BOTH_UP
+            climberState = ClimberState.UP
 
         }
     }
     companion object {
         val instance = Climber()
 
+    }
+
+    fun drive(speed : Double){
+        driveMotor.set(speed)
+    }
+
+    fun climberDown(){
+        climbPIDController.setReference(Constants.Climber.DOWN_POSITION, ControlType.kPosition);
+    }
+
+    fun climberUp(){
+        climbPIDController.setReference(Constants.Climber.UP_POSITION, ControlType.kPosition);
     }
 }
