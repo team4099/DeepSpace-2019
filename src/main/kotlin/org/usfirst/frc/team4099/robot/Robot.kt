@@ -33,7 +33,7 @@ class Robot : TimedRobot() {
     //private val climber = Climber.instance
 
     private val wrist = Wrist.instance
-    //private val intake = Intake.instance
+    private val intake = Intake.instance
 
     private val drive = Drive.instance
     private val controlBoard = ControlBoard.instance
@@ -60,7 +60,7 @@ class Robot : TimedRobot() {
             DashboardConfigurator.initDashboard()
 //            enabledLooper.register(drive.loop)
 
-      //      enabledLooper.register(intake.loop)
+            enabledLooper.register(intake.loop)
 //            enabledLooper.register(superstructure.loop)
 
 
@@ -117,6 +117,7 @@ class Robot : TimedRobot() {
             enabledLooper.register(drive.loop)
             enabledLooper.register(vision.loop)
             enabledLooper.register(elevator.loop)
+            enabledLooper.register(intake.loop)
             enabledLooper.start()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopInit", t)
@@ -158,7 +159,15 @@ class Robot : TimedRobot() {
                 elevator.setOpenLoop(0.0)
             }
 
-
+            if(controlBoard.runIntake){
+                intake.intakeState = Intake.IntakeState.IN
+            }
+            if(controlBoard.reverseIntakeFast){
+                intake.intakeState = Intake.IntakeState.FAST_OUT
+            }
+            else if(intake.intakeState == Intake.IntakeState.FAST_OUT){
+                intake.intakeState = Intake.IntakeState.STOP
+            }
 
 
 
