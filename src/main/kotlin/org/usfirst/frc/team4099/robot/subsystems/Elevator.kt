@@ -35,16 +35,16 @@ class Elevator private constructor(): Subsystem {
     }
 
     init {
-        talon.inverted = false
-        slave.inverted = true
+        talon.inverted = true
+        slave.inverted = false
         talon.clearStickyFaults(0)
         talon.setSensorPhase(false)
         //talon.set(ControlMode.MotionMagic, 0.0)
         talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0)
         talon.configNominalOutputForward(0.0, 0)
         talon.configNominalOutputReverse(0.0, 0)
-        talon.configPeakOutputReverse(-1.0, 0)
-        talon.configPeakOutputForward(1.0, 0)
+        talon.configPeakOutputReverse(-0.16, 0)
+        talon.configPeakOutputForward(0.16, 0)
         talon.config_kP(0, Constants.Gains.ELEVATOR_UP_KP, 0)
         talon.config_kI(0, Constants.Gains.ELEVATOR_UP_KI, 0)
         talon.config_kD(0, Constants.Gains.ELEVATOR_UP_KD, 0)
@@ -54,13 +54,12 @@ class Elevator private constructor(): Subsystem {
         talon.config_kI(1, Constants.Gains.ELEVATOR_DOWN_KI, 0)
         talon.config_kD(1, Constants.Gains.ELEVATOR_DOWN_KD, 0)
         talon.config_kF(1, Constants.Gains.ELEVATOR_DOWN_KF, 0)
-        zeroSensors()
 
-        talon.configMotionCruiseVelocity(0, 0)
-        talon.configMotionAcceleration(0, 0)
+        talon.configMotionCruiseVelocity(10, 0)
+        talon.configMotionAcceleration(100, 0)
 
-        talon.configForwardSoftLimitEnable(true, 0)
-        talon.configForwardSoftLimitThreshold(ElevatorConversion.inchesToPulses(Constants.Elevator.BOTTOM_SOFT_LIMIT).toInt(), 0)
+        talon.configReverseSoftLimitEnable(true, 0)
+        talon.configReverseSoftLimitThreshold(ElevatorConversion.inchesToPulses(Constants.Elevator.BOTTOM_SOFT_LIMIT).toInt(), 0)
         talon.overrideSoftLimitsEnable(true)
 
         //SmartDashboard.putNumber("elevator/pidPDown", Constants.Gains.ELEVATOR_DOWN_KP)
@@ -188,7 +187,8 @@ class Elevator private constructor(): Subsystem {
 
     val loop: Loop = object : Loop {
         override fun onStart() {
-            elevatorState = ElevatorState.HATCHMID
+            zeroSensors()
+            elevatorState = ElevatorState.OPEN_LOOP
         }
 
         override fun onLoop() {

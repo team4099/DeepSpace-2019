@@ -1,7 +1,7 @@
 package org.usfirst.frc.team4099.lib.util.conversions
 
 object ElevatorConversion : EncoderConversion {
-    val pulsesToInches = 2.0 * Math.PI * 3.0 / 1024.0//1.0/907.0 / .526  // 2pi in. circumference * 3 stages / 4096 pulses per rev
+    val pulsesToInches = 1.5 * Math.PI * 3.0 / 1024.0//1.0/907.0 / .526  // diameter * circumference * stages / pulses per revolution
 
     override fun inchesToPulses(inches: Double): Double {
         return (inches / pulsesToInches)
