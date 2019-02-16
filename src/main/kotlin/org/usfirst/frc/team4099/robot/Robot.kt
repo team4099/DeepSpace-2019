@@ -33,13 +33,13 @@ class Robot : TimedRobot() {
     //private val climber = Climber.instance
 
     private val wrist = Wrist.instance
-    private val intake = Intake.instance
+    //private val intake = Intake.instance
 
     private val drive = Drive.instance
     private val controlBoard = ControlBoard.instance
     private val disabledLooper = Looper("disabledLooper")
     private val enabledLooper = Looper("enabledLooper")
-    private val leds = LED.instance
+  //  private val leds = LED.instance
     private val elevator = Elevator.instance
     private val superstructure = Superstructure.instance
     private val cheesyDriveHelper = CheesyDriveHelper()
@@ -60,13 +60,13 @@ class Robot : TimedRobot() {
             DashboardConfigurator.initDashboard()
 //            enabledLooper.register(drive.loop)
 
-            enabledLooper.register(intake.loop)
+      //      enabledLooper.register(intake.loop)
 //            enabledLooper.register(superstructure.loop)
 
 
 
             enabledLooper.register(drive.loop)
-            enabledLooper.register(leds.loop)
+    //        enabledLooper.register(leds.loop)
             enabledLooper.register(wrist.loop)
 
             enabledLooper.register(elevator.loop)
@@ -102,7 +102,7 @@ class Robot : TimedRobot() {
             enabledLooper.start() // start EnabledLooper
 
             autoModeExecuter = AutoModeExecuter()
-            autoModeExecuter?.setAutoMode(HatchPanelOnly(DashboardConfigurator.StartingPosition.LEFT, 0.0))
+            //autoModeExecuter?.setAutoMode(HatchPanelOnly(DashboardConfigurator.StartingPosition.LEFT, 0.0))
             autoModeExecuter?.start()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("autonomousInit", t)
@@ -149,24 +149,25 @@ class Robot : TimedRobot() {
 
     override fun teleopPeriodic() {
         try {
-            leds.handleFrontDown()
+//            leds.handleFrontDown()
             println("Period")
-                if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER){
-                    elevator.wantedElevatorPower = controlBoard.elevatorPower
-                }
-                else{
-                    elevator.wantedElevatorPower = 0.0
-                }
+//                if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER){
+//                    elevator.wantedElevatorPower = controlBoard.elevatorPower
+//                }
+//                else{
+//                    elevator.wantedElevatorPower = 0.0
+//                }
+            elevator.setOpenLoop(controlBoard.elevatorPower)
 
 
 
 
 
                 if(controlBoard.hatchPExtend){
-                    intake.extended = true
+                   // intake.extended = true
                 }
                 if(controlBoard.hatchPOut){
-                    intake.hatchOut = true
+                    //intake.hatchOut = true
 
                 }
 

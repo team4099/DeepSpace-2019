@@ -39,7 +39,7 @@ class Elevator private constructor(): Subsystem {
         slave.inverted = true
         talon.clearStickyFaults(0)
         talon.setSensorPhase(false)
-        talon.set(ControlMode.MotionMagic, 0.0)
+        //talon.set(ControlMode.MotionMagic, 0.0)
         talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0)
         talon.configNominalOutputForward(0.0, 0)
         talon.configNominalOutputReverse(0.0, 0)
@@ -54,7 +54,7 @@ class Elevator private constructor(): Subsystem {
         talon.config_kI(1, Constants.Gains.ELEVATOR_DOWN_KI, 0)
         talon.config_kD(1, Constants.Gains.ELEVATOR_DOWN_KD, 0)
         talon.config_kF(1, Constants.Gains.ELEVATOR_DOWN_KF, 0)
-
+        zeroSensors()
 
         talon.configMotionCruiseVelocity(0, 0)
         talon.configMotionAcceleration(0, 0)
@@ -77,11 +77,11 @@ class Elevator private constructor(): Subsystem {
     fun setOpenLoop(power: Double) {
         elevatorState = ElevatorState.OPEN_LOOP
         println(observedElevatorPosition)
-        if(observedElevatorPosition < Constants.Elevator.BOTTOM_SOFT_LIMIT && power < 0.0){ //CHANGE SOFT LIMIT
+        if(observedElevatorPosition < Constants.Elevator.BOTTOM_SOFT_LIMIT  && power < 0.0){ //CHANGE SOFT LIMIT
             talon.set(ControlMode.PercentOutput, 0.0)
         }
         else {
-            talon.set(ControlMode.PercentOutput, -power)
+            talon.set(ControlMode.PercentOutput, power)
         }
     }
 
@@ -198,7 +198,8 @@ class Elevator private constructor(): Subsystem {
                 println("elevatorPos: $observedElevatorPosition")
                 when (elevatorState){
                     ElevatorState.OPEN_LOOP -> {
-                        setOpenLoop(wantedElevatorPower)
+                        //setOpenLoop(wantedElevatorPower)
+                        return
                     }
                     ElevatorState.VELOCITY_CONTROL -> {
                         return
