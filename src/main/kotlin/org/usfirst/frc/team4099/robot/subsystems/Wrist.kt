@@ -41,6 +41,7 @@ class Wrist private constructor(): Subsystem {
     init {
         talon.set(ControlMode.PercentOutput, 0.0)
         talon.inverted = true
+        slave.inverted = false
         talon.setSensorPhase(true)
         talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0)
         talon.configNominalOutputForward(0.0, 0)
