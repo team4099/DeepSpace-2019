@@ -22,11 +22,16 @@ class Constants {
     }
 
     object Climber {
-        val CLIMBER_F1_FORWARD_ID = 4
-        val CLIMBER_F1_REVERSE_ID = 5
-
-        val CLIMBER_B1_FORWARD_ID = 6
-        val CLIMBER_B1_REVERSE_ID = 7
+        val CLIMBER_SPARK_ID = 0
+        val DRIVE_SPARK_ID = 0
+        val CLIMBER_KP = 0.0
+        val CLIMBER_KI = 0.0
+        val CLIMBER_KD = 0.0
+        val CLIMBER_KIz = 0.0
+        val CLIMBER_KF = 0.0
+        val MAX_OUTPUT = 1.0
+        val DOWN_POSITION = 0.0
+        val UP_POSITION = 0.0
     }
 
 
@@ -155,6 +160,7 @@ class Constants {
 
     object Wrist {
         val WRIST_TALON_ID = 0
+        val WRIST_SLAVE_VICTOR_ID = 0
 
         val WRIST_UP_KP = 0.0
         val WRIST_UP_KI = 0.0

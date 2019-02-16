@@ -79,6 +79,8 @@ class ControlBoard private constructor() {
 
     val toggleWrist : Boolean
         get() = operator.leftJoystickButton
+    val wristPower: Double
+        get() = operator.leftYAxis
 
     val aimingOn: Boolean
         get() = driver.bButton
