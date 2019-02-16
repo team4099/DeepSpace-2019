@@ -1,8 +1,10 @@
 package org.usfirst.frc.team4099.lib.util.conversions
 
+import kotlin.math.PI
+
 
 object WristConversion {
-    val pulsesToRadians = 0.055
+    val pulsesToRadians = 18/1024/84/2/PI
 
     fun radiansToPulses(radians: Double): Double {
         return (radians / pulsesToRadians)
