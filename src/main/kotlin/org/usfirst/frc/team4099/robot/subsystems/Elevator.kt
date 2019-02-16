@@ -175,18 +175,20 @@ class Elevator private constructor(): Subsystem {
     }
 
     private fun setElevatorPosition(position: ElevatorState) {
-//        var target = position.targetPos
-//        if (target == Double.NaN) {
-//            target = observedElevatorPosition
-//        } else {
-//            observedElevatorPosition = target
-//        }
-//        talon.set(ControlMode.MotionMagic, ElevatorConversion.inchesToPulses(target).toDouble())
+        var target = position.targetPos
+        if (target == Double.NaN) {
+            target = observedElevatorPosition
+        } else {
+            //observedElevatorPosition = target
+        }
+        talon.set(ControlMode.MotionMagic, ElevatorConversion.inchesToPulses(target).toDouble())
+        println("POSITION: " + observedElevatorPosition)
+        println("TARGET: " + target)
     }
 
     val loop: Loop = object : Loop {
         override fun onStart() {
-            elevatorState = ElevatorState.OPEN_LOOP
+            elevatorState = ElevatorState.HATCHMID
         }
 
         override fun onLoop() {

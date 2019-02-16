@@ -151,26 +151,30 @@ class Robot : TimedRobot() {
         try {
 //            leds.handleFrontDown()
             println("Period")
-//                if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER){
-//                    elevator.wantedElevatorPower = controlBoard.elevatorPower
-//                }
-//                else{
-//                    elevator.wantedElevatorPower = 0.0
-//                }
-            elevator.setOpenLoop(controlBoard.elevatorPower)
+            if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER){
+                elevator.setOpenLoop(controlBoard.elevatorPower)
+            }
+            else{
+                elevator.setOpenLoop(0.0)
+            }
 
 
 
 
 
-                if(controlBoard.hatchPExtend){
+            if(controlBoard.hatchPExtend){
                    // intake.extended = true
-                }
-                if(controlBoard.hatchPOut){
+            }
+            if(controlBoard.hatchPOut){
                     //intake.hatchOut = true
 
-                }
+            }
 
+            when {
+                controlBoard.elevatorHigh -> elevator.elevatorState = if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHHIGH else Elevator.ElevatorState.PORTHIGH;
+                controlBoard.elevatorMid -> elevator.elevatorState = if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHMID else Elevator.ElevatorState.PORTMID;
+                controlBoard.elevatorLow -> elevator.elevatorState = if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHLOW else Elevator.ElevatorState.PORTLOW;
+            }
 
             drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
 
