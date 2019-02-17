@@ -31,8 +31,8 @@ class Wrist private constructor(): Subsystem {
 //                talon.motorOutputPercent < 0 && talon.sensorCollection.quadraturePosition > 1600
 
     enum class WristState(val targetAngle: Double) {
-        HORIZONTAL(-13.03),
-        VERTICAL(13.2),
+        HORIZONTAL(13.2),
+        VERTICAL(40.5),
         OPEN_LOOP(Double.NaN),
         VELOCITY_CONTROL(Double.NaN)
         //TODO Calibrate values
@@ -122,7 +122,7 @@ class Wrist private constructor(): Subsystem {
 
     val loop: Loop = object : Loop {
         override fun onStart() {
-            zeroSensors()
+           // zeroSensors()
         }
 
         override fun onLoop() {
@@ -133,6 +133,8 @@ class Wrist private constructor(): Subsystem {
                     println("Target: " + wristState.targetAngle)
                 }
                 if (wristState == WristState.OPEN_LOOP || wristState == WristState.VELOCITY_CONTROL) {
+                    println("Wrist: " + wristAngle)
+                    println("Target: " + wristState.targetAngle)
                     return
                 }
 //                if (outOfBounds()) {
@@ -141,8 +143,10 @@ class Wrist private constructor(): Subsystem {
 //                    return
 //                }
                 else {
-                    talon.set(ControlMode.MotionMagic, WristConversion.radiansToPulses(wristState.targetAngle).toDouble())
+                    talon.set(ControlMode.MotionMagic, WristConversion.radiansToPulses(wristState.targetAngle-10).toDouble())
                 }
+                println("Wrist: " + wristAngle)
+                println("Target: " + wristState.targetAngle)
 
             }
         }

@@ -229,8 +229,13 @@ class Robot : TimedRobot() {
 //                    wrist.wristState = Wrist.WristState.VERTICAL
 //                }
 //            }
-            wrist.setOpenLoop(controlBoard.wristPower)
-            //wrist.setWristMode(Wrist.WristState.HORIZONTAL)
+//            if (Math.abs(controlBoard.wristPower)> 0.1) {
+//                wrist.setOpenLoop(-controlBoard.wristPower)
+//            }
+//            else {
+//                wrist.setOpenLoop(0.0)
+//            }
+            wrist.setWristMode(Wrist.WristState.HORIZONTAL)
             outputAllToSmartDashboard()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)
