@@ -3,7 +3,7 @@ package org.usfirst.frc.team4099.auto.actions
 import org.usfirst.frc.team4099.robot.subsystems.Intake
 import edu.wpi.first.wpilibj.Timer
 
-class HatchPanelExtendAction: Action {
+class HatchPanelRetractAction: Action {
     private val mIntake = Intake.instance
     private var startTime: Double = 0.toDouble()
     override fun start() {

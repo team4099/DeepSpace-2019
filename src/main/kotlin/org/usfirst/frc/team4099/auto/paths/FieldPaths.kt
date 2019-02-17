@@ -7,5 +7,6 @@ enum class FieldPaths (val pathFileLeft: File, val pathFileRight: File) {
     RIGHTH2_TO_RIGHTROCKET3(File("/home/lvuser/pathFiles/RightH2ToRightRocket3.left.pf1.csv"), File("/home/lvuser/pathFiles/RightH2ToRightRocket3.right.pf1.csv")),
     RIGHTROCKET3_TO_LOADSTATION(File("/home/lvuser/pathFiles/RightRocket3ToLoadStation.left.pf1.csv"), File("/home/lvuser/pathFiles/RightRocket3ToLoadStation.right.pf1.csv")),
     LEFTROCKET3_TO_LOADSTATION(File("/home/lvuser/pathFiles/LeftRocket3ToLoadStation.left.pf1.csv"), File("/home/lvuser/pathFiles/LeftRocket3ToLoadStation.right.pf1.csv")),
+    ,
     STANDSTILL(File("/home/lvuser/pathFiles/RightH2ToRightRocket3.left.pf1.csv"), File("/home/lvuser/pathFiles/RightH2ToRightRocket3.left.pf1.csv"))
 }

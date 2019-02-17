@@ -35,17 +35,17 @@ class Elevator private constructor(): Subsystem {
     }
 
     init {
-        talon.inverted = true
-        slave.inverted = false
+        talon.inverted = false
+        slave.inverted = true
         talon.clearStickyFaults(0)
         talon.setSensorPhase(false)
-        talon.configPeakCurrentLimit(30)
+        //talon.configPeakCurrentLimit(30)
         //talon.set(ControlMode.MotionMagic, 0.0)
         talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0)
         talon.configNominalOutputForward(0.0, 0)
         talon.configNominalOutputReverse(0.0, 0)
-        talon.configPeakOutputReverse(-1.00, 0)
-        talon.configPeakOutputForward(1.00, 0)
+        talon.configPeakOutputReverse(-1.0, 0)
+        talon.configPeakOutputForward(1.0, 0)
         talon.config_kP(0, Constants.Gains.ELEVATOR_UP_KP, 0)
         talon.config_kI(0, Constants.Gains.ELEVATOR_UP_KI, 0)
         talon.config_kD(0, Constants.Gains.ELEVATOR_UP_KD, 0)
@@ -59,9 +59,9 @@ class Elevator private constructor(): Subsystem {
         talon.configMotionCruiseVelocity(10, 0)
         talon.configMotionAcceleration(100, 0)
 
-        talon.configReverseSoftLimitEnable(true, 0)
-        talon.configReverseSoftLimitThreshold(ElevatorConversion.inchesToPulses(Constants.Elevator.BOTTOM_SOFT_LIMIT).toInt(), 0)
-        talon.overrideSoftLimitsEnable(true)
+//        talon.configReverseSoftLimitEnable(true, 0)
+//        talon.configReverseSoftLimitThreshold(ElevatorConversion.inchesToPulses(Constants.Elevator.BOTTOM_SOFT_LIMIT).toInt(), 0)
+//        talon.overrideSoftLimitsEnable(true)
 
         //SmartDashboard.putNumber("elevator/pidPDown", Constants.Gains.ELEVATOR_DOWN_KP)
         //SmartDashboard.putNumber("elevator/pidIDown", Constants.Gains.ELEVATOR_DOWN_KI)
@@ -76,12 +76,12 @@ class Elevator private constructor(): Subsystem {
 
     fun setOpenLoop(power: Double) {
         elevatorState = ElevatorState.OPEN_LOOP
-        println(observedElevatorPosition)
+        println("Elevator: " + observedElevatorPosition)
         if(observedElevatorPosition < Constants.Elevator.BOTTOM_SOFT_LIMIT  && power < 0.0){ //CHANGE SOFT LIMIT
-            talon.set(ControlMode.PercentOutput, 0.0)
+            talon.set(ControlMode.PercentOutput, -power)
         }
         else {
-            talon.set(ControlMode.PercentOutput, power)
+            talon.set(ControlMode.PercentOutput, -power)
         }
     }
 
