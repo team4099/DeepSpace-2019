@@ -57,7 +57,7 @@ class Intake private constructor() : Subsystem {
     }
 
     init{
-        talon.configPeakCurrentLimit(20)
+        talon.configPeakCurrentLimit(10)
     }
 
     /**

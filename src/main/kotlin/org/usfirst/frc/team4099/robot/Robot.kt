@@ -157,7 +157,8 @@ class Robot : TimedRobot() {
                 elevator.setOpenLoop(controlBoard.elevatorPower)
             }
             else{
-                elevator.setOpenLoop(0.0)
+                //elevator.setOpenLoop(0.0)
+                elevator.setOpenLoop(controlBoard.elevatorPower)
             }
 
             if(controlBoard.runIntake){
@@ -181,6 +182,13 @@ class Robot : TimedRobot() {
             if(controlBoard.hatchPOut){
                     //intake.hatchOut = true
 
+            }
+
+            elevator.elevatorState = when{
+                controlBoard.elevatorHigh -> if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHHIGH else Elevator.ElevatorState.PORTHIGH;
+                controlBoard.elevatorMid -> if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHMID else Elevator.ElevatorState.PORTMID;
+                controlBoard.elevatorLow -> if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHLOW else Elevator.ElevatorState.PORTLOW;
+                else -> elevator.elevatorState
             }
 
 //            when {
@@ -239,7 +247,7 @@ class Robot : TimedRobot() {
 //            else {
 //                wrist.setOpenLoop(0.0)
 //            }
-            wrist.setWristMode(Wrist.WristState.HORIZONTAL)
+//            wrist.setWristMode(Wrist.WristState.HORIZONTAL)
             outputAllToSmartDashboard()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)
