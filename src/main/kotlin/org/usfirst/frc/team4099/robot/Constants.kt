@@ -72,8 +72,8 @@ class Constants {
 
 
     object Elevator {
-        val ELEVATOR_TALON_ID = 0   //CHANGE
-        val SLAVE_VICTOR_ID = 15 //CHANGE
+        val ELEVATOR_TALON_ID = 3   //CHANGE
+        val SLAVE_VICTOR_ID = 13 //CHANGE
         val MAX_SPEED = 2400 //CHANGE
         val MIN_TRIGGER = 0.1
         val BOTTOM_SOFT_LIMIT = 10.0 //set later - CHANGE
@@ -150,7 +150,7 @@ class Constants {
 
 
     object Intake {
-        val INTAKE_TALON_ID = 0
+        val INTAKE_TALON_ID = 12
         val EXTENDER_FORWARD_ID = 0
         val EXTENDER_REVERSE_ID = 7
         val DEPLOYER_FORWARD_ID = 1
@@ -159,8 +159,8 @@ class Constants {
 
 
     object Wrist {
-        val WRIST_TALON_ID = 14
-        val WRIST_SLAVE_VICTOR_ID = 13
+        val WRIST_TALON_ID = 15
+        val WRIST_SLAVE_VICTOR_ID = 14
 
         val WRIST_UP_KP = 5.0
         val WRIST_UP_KI = 0.0
