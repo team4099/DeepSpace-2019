@@ -5,7 +5,7 @@ import org.usfirst.frc.team4099.robot.subsystems.Intake
 class HatchPanelExtendAction: Action {
     private val mIntake = Intake.instance
     override fun start() {
-        mIntake.extended
+        mIntake.extended = true
     }
 
     override fun done() {
