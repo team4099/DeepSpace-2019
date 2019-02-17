@@ -75,6 +75,7 @@ class Robot : TimedRobot() {
 
             disabledLooper.register(VoltageEstimator.instance)
 
+
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("robotInit", t)
             throw t
@@ -162,6 +163,9 @@ class Robot : TimedRobot() {
             if(controlBoard.runIntake){
                 intake.intakeState = Intake.IntakeState.IN
             }
+            else{
+                intake.intakeState = Intake.IntakeState.STOP
+            }
             if(controlBoard.reverseIntakeFast){
                 intake.intakeState = Intake.IntakeState.FAST_OUT
             }
@@ -229,7 +233,7 @@ class Robot : TimedRobot() {
 //                    wrist.wristState = Wrist.WristState.VERTICAL
 //                }
 //            }
-//            if (Math.abs(controlBoard.wristPower)> 0.1) {
+//            if (Math.abs(controlBoard.wristPower)> 0.2) {
 //                wrist.setOpenLoop(-controlBoard.wristPower)
 //            }
 //            else {

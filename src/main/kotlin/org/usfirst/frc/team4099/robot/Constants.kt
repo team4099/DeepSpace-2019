@@ -162,10 +162,10 @@ class Constants {
         val WRIST_TALON_ID = 14
         val WRIST_SLAVE_VICTOR_ID = 13
 
-        val WRIST_UP_KP = 2.1
+        val WRIST_UP_KP = 5.0
         val WRIST_UP_KI = 0.0
-        val WRIST_UP_KD = 40.0
-        val WRIST_UP_KF = 100.0
+        val WRIST_UP_KD = 50.0
+        val WRIST_UP_KF = 1.0
 
         val WRIST_DOWN_KP = 0.0
         val WRIST_DOWN_KI = 0.0

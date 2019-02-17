@@ -23,7 +23,7 @@ class Wrist private constructor(): Subsystem {
     private val slave = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, talon)
 //    private val arm = Arm.instance
 
-    var wristState = WristState.HORIZONTAL
+    var wristState = WristState.OPEN_LOOP
     private var wristPower = 0.0
     private var wristAngle = 0.0
 //    private var outOfBounds: Boolean = true
@@ -31,10 +31,10 @@ class Wrist private constructor(): Subsystem {
 //                talon.motorOutputPercent < 0 && talon.sensorCollection.quadraturePosition > 1600
 
     enum class WristState(val targetAngle: Double) {
-        HORIZONTAL(13.2),
+        HORIZONTAL(-31.1),
         VERTICAL(40.5),
         OPEN_LOOP(Double.NaN),
-        VELOCITY_CONTROL(Double.NaN)
+         VELOCITY_CONTROL(Double.NaN)
         //TODO Calibrate values
     }
 
@@ -43,24 +43,31 @@ class Wrist private constructor(): Subsystem {
         talon.inverted = true
         slave.inverted = false
         talon.setSensorPhase(true)
-        talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0)
+        talon.configPeakCurrentLimit(20)
+
+        talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0)
         talon.configNominalOutputForward(0.0, 0)
         talon.configNominalOutputReverse(0.0, 0)
-        talon.configPeakOutputReverse(-1.0, 0)
-        talon.configPeakOutputForward(1.0, 0)
+        talon.configPeakOutputReverse(-0.3, 0)
+        talon.configPeakOutputForward(0.3, 0)
 
         talon.config_kP(0, Constants.Wrist.WRIST_UP_KP, 0)
         talon.config_kI(0, Constants.Wrist.WRIST_UP_KI, 0)
         talon.config_kD(0, Constants.Wrist.WRIST_UP_KD, 0)
         talon.config_kF(0, Constants.Wrist.WRIST_UP_KF, 0)
+        talon.configMaxIntegralAccumulator(0,0.0,0)
+        talon.config_IntegralZone(0,1,0)
 
         talon.config_kP(1, Constants.Wrist.WRIST_DOWN_KP, 0)
         talon.config_kI(1, Constants.Wrist.WRIST_DOWN_KI, 0)
         talon.config_kD(1, Constants.Wrist.WRIST_DOWN_KD, 0)
         talon.config_kF(1, Constants.Wrist.WRIST_DOWN_KF, 0)
+        talon.configMaxIntegralAccumulator(1,0.0,0)
+        talon.config_IntegralZone(1,1,0)
 
         talon.configMotionCruiseVelocity(40, 0)
         talon.configMotionAcceleration(100, 0)
+
 //        talon.configForwardSoftLimitEnable(true, 0)
 //        talon.configForwardSoftLimitThreshold(100, 0)
 //        talon.configReverseSoftLimitEnable(true, 0)
@@ -122,19 +129,18 @@ class Wrist private constructor(): Subsystem {
 
     val loop: Loop = object : Loop {
         override fun onStart() {
-           // zeroSensors()
+           zeroSensors()
+            wristState = WristState.OPEN_LOOP
+            print("onStart-------------------------------------------------------------------------------------------------")
         }
 
         override fun onLoop() {
             synchronized(this@Wrist) {
-                wristAngle = WristConversion.pulsesToRadians(talon.sensorCollection.pulseWidthPosition.toDouble())
-                if(wristState == WristState.HORIZONTAL){
-                    println("Wrist: " + wristAngle)
-                    println("Target: " + wristState.targetAngle)
-                }
+                wristAngle = WristConversion.pulsesToRadians(talon.sensorCollection.quadraturePosition.toDouble())
+                println("IAccumulator: " + talon.integralAccumulator)
                 if (wristState == WristState.OPEN_LOOP || wristState == WristState.VELOCITY_CONTROL) {
                     println("Wrist: " + wristAngle)
-                    println("Target: " + wristState.targetAngle)
+                    //println("Target: " + wristState.targetAngle)
                     return
                 }
 //                if (outOfBounds()) {
@@ -143,7 +149,8 @@ class Wrist private constructor(): Subsystem {
 //                    return
 //                }
                 else {
-                    talon.set(ControlMode.MotionMagic, WristConversion.radiansToPulses(wristState.targetAngle-10).toDouble())
+                    talon.set(ControlMode.MotionMagic, WristConversion.radiansToPulses(wristState.targetAngle).toDouble())
+                    print("MOTION MAGIC ----------------------------------------------")
                 }
                 println("Wrist: " + wristAngle)
                 println("Target: " + wristState.targetAngle)
@@ -156,7 +163,12 @@ class Wrist private constructor(): Subsystem {
     }
 
     override fun zeroSensors() {
-        talon.sensorCollection.setQuadraturePosition(0, 0)
+        println("zeroed")
+        talon.integralAccumulator = 0.0
+        talon.setIntegralAccumulator(0.0)
+        talon.sensorCollection.setPulseWidthPosition(0,0)
+        talon.sensorCollection.setQuadraturePosition(0,0)
+        println(talon.sensorCollection.quadraturePosition)
     }
 
     companion object {

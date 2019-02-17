@@ -1,5 +1,7 @@
 package org.usfirst.frc.team4099.robot.subsystems
 
+import com.ctre.phoenix.motorcontrol.ControlMode
+import com.ctre.phoenix.motorcontrol.can.TalonSRX
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.Talon
 import edu.wpi.first.wpilibj.Timer
@@ -19,7 +21,7 @@ import kotlin.system.measureTimeMillis
  */
 class Intake private constructor() : Subsystem {
 
-    private val talon = Talon(Constants.Intake.INTAKE_TALON_ID)
+    private val talon = TalonSRX(Constants.Intake.INTAKE_TALON_ID)
     private val extender: DoubleSolenoid = DoubleSolenoid(Constants.Intake.EXTENDER_FORWARD_ID,
             Constants.Intake.EXTENDER_REVERSE_ID)
     private val deployer: DoubleSolenoid = DoubleSolenoid(Constants.Intake.DEPLOYER_FORWARD_ID,
@@ -54,6 +56,9 @@ class Intake private constructor() : Subsystem {
         //SmartDashboard.putNumber("intake/current", BrownoutDefender.instance.getCurrent(7))
     }
 
+    init{
+        talon.configPeakCurrentLimit(20)
+    }
 
     /**
      * stops intake
@@ -68,7 +73,7 @@ class Intake private constructor() : Subsystem {
      * @param power a double that is the power for the intake
      */
     private fun setIntakePower(power: Double) {
-        talon.set(power)
+        talon.set(ControlMode.PercentOutput,power)
     }
 
     /**
