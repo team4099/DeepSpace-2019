@@ -29,7 +29,7 @@ class Robot : TimedRobot() {
     private var autoModeExecuter: AutoModeExecuter? = null
 
 
-    private val test3 : DoubleSolenoid = DoubleSolenoid(1,6)
+//    private val test3 : DoubleSolenoid = DoubleSolenoid(1,6)
     //private val climber = Climber.instance
 
     private val wrist = Wrist.instance
@@ -221,7 +221,16 @@ class Robot : TimedRobot() {
 //            } else {
 //                drive.setLeftRightPower(vision.steeringAdjust, - vision.steeringAdjust)
 //            }
+//            if(controlBoard.toggleWrist){
+//                if(wrist.wristState == Wrist.WristState.VERTICAL){
+//                    wrist.wristState = Wrist.WristState.HORIZONTAL
+//                }
+//                else /*if (wrist.wristState == Wrist.WristState.HORIZONTAL)*/{
+//                    wrist.wristState = Wrist.WristState.VERTICAL
+//                }
+//            }
             wrist.setOpenLoop(controlBoard.wristPower)
+            //wrist.setWristMode(Wrist.WristState.HORIZONTAL)
             outputAllToSmartDashboard()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)

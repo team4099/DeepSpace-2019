@@ -43,8 +43,8 @@ class Elevator private constructor(): Subsystem {
         talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0)
         talon.configNominalOutputForward(0.0, 0)
         talon.configNominalOutputReverse(0.0, 0)
-        talon.configPeakOutputReverse(-0.16, 0)
-        talon.configPeakOutputForward(0.16, 0)
+        talon.configPeakOutputReverse(-1.00, 0)
+        talon.configPeakOutputForward(1.00, 0)
         talon.config_kP(0, Constants.Gains.ELEVATOR_UP_KP, 0)
         talon.config_kI(0, Constants.Gains.ELEVATOR_UP_KI, 0)
         talon.config_kD(0, Constants.Gains.ELEVATOR_UP_KD, 0)
@@ -197,7 +197,7 @@ class Elevator private constructor(): Subsystem {
                 observedElevatorPosition = ElevatorConversion.pulsesToInches(talon.sensorCollection.quadraturePosition.toDouble())
                 elevatorPower = -talon.motorOutputPercent
 
-                println("elevatorPos: $observedElevatorPosition")
+                //println("elevatorPos: $observedElevatorPosition")
                 when (elevatorState){
                     ElevatorState.OPEN_LOOP -> {
                         //setOpenLoop(wantedElevatorPower)

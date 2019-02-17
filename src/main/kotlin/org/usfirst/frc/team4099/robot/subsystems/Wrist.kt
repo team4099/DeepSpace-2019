@@ -31,8 +31,8 @@ class Wrist private constructor(): Subsystem {
 //                talon.motorOutputPercent < 0 && talon.sensorCollection.quadraturePosition > 1600
 
     enum class WristState(val targetAngle: Double) {
-        HORIZONTAL(0.0),
-        VERTICAL(PI / 2),
+        HORIZONTAL(-13.03),
+        VERTICAL(13.2),
         OPEN_LOOP(Double.NaN),
         VELOCITY_CONTROL(Double.NaN)
         //TODO Calibrate values
@@ -59,14 +59,14 @@ class Wrist private constructor(): Subsystem {
         talon.config_kD(1, Constants.Wrist.WRIST_DOWN_KD, 0)
         talon.config_kF(1, Constants.Wrist.WRIST_DOWN_KF, 0)
 
-        talon.configMotionCruiseVelocity(0, 0)
-        talon.configMotionAcceleration(0, 0)
-        talon.configForwardSoftLimitEnable(true, 0)
-        talon.configForwardSoftLimitThreshold(100, 0)
-        talon.configReverseSoftLimitEnable(true, 0)
-        talon.configReverseSoftLimitThreshold(0, 0)
-        talon.overrideSoftLimitsEnable(true)
-        talon.overrideLimitSwitchesEnable(true)
+        talon.configMotionCruiseVelocity(40, 0)
+        talon.configMotionAcceleration(100, 0)
+//        talon.configForwardSoftLimitEnable(true, 0)
+//        talon.configForwardSoftLimitThreshold(100, 0)
+//        talon.configReverseSoftLimitEnable(true, 0)
+//        talon.configReverseSoftLimitThreshold(0, 0)
+//        talon.overrideSoftLimitsEnable(true)
+//        talon.overrideLimitSwitchesEnable(true)
     }
 
     /**
@@ -128,6 +128,10 @@ class Wrist private constructor(): Subsystem {
         override fun onLoop() {
             synchronized(this@Wrist) {
                 wristAngle = WristConversion.pulsesToRadians(talon.sensorCollection.pulseWidthPosition.toDouble())
+                if(wristState == WristState.HORIZONTAL){
+                    println("Wrist: " + wristAngle)
+                    println("Target: " + wristState.targetAngle)
+                }
                 if (wristState == WristState.OPEN_LOOP || wristState == WristState.VELOCITY_CONTROL) {
                     return
                 }
