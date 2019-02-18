@@ -2,6 +2,7 @@ package org.usfirst.frc.team4099.robot.subsystems
 
 import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.motorcontrol.FeedbackDevice
+import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import org.usfirst.frc.team4099.lib.util.CANMotorControllerFactory
 import org.usfirst.frc.team4099.lib.util.Utils
@@ -11,6 +12,7 @@ import org.usfirst.frc.team4099.robot.loops.Loop
 
 class Elevator private constructor(): Subsystem {
     private val talon = CANMotorControllerFactory.createDefaultTalon(Constants.Elevator.ELEVATOR_TALON_ID)
+    private var limitSwitch = DigitalInput(0);
 
     private var elevatorPower = 0.0
     var elevatorState = ElevatorState.OPEN_LOOP
@@ -193,7 +195,18 @@ class Elevator private constructor(): Subsystem {
                         return
                     }
                     ElevatorState.VELOCITY_CONTROL -> {
-                        return
+                        if (limitSwitch.get() == true) {
+                            when (movementState) {
+                                MovementState.UP -> setElevatorVelocity(1.0)
+                                MovementState.DOWN -> setElevatorVelocity(-1.0)
+                                MovementState.STILL -> {
+                                    talon.set(ControlMode.MotionMagic, ElevatorConversion.pulsesToInches(talon.sensorCollection.pulseWidthPosition.toDouble()))
+                                }
+                            }
+                        } else {
+                            movementState = MovementState.STILL
+                            talon.set(ControlMode.MotionMagic, ElevatorConversion.pulsesToInches(talon.sensorCollection.pulseWidthPosition.toDouble()))
+                        }
                     }
                     ElevatorState.HATCHHIGH -> {
                         setElevatorPosition(ElevatorState.HATCHHIGH)
