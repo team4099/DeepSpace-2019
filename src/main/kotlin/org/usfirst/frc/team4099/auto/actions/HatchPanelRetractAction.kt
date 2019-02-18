@@ -7,7 +7,7 @@ class HatchPanelRetractAction: Action {
     private val mIntake = Intake.instance
     private var startTime: Double = 0.toDouble()
     override fun start() {
-        mIntake.extended = true
+        mIntake.extended = false
         startTime = Timer.getFPGATimestamp()
     }
 
