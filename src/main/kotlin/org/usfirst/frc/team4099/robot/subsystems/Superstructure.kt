@@ -87,8 +87,8 @@ class Superstructure : Subsystem {
     }
 
     private fun handleVision() {
-//        vision.visionState = Vision.VisionState.AIMING
-//        println("vision handled")
+        vision.visionState = Vision.VisionState.AIMING
+        println("vision handled")
 
         //led.setStateColors("PURPLE", LED.SystemState.SOLID)
     }
