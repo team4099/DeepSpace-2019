@@ -27,6 +27,15 @@ object DashboardConfigurator {
         RIGHT("RIGHT")
     }
 
+    enum class StartingHeight(val dashboardName: String){
+        H1("H1"),
+        H2("H2")
+    }
+    enum class DesiredRocketSide(val dashboardName: String){
+        LEFT("LEFT"),
+        RIGHT("RIGHT")
+    }
+
 
 
     fun initDashboard() {
