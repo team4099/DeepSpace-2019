@@ -63,7 +63,7 @@ class ControlBoard private constructor() {
         get() = operator.xButton
 
     val elevatorPower: Double
-        get() = (operator.rightTriggerAxis /*- operator.leftTriggerAxis*/) * 1
+        get() = (operator.rightTriggerAxis - operator.leftTriggerAxis) * 1
 
 
 //

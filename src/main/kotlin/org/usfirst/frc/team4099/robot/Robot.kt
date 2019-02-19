@@ -177,11 +177,10 @@ class Robot : TimedRobot() {
 
 
             if(controlBoard.hatchPExtend){
-                   // intake.extended = true
+                    intake.extended = true
             }
             if(controlBoard.hatchPOut){
-                    //intake.hatchOut = true
-
+                    intake.hatchOut = true
             }
 
             elevator.elevatorState = when{

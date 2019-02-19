@@ -142,13 +142,6 @@ class Constants {
         val SHOTGUN_PORT = 1
     }
 
-
-
-
-
-
-
-
     object Intake {
         val INTAKE_TALON_ID = 12
         val EXTENDER_FORWARD_ID = 0
