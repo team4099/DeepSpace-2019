@@ -163,6 +163,36 @@ class Wrist private constructor(): Subsystem {
     }
 
     override fun zeroSensors() {
+        talon.inverted = true
+        slave.inverted = false
+        talon.setSensorPhase(true)
+        talon.configPeakCurrentLimit(20)
+
+        talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0)
+        talon.configNominalOutputForward(0.0, 0)
+        talon.configNominalOutputReverse(0.0, 0)
+        talon.configPeakOutputReverse(-1.0, 0)
+        talon.configPeakOutputForward(1.0, 0)
+
+//        talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 20, 0)
+//        talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 20, 0)
+
+        talon.config_kP(0, Constants.Wrist.WRIST_UP_KP, 0)
+        talon.config_kI(0, Constants.Wrist.WRIST_UP_KI, 0)
+        talon.config_kD(0, Constants.Wrist.WRIST_UP_KD, 0)
+        talon.config_kF(0, Constants.Wrist.WRIST_UP_KF, 0)
+        talon.configMaxIntegralAccumulator(0,0.0,0)
+        talon.config_IntegralZone(0,1,0)
+
+        talon.config_kP(1, Constants.Wrist.WRIST_DOWN_KP, 0)
+        talon.config_kI(1, Constants.Wrist.WRIST_DOWN_KI, 0)
+        talon.config_kD(1, Constants.Wrist.WRIST_DOWN_KD, 0)
+        talon.config_kF(1, Constants.Wrist.WRIST_DOWN_KF, 0)
+        talon.configMaxIntegralAccumulator(1,0.0,0)
+        talon.config_IntegralZone(1,1,0)
+
+        talon.configMotionCruiseVelocity(40, 0)
+        talon.configMotionAcceleration(100, 0)
         println("zeroed")
         talon.integralAccumulator = 0.0
         talon.setIntegralAccumulator(0.0)
