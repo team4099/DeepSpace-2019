@@ -31,20 +31,21 @@ class Intake private constructor() : Subsystem {
     var hatchState = HatchState.IN
     private var hatchOutStart = 0.0
     private var intakePower = 0.0
-//    var hatchOut = false
-//        set (wantsOut) {
-//            deployer.set(if (wantsOut) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
-//            field = wantsOut
-//        }
-//
-//    var extended = false
-//        set (wantsExtended) {
+    var hatchOut = false
+        set (wantsOut) {
+            deployer.set(if (wantsOut) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
+            field = wantsOut
+        }
+
+    var extended = false
+        set (wantsExtended) {
 //            if(wantsExtended){
 //                hatchOutStart = Timer.getFPGATimestamp()
 //            }
-//            //extender.set(if (wantsExtended) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
-//            field = wantsExtended
-//        }
+            extender.set(if (wantsExtended) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
+            println(wantsExtended)
+            field = wantsExtended
+        }
 
 
     enum class IntakeState {
@@ -114,7 +115,13 @@ class Intake private constructor() : Subsystem {
                     }
                 }
             }
-
+//            extended = false
+//            println(extended)
+//            if(hatchOut && Timer.getFPGATimestamp() - hatchOutStart > 0.2){
+//                extended = false
+//                //hatchOut = false
+//            }
+//            hatchOut = false
         }
 
         override fun onStop() = stop()
