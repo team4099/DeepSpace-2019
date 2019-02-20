@@ -20,7 +20,9 @@ import kotlin.math.*
 
 class Wrist private constructor(): Subsystem {
     private val talon = CANMotorControllerFactory.createDefaultTalon(Constants.Wrist.WRIST_TALON_ID)
-    private val slave = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, talon)
+    //private val slave = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, talon)
+    private val slave = CANMotorControllerFactory.createPermanentSlaveTalon(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, Constants.Wrist.WRIST_TALON_ID)
+    //^^^^ TALON FOR PRACTICE BOT CHANGE CHANGE CHANGE
 //    private val arm = Arm.instance
 
     var wristState = WristState.OPEN_LOOP
@@ -31,7 +33,7 @@ class Wrist private constructor(): Subsystem {
 //                talon.motorOutputPercent < 0 && talon.sensorCollection.quadraturePosition > 1600
 
     enum class WristState(val targetAngle: Double) {
-        HORIZONTAL(-31.1),
+        HORIZONTAL(-29.9),
         VERTICAL(40.5),
         OPEN_LOOP(Double.NaN),
          VELOCITY_CONTROL(Double.NaN)
@@ -136,8 +138,10 @@ class Wrist private constructor(): Subsystem {
 
         override fun onLoop() {
             synchronized(this@Wrist) {
+                println("hi")
                 wristAngle = WristConversion.pulsesToRadians(talon.sensorCollection.quadraturePosition.toDouble())
                 //println("IAccumulator: " + talon.integralAccumulator)
+                println("Wrist: " + wristAngle)
                 if (wristState == WristState.OPEN_LOOP || wristState == WristState.VELOCITY_CONTROL) {
                     //println("Wrist: " + wristAngle)
                     //println("Target: " + wristState.targetAngle)
@@ -171,8 +175,8 @@ class Wrist private constructor(): Subsystem {
         talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0)
         talon.configNominalOutputForward(0.0, 0)
         talon.configNominalOutputReverse(0.0, 0)
-        talon.configPeakOutputReverse(-1.0, 0)
-        talon.configPeakOutputForward(1.0, 0)
+        talon.configPeakOutputReverse(-0.3, 0)
+        talon.configPeakOutputForward(0.3, 0)
 
 //        talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 20, 0)
 //        talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 20, 0)

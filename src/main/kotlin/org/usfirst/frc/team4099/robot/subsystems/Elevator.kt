@@ -35,8 +35,8 @@ class Elevator private constructor(): Subsystem {
     }
 
     init {
-        talon.inverted = true
-        slave.inverted = true
+        talon.inverted = false
+        slave.inverted = false
         talon.clearStickyFaults(0)
         talon.setSensorPhase(false)
         //talon.configPeakCurrentLimit(30)
@@ -78,10 +78,10 @@ class Elevator private constructor(): Subsystem {
         elevatorState = ElevatorState.OPEN_LOOP
         println("Elevator: " + observedElevatorPosition)
         if(observedElevatorPosition < Constants.Elevator.BOTTOM_SOFT_LIMIT  && power < 0.0){ //CHANGE SOFT LIMIT
-            talon.set(ControlMode.PercentOutput, -power)
+            talon.set(ControlMode.PercentOutput, power)
         }
         else {
-            talon.set(ControlMode.PercentOutput, -power)
+            talon.set(ControlMode.PercentOutput, power)
         }
     }
 

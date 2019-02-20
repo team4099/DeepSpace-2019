@@ -144,25 +144,25 @@ class Constants {
 
     object Intake {
         val INTAKE_TALON_ID = 12
-        val EXTENDER_FORWARD_ID = 0
-        val EXTENDER_REVERSE_ID = 7
-        val DEPLOYER_FORWARD_ID = 1
-        val DEPLOYER_REVERSE_ID = 6
+        val EXTENDER_FORWARD_ID = 1
+        val EXTENDER_REVERSE_ID = 6
+        val DEPLOYER_FORWARD_ID = 0
+        val DEPLOYER_REVERSE_ID = 7
     }
 
 
     object Wrist {
-        val WRIST_TALON_ID = 15
-        val WRIST_SLAVE_VICTOR_ID = 14
+        val WRIST_TALON_ID = 14 //MAY NOT MATCH FINAL BOT FIX LATER
+        val WRIST_SLAVE_VICTOR_ID = 15
 
-        val WRIST_UP_KP = 5.0
+        val WRIST_UP_KP = 4.0
         val WRIST_UP_KI = 0.0
         val WRIST_UP_KD = 50.0
         val WRIST_UP_KF = 1.0
 
-        val WRIST_DOWN_KP = 0.0
+        val WRIST_DOWN_KP = 4.0
         val WRIST_DOWN_KI = 0.0
-        val WRIST_DOWN_KD = 0.0
-        val WRIST_DOWN_KF = 0.0
+        val WRIST_DOWN_KD = 50.0
+        val WRIST_DOWN_KF = 1.0
     }
 }

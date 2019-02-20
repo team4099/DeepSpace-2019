@@ -28,26 +28,31 @@ class Intake private constructor() : Subsystem {
             Constants.Intake.DEPLOYER_REVERSE_ID)
 
     var intakeState = IntakeState.IN
+    var hatchState = HatchState.IN
     private var hatchOutStart = 0.0
     private var intakePower = 0.0
-    var hatchOut = false
-        set (wantsOut) {
-            deployer.set(if (wantsOut) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
-            field = wantsOut
-        }
-
-    var extended = false
-        set (wantsExtended) {
-            if(wantsExtended){
-                hatchOutStart = Timer.getFPGATimestamp()
-            }
-            extender.set(if (wantsExtended) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
-            field = wantsExtended
-        }
+//    var hatchOut = false
+//        set (wantsOut) {
+//            deployer.set(if (wantsOut) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
+//            field = wantsOut
+//        }
+//
+//    var extended = false
+//        set (wantsExtended) {
+//            if(wantsExtended){
+//                hatchOutStart = Timer.getFPGATimestamp()
+//            }
+//            //extender.set(if (wantsExtended) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
+//            field = wantsExtended
+//        }
 
 
     enum class IntakeState {
         IN, STOP, SLOW_OUT, FAST_OUT, SLOW
+    }
+
+    enum class HatchState {
+        OUT, IN
     }
 
     override fun outputToSmartDashboard() {
@@ -82,8 +87,7 @@ class Intake private constructor() : Subsystem {
      */
     val loop: Loop = object : Loop {
         override fun onStart() {
-            hatchOut = false
-            extended = false
+            hatchState = HatchState.IN
             intakeState = IntakeState.STOP
         }
 
@@ -99,11 +103,18 @@ class Intake private constructor() : Subsystem {
                     IntakeState.FAST_OUT -> setIntakePower(1.0)
                     IntakeState.SLOW -> setIntakePower(-0.5)
                 }
+                when (hatchState){
+                    HatchState.IN -> {
+                        extender.set(DoubleSolenoid.Value.kReverse)
+                        //deployer.set(DoubleSolenoid.Value.kReverse)
+                    }
+                    HatchState.OUT -> {
+                        extender.set(DoubleSolenoid.Value.kForward)
+                        //deployer.set(DoubleSolenoid.Value.kForward)
+                    }
+                }
             }
-            if(hatchOut && Timer.getFPGATimestamp() - hatchOutStart > 0.2){
-                extended = false
-                hatchOut = false
-            }
+
         }
 
         override fun onStop() = stop()

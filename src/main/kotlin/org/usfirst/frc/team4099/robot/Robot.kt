@@ -177,10 +177,10 @@ class Robot : TimedRobot() {
 
 
             if(controlBoard.hatchPExtend){
-                    intake.extended = true
+                intake.hatchState = Intake.HatchState.OUT
             }
             if(controlBoard.hatchPOut){
-                    intake.hatchOut = true
+                intake.hatchState = Intake.HatchState.IN
             }
 
             elevator.elevatorState = when{
@@ -240,14 +240,14 @@ class Robot : TimedRobot() {
 //                    wrist.wristState = Wrist.WristState.VERTICAL
 //                }
 //            }
-
-            if (Math.abs(controlBoard.wristPower)> 0.2) {
-                wrist.setOpenLoop(-controlBoard.wristPower)
-            }
-            else {
-                wrist.setOpenLoop(0.0)
-            }
-            //wrist.setWristMode(Wrist.WristState.HORIZONTAL)
+//
+//            if (Math.abs(controlBoard.wristPower)> 0.2) {
+//                wrist.setOpenLoop(-controlBoard.wristPower)
+//            }
+//            else {
+//                wrist.setOpenLoop(0.0)
+//            }
+            wrist.setWristMode(Wrist.WristState.HORIZONTAL)
             outputAllToSmartDashboard()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)
