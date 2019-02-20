@@ -24,7 +24,12 @@ class ControlBoard private constructor() {
         get() = operator.dPadDown //change back to operator
 
     val hatchPOut: Boolean      //refactor
-        get() = operator.dPadUp
+        get() = operator.dPadLeft
+    val hatchPDeExtend : Boolean
+        get() = operator.dPadUp //change back to operator
+
+    val hatchDePOut: Boolean      //refactor
+        get() = operator.dPadRight
 
 
     val reverseIntakeSlow: Boolean

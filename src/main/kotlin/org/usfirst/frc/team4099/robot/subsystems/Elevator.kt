@@ -76,7 +76,7 @@ class Elevator private constructor(): Subsystem {
 
     fun setOpenLoop(power: Double) {
         elevatorState = ElevatorState.OPEN_LOOP
-        println("Elevator: " + observedElevatorPosition)
+//        println("Elevator: " + observedElevatorPosition)
         if(observedElevatorPosition < Constants.Elevator.BOTTOM_SOFT_LIMIT  && power < 0.0){ //CHANGE SOFT LIMIT
             talon.set(ControlMode.PercentOutput, -power)
         }
@@ -182,8 +182,8 @@ class Elevator private constructor(): Subsystem {
             //observedElevatorPosition = target
         }
         talon.set(ControlMode.MotionMagic, ElevatorConversion.inchesToPulses(target).toDouble())
-        println("POSITION: " + observedElevatorPosition)
-        println("TARGET: " + target)
+        //println("POSITION: " + observedElevatorPosition)
+        //println("TARGET: " + target)
     }
 
     val loop: Loop = object : Loop {

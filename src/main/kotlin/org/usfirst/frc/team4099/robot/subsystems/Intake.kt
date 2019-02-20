@@ -38,10 +38,11 @@ class Intake private constructor() : Subsystem {
 
     var extended = false
         set (wantsExtended) {
-            if(wantsExtended){
-                hatchOutStart = Timer.getFPGATimestamp()
-            }
+//            if(wantsExtended){
+//                hatchOutStart = Timer.getFPGATimestamp()
+//            }
             extender.set(if (wantsExtended) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
+            println(wantsExtended)
             field = wantsExtended
         }
 
@@ -100,10 +101,13 @@ class Intake private constructor() : Subsystem {
                     IntakeState.SLOW -> setIntakePower(-0.5)
                 }
             }
-            if(hatchOut && Timer.getFPGATimestamp() - hatchOutStart > 0.2){
-                extended = false
-                hatchOut = false
-            }
+            extended = false
+            println(extended)
+//            if(hatchOut && Timer.getFPGATimestamp() - hatchOutStart > 0.2){
+//                extended = false
+//                //hatchOut = false
+//            }
+//            hatchOut = false
         }
 
         override fun onStop() = stop()

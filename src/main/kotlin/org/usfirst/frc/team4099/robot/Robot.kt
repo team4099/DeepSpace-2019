@@ -114,11 +114,11 @@ class Robot : TimedRobot() {
 
     override fun teleopInit() {
         try {
-            enabledLooper.register(superstructure.loop)
-            enabledLooper.register(drive.loop)
-            enabledLooper.register(vision.loop)
-            enabledLooper.register(elevator.loop)
-            enabledLooper.register(intake.loop)
+//            enabledLooper.register(superstructure.loop)
+//            enabledLooper.register(drive.loop)
+//            enabledLooper.register(vision.loop)
+//            enabledLooper.register(elevator.loop)
+//            enabledLooper.register(intake.loop)
             enabledLooper.start()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopInit", t)
@@ -181,6 +181,12 @@ class Robot : TimedRobot() {
             }
             if(controlBoard.hatchPOut){
                     intake.hatchOut = true
+            }
+            if(controlBoard.hatchDePOut){
+                intake.extended = false
+            }
+            if(controlBoard.hatchPDeExtend){
+                intake.hatchOut = false
             }
 
             elevator.elevatorState = when{
