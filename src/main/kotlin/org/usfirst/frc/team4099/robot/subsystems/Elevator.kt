@@ -2,6 +2,7 @@ package org.usfirst.frc.team4099.robot.subsystems
 
 import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.motorcontrol.FeedbackDevice
+import com.ctre.phoenix.motorcontrol.NeutralMode
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import org.usfirst.frc.team4099.lib.util.CANMotorControllerFactory
 import org.usfirst.frc.team4099.lib.util.Utils
@@ -25,7 +26,8 @@ class Elevator private constructor(): Subsystem {
     var isHatchPanel = true
 
     enum class ElevatorState (val targetPos : Double) {
-        HATCHLOW(  20.0), HATCHMID(40.0), HATCHHIGH(60.0),
+        GROUND(1.0),
+        HATCHLOW(92.0), HATCHMID(180.0), HATCHHIGH(270.0),
         PORTLOW(30.0), PORTMID(50.0), PORTHIGH(70.0),
         VELOCITY_CONTROL(Double.NaN), OPEN_LOOP(Double.NaN)
     }
@@ -37,6 +39,8 @@ class Elevator private constructor(): Subsystem {
     init {
         talon.inverted = false
         slave.inverted = false
+        talon.setNeutralMode(NeutralMode.Brake)
+        slave.setNeutralMode(NeutralMode.Brake)
         talon.clearStickyFaults(0)
         talon.setSensorPhase(false)
         //talon.configPeakCurrentLimit(30)
@@ -56,8 +60,8 @@ class Elevator private constructor(): Subsystem {
         talon.config_kD(1, Constants.Gains.ELEVATOR_DOWN_KD, 0)
         talon.config_kF(1, Constants.Gains.ELEVATOR_DOWN_KF, 0)
 
-        talon.configMotionCruiseVelocity(100, 0)
-        talon.configMotionAcceleration(100, 0)
+        talon.configMotionCruiseVelocity(1600, 0)
+        talon.configMotionAcceleration(1000, 0)
 
         talon.configReverseSoftLimitEnable(true, 0)
         talon.configReverseSoftLimitThreshold(ElevatorConversion.inchesToPulses(Constants.Elevator.BOTTOM_SOFT_LIMIT).toInt(), 0)
@@ -87,19 +91,19 @@ class Elevator private constructor(): Subsystem {
 
 
     fun setElevatorVelocity(inchesPerSecond: Double) {
-        if ((inchesPerSecond <= 0 || Utils.around(inchesPerSecond, 0.0, .1)) && observedElevatorPosition < 0.5) {
-            setOpenLoop(0.0)
-            talon.sensorCollection.setQuadraturePosition(0, 0)
-//            println("exiting at 0 power, $inchesPerSecond")
-            return
-        }
+//        if ((inchesPerSecond <= 0 || Utils.around(inchesPerSecond, 0.0, .1)) && observedElevatorPosition < 0.5) {
+//            setOpenLoop(0.0)
+//            talon.sensorCollection.setQuadraturePosition(0, 0)
+////            println("exiting at 0 power, $inchesPerSecond")
+//            return
+//        }
         elevatorState = ElevatorState.VELOCITY_CONTROL
         if(inchesPerSecond >= 0) {
             talon.selectProfileSlot(0, 0)
         } else {
             talon.selectProfileSlot(1, 0)
         }
-        talon.set(ControlMode.Velocity, -inchesPerSecond)
+        talon.set(ControlMode.Velocity, inchesPerSecond)
 //        println("nativeVel: $inchesPerSecond, observedVel: ${talon.sensorCollection.quadratureVelocity}")
     }
 
@@ -198,7 +202,8 @@ class Elevator private constructor(): Subsystem {
                 observedElevatorPosition = ElevatorConversion.pulsesToInches(talon.sensorCollection.quadraturePosition.toDouble())
                 elevatorPower = -talon.motorOutputPercent
 
-                //println("elevatorPos: $observedElevatorPosition")
+                println("elevatorPos: $observedElevatorPosition")
+
                 when (elevatorState){
                     ElevatorState.OPEN_LOOP -> {
                         //setOpenLoop(wantedElevatorPower)
@@ -231,6 +236,7 @@ class Elevator private constructor(): Subsystem {
                     observedElevatorVelocity > 1 -> movementState = MovementState.UP
                     observedElevatorVelocity < 1 -> movementState = MovementState.DOWN
                 }
+                //println()
             }
         }
 

@@ -369,14 +369,14 @@ class Drive private constructor() : Subsystem {
             val leftVelocityAdjustment = Constants.Gains.LEFT_LOW_KP * leftErrorDistance + Constants.Gains.LEFT_LOW_KD * ((leftErrorDistance - lastLeftError)/path.getDeltaTime())
             val rightVelocityAdjustment = Constants.Gains.RIGHT_LOW_KP * rightErrorDistance + Constants.Gains.RIGHT_LOW_KD * ((rightErrorDistance - lastRightError)/path.getDeltaTime())
 
-            leftTurn = leftTurn + leftVelocityAdjustment
-            rightTurn = rightTurn + rightVelocityAdjustment
+         //   leftTurn = leftTurn + leftVelocityAdjustment
+           // rightTurn = rightTurn + rightVelocityAdjustment
 
             lastLeftError = leftErrorDistance
 
 
-            leftTurn = leftTurn + turn
-            rightTurn = rightTurn - turn
+            //leftTurn = leftTurn + turn
+//            rightTurn = rightTurn - turn
 
             setVelocitySetpoint(leftTurn, rightTurn)
             println(" " +segment  + " " +leftTurn+" " + rightTurn)

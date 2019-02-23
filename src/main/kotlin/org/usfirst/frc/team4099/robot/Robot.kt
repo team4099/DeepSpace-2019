@@ -103,7 +103,7 @@ class Robot : TimedRobot() {
             enabledLooper.start() // start EnabledLooper
 
             autoModeExecuter = AutoModeExecuter()
-            //autoModeExecuter?.setAutoMode(HatchPanelOnly(DashboardConfigurator.StartingPosition.LEFT, 0.0))
+            autoModeExecuter?.setAutoMode(HatchPanelOnly(DashboardConfigurator.StartingPosition.LEFT, 0.0))
             autoModeExecuter?.start()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("autonomousInit", t)
@@ -153,12 +153,12 @@ class Robot : TimedRobot() {
         try {
 //            leds.handleFrontDown()
             println("Period")
-//            if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER) {
-//                elevator.setOpenLoop(controlBoard.elevatorPower)
-//            } else {
-//                //elevator.setOpenLoop(0.0)
-//                elevator.setOpenLoop(0.0)
-//            }
+            if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER) {
+                elevator.setOpenLoop(controlBoard.elevatorPower)
+            } else {
+                //elevator.setOpenLoop(0.0)
+                elevator.setOpenLoop(0.0)
+            }
 
             if(controlBoard.runIntake){
                 intake.intakeState = Intake.IntakeState.IN
@@ -255,6 +255,22 @@ class Robot : TimedRobot() {
 //            wrist.setWristMode(Wrist.WristState.HORIZONTAL)
             //elevator.elevatorState = Elevator.ElevatorState.HATCHHIGH
             outputAllToSmartDashboard()
+            //elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
+//            if (controlBoard.elevatorLow){
+//                elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
+//            }
+//            else if (controlBoard.elevatorMid){
+//                elevator.elevatorState = Elevator.ElevatorState.HATCHMID
+//            }
+//            else if (controlBoard.elevatorHigh){
+//                elevator.elevatorState = Elevator.ElevatorState.HATCHHIGH
+//            }
+//            else if (controlBoard.toggleIntake){
+//                elevator.elevatorState = Elevator.ElevatorState.GROUND
+//            }
+            //elevator.setElevatorVelocity(400.0 * controlBoard.elevatorPower+300)
+            //elevator.setOpenLoop(controlBoard.elevatorPower)
+           // wrist.setOpenLoop(controlBoard.wristPower)
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)
             throw t
