@@ -138,10 +138,10 @@ class Wrist private constructor(): Subsystem {
 
         override fun onLoop() {
             synchronized(this@Wrist) {
-                println("hi")
+                //println("hi")
                 wristAngle = WristConversion.pulsesToRadians(talon.sensorCollection.quadraturePosition.toDouble())
                 //println("IAccumulator: " + talon.integralAccumulator)
-                println("Wrist: " + wristAngle)
+                //println("Wrist: " + wristAngle)
                 if (wristState == WristState.OPEN_LOOP || wristState == WristState.VELOCITY_CONTROL) {
                     //println("Wrist: " + wristAngle)
                     //println("Target: " + wristState.targetAngle)

@@ -15,7 +15,7 @@ class Elevator private constructor(): Subsystem {
 
     private var elevatorPower = 0.0
     var wantedElevatorPower = 0.0
-    var elevatorState = ElevatorState.OPEN_LOOP
+    var elevatorState = ElevatorState.HATCHLOW //change now
     var movementState = MovementState.STILL
         private set
     var observedElevatorPosition = 0.0
@@ -44,8 +44,8 @@ class Elevator private constructor(): Subsystem {
         talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0)
         talon.configNominalOutputForward(0.0, 0)
         talon.configNominalOutputReverse(0.0, 0)
-        talon.configPeakOutputReverse(-0.3, 0)
-        talon.configPeakOutputForward(0.3, 0)
+        talon.configPeakOutputReverse(-1.0, 0)
+        talon.configPeakOutputForward(1.0, 0)
         talon.config_kP(0, Constants.Gains.ELEVATOR_UP_KP, 0)
         talon.config_kI(0, Constants.Gains.ELEVATOR_UP_KI, 0)
         talon.config_kD(0, Constants.Gains.ELEVATOR_UP_KD, 0)
@@ -56,12 +56,12 @@ class Elevator private constructor(): Subsystem {
         talon.config_kD(1, Constants.Gains.ELEVATOR_DOWN_KD, 0)
         talon.config_kF(1, Constants.Gains.ELEVATOR_DOWN_KF, 0)
 
-        talon.configMotionCruiseVelocity(10, 0)
+        talon.configMotionCruiseVelocity(100, 0)
         talon.configMotionAcceleration(100, 0)
 
-//        talon.configReverseSoftLimitEnable(true, 0)
-//        talon.configReverseSoftLimitThreshold(ElevatorConversion.inchesToPulses(Constants.Elevator.BOTTOM_SOFT_LIMIT).toInt(), 0)
-//        talon.overrideSoftLimitsEnable(true)
+        talon.configReverseSoftLimitEnable(true, 0)
+        talon.configReverseSoftLimitThreshold(ElevatorConversion.inchesToPulses(Constants.Elevator.BOTTOM_SOFT_LIMIT).toInt(), 0)
+        talon.overrideSoftLimitsEnable(true)
 
         //SmartDashboard.putNumber("elevator/pidPDown", Constants.Gains.ELEVATOR_DOWN_KP)
         //SmartDashboard.putNumber("elevator/pidIDown", Constants.Gains.ELEVATOR_DOWN_KI)
@@ -182,8 +182,8 @@ class Elevator private constructor(): Subsystem {
             //observedElevatorPosition = target
         }
         talon.set(ControlMode.MotionMagic, ElevatorConversion.inchesToPulses(target).toDouble())
-        //println("POSITION: " + observedElevatorPosition)
-        //println("TARGET: " + target)
+        println("POSITION: " + observedElevatorPosition)
+        println("TARGET: " + target)
     }
 
     val loop: Loop = object : Loop {
@@ -235,13 +235,13 @@ class Elevator private constructor(): Subsystem {
         }
 
         override fun onStop() {
-            setElevatorVelocity(0.0)
+            //setElevatorVelocity(0.0)
         }
     }
 
     override fun stop() {
         movementState = MovementState.STILL
-        setElevatorVelocity(0.0)
+        //setElevatorVelocity(0.0)
 
     }
 

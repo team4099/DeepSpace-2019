@@ -153,13 +153,12 @@ class Robot : TimedRobot() {
         try {
 //            leds.handleFrontDown()
             println("Period")
-            if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER){
-                elevator.setOpenLoop(controlBoard.elevatorPower)
-            }
-            else{
-                //elevator.setOpenLoop(0.0)
-                elevator.setOpenLoop(controlBoard.elevatorPower)
-            }
+//            if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER) {
+//                elevator.setOpenLoop(controlBoard.elevatorPower)
+//            } else {
+//                //elevator.setOpenLoop(0.0)
+//                elevator.setOpenLoop(0.0)
+//            }
 
             if(controlBoard.runIntake){
                 intake.intakeState = Intake.IntakeState.IN
@@ -189,12 +188,12 @@ class Robot : TimedRobot() {
                 intake.hatchOut = false
             }
 
-            elevator.elevatorState = when{
-                controlBoard.elevatorHigh -> if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHHIGH else Elevator.ElevatorState.PORTHIGH;
-                controlBoard.elevatorMid -> if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHMID else Elevator.ElevatorState.PORTMID;
-                controlBoard.elevatorLow -> if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHLOW else Elevator.ElevatorState.PORTLOW;
-                else -> elevator.elevatorState
-            }
+//            elevator.elevatorState = when{
+//                controlBoard.elevatorHigh -> if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHHIGH else Elevator.ElevatorState.PORTHIGH;
+//                controlBoard.elevatorMid -> if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHMID else Elevator.ElevatorState.PORTMID;
+//                controlBoard.elevatorLow -> if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHLOW else Elevator.ElevatorState.PORTLOW;
+//                else -> elevator.elevatorState
+//            }
 
 //            when {
 //                controlBoard.elevatorHigh -> elevator.elevatorState = if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHHIGH else Elevator.ElevatorState.PORTHIGH;
@@ -253,7 +252,8 @@ class Robot : TimedRobot() {
 //            else {
 //                wrist.setOpenLoop(0.0)
 //            }
-            wrist.setWristMode(Wrist.WristState.HORIZONTAL)
+//            wrist.setWristMode(Wrist.WristState.HORIZONTAL)
+            //elevator.elevatorState = Elevator.ElevatorState.HATCHHIGH
             outputAllToSmartDashboard()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)

@@ -58,15 +58,15 @@ class Constants {
         val RIGHT_HIGH_KD = 0.0000
         val RIGHT_HIGH_KF = 1023.0 / 4420.0
 
-        val ELEVATOR_UP_KP = 0.6
-        val ELEVATOR_UP_KI = 0.0008
-        val ELEVATOR_UP_KD = 55.000
-        val ELEVATOR_UP_KF = 0.5700
+        val ELEVATOR_UP_KP = 3.0
+        val ELEVATOR_UP_KI = 0.0005
+        val ELEVATOR_UP_KD = 150.0
+        val ELEVATOR_UP_KF = 2.0
 
-        val ELEVATOR_DOWN_KP = 1.00
-        val ELEVATOR_DOWN_KI = 0.002
-        val ELEVATOR_DOWN_KD = 60.0
-        val ELEVATOR_DOWN_KF = 0.78
+        val ELEVATOR_DOWN_KP = 2.0
+        val ELEVATOR_DOWN_KI = 0.0
+        val ELEVATOR_DOWN_KD = 150.0
+        val ELEVATOR_DOWN_KF = 1.0
 
     }
 
@@ -76,7 +76,7 @@ class Constants {
         val SLAVE_VICTOR_ID = 13 //CHANGE
         val MAX_SPEED = 2400 //CHANGE
         val MIN_TRIGGER = 0.1
-        val BOTTOM_SOFT_LIMIT = 10.0 //set later - CHANGE
+        val BOTTOM_SOFT_LIMIT = 5.0 //set later - CHANGE
     }
 
 
