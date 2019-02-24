@@ -28,13 +28,16 @@ class Wrist private constructor(): Subsystem {
     var wristState = WristState.OPEN_LOOP
     private var wristPower = 0.0
     private var wristAngle = 0.0
+    var observedVelocity = 0.0
+    var maxVel = 0.0
 //    private var outOfBounds: Boolean = true
 //        get() = talon.motorOutputPercent > 0 && talon.sensorCollection.quadraturePosition < 0 ||
 //                talon.motorOutputPercent < 0 && talon.sensorCollection.quadraturePosition > 1600
 
     enum class WristState(val targetAngle: Double) {
-        HORIZONTAL(-29.9),
-        VERTICAL(40.5),
+        HORIZONTAL(-27.9),
+        VERTICAL(-2.0),
+        CARGO(-23.9),
         OPEN_LOOP(Double.NaN),
          VELOCITY_CONTROL(Double.NaN)
         //TODO Calibrate values
@@ -67,8 +70,15 @@ class Wrist private constructor(): Subsystem {
         talon.configMaxIntegralAccumulator(1,0.0,0)
         talon.config_IntegralZone(1,1,0)
 
-        talon.configMotionCruiseVelocity(40, 0)
-        talon.configMotionAcceleration(100, 0)
+        talon.config_kP(2, Constants.Wrist.WRiST_VELOCITY_KP, 0)
+        talon.config_kI(2, Constants.Wrist.WRiST_VELOCITY_KI, 0)
+        talon.config_kD(2, Constants.Wrist.WRiST_VELOCITY_KD, 0)
+        talon.config_kF(2, Constants.Wrist.WRiST_VELOCITY_KF, 0)
+        talon.configMaxIntegralAccumulator(2,0.0,0)
+        talon.config_IntegralZone(2,1,0)
+
+        talon.configMotionCruiseVelocity(2000, 0)
+        talon.configMotionAcceleration(1500, 0)
 
 //        talon.configForwardSoftLimitEnable(true, 0)
 //        talon.configForwardSoftLimitThreshold(100, 0)
@@ -111,6 +121,15 @@ class Wrist private constructor(): Subsystem {
 //        println("wrist speed: ${talon.sensorCollection.quadratureVelocity}")
     }
 
+    fun setWristPosition(radians: Double){
+        if(radians > wristAngle) {
+            talon.selectProfileSlot(0, 0)
+        } else {
+            talon.selectProfileSlot(1, 0)
+        }
+        talon.set(ControlMode.MotionMagic, WristConversion.radiansToPulses(radians))
+    }
+
     fun setWristVelocity(radiansPerSecond: Double) {
 //        if ((radiansPerSecond <= 0 || Utils.around(radiansPerSecond, 0.0, .1)) && talon.sensorCollection.quadraturePosition < 2.5) {
 //            setOpenLoop(0.0)
@@ -119,11 +138,11 @@ class Wrist private constructor(): Subsystem {
 //        }
         wristState = WristState.VELOCITY_CONTROL
         if(radiansPerSecond > 0) {
-            talon.selectProfileSlot(1, 0)
+            talon.selectProfileSlot(2, 0)
         } else {
-            talon.selectProfileSlot(0, 0)
+            talon.selectProfileSlot(2, 0)
         }
-        talon.set(ControlMode.Velocity, radiansPerSecond)
+        talon.set(ControlMode.Velocity, WristConversion.radiansToPulses(radiansPerSecond))
         //println("nativeVel: $radiansPerSecond, observedVel: ${talon.sensorCollection.quadratureVelocity}, error: ${talon.sensorCollection.quadratureVelocity - radiansPerSecond}")
 
     }
@@ -140,6 +159,11 @@ class Wrist private constructor(): Subsystem {
             synchronized(this@Wrist) {
                 //println("hi")
                 wristAngle = WristConversion.pulsesToRadians(talon.sensorCollection.quadraturePosition.toDouble())
+                observedVelocity = WristConversion.pulsesToRadians(talon.sensorCollection.quadratureVelocity.toDouble())
+                if(Math.abs(observedVelocity) > Math.abs(maxVel)){
+                    maxVel = observedVelocity
+                }
+                println("Max WristV = " + maxVel)
                 //println("IAccumulator: " + talon.integralAccumulator)
                 //println("Wrist: " + wristAngle)
                 if (wristState == WristState.OPEN_LOOP || wristState == WristState.VELOCITY_CONTROL) {
@@ -153,7 +177,7 @@ class Wrist private constructor(): Subsystem {
 //                    return
 //                }
                 else {
-                    talon.set(ControlMode.MotionMagic, WristConversion.radiansToPulses(wristState.targetAngle).toDouble())
+                    setWristPosition(wristState.targetAngle)
                     print("MOTION MAGIC ----------------------------------------------")
                 }
 //                println("Wrist: " + wristAngle)
@@ -195,8 +219,6 @@ class Wrist private constructor(): Subsystem {
         talon.configMaxIntegralAccumulator(1,0.0,0)
         talon.config_IntegralZone(1,1,0)
 
-        talon.configMotionCruiseVelocity(40, 0)
-        talon.configMotionAcceleration(100, 0)
         println("zeroed")
         talon.integralAccumulator = 0.0
         talon.setIntegralAccumulator(0.0)

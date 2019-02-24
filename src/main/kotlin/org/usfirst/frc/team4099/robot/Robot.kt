@@ -153,12 +153,13 @@ class Robot : TimedRobot() {
         try {
 //            leds.handleFrontDown()
             println("Period")
-            if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER) {
-                elevator.setOpenLoop(controlBoard.elevatorPower)
-            } else {
-                //elevator.setOpenLoop(0.0)
-                elevator.setOpenLoop(0.0)
-            }
+//            if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER) {
+//                //elevator.setElevatorVelocity(controlBoard.elevatorPower * Constants.Elevator.MAX_SPEED)
+//                elevator.setOpenLoop(controlBoard.elevatorPower)
+//            } else {
+//                //elevator.setElevatorVelocity(0.0)
+//                elevator.setOpenLoop(0.0)
+//            }
 
             if(controlBoard.runIntake){
                 intake.intakeState = Intake.IntakeState.IN
@@ -246,13 +247,15 @@ class Robot : TimedRobot() {
 //                }
 //            }
 //
-//            if (Math.abs(controlBoard.wristPower)> 0.2) {
-//                wrist.setOpenLoop(-controlBoard.wristPower)
-//            }
-//            else {
-//                wrist.setOpenLoop(0.0)
-//            }
-//            wrist.setWristMode(Wrist.WristState.HORIZONTAL)
+            if (Math.abs(controlBoard.wristPower)> 0.2) {
+                wrist.setWristVelocity(-controlBoard.wristPower * Constants.Wrist.MAX_SPEED)
+                //wrist.setOpenLoop(-controlBoard.wristPower)
+            }
+            else {
+                wrist.setWristVelocity(0.0)
+                //wrist.setOpenLoop(0.0)
+            }
+            //wrist.setWristMode(Wrist.WristState.HORIZONTAL)
             //elevator.elevatorState = Elevator.ElevatorState.HATCHHIGH
             outputAllToSmartDashboard()
             //elevator.elevatorState = Elevator.ElevatorState.HATCHLOW

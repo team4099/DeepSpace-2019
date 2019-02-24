@@ -15,6 +15,7 @@ class Elevator private constructor(): Subsystem {
     private val slave = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Elevator.SLAVE_VICTOR_ID, talon)
 
     private var elevatorPower = 0.0
+    var maxElevatorV = 0.0
     var wantedElevatorPower = 0.0
     var elevatorState = ElevatorState.HATCHLOW //change now
     var movementState = MovementState.STILL
@@ -200,6 +201,10 @@ class Elevator private constructor(): Subsystem {
             synchronized(this@Elevator) {
                 observedElevatorVelocity = ElevatorConversion.nativeSpeedToInchesPerSecond(talon.sensorCollection.quadratureVelocity.toDouble())
                 observedElevatorPosition = ElevatorConversion.pulsesToInches(talon.sensorCollection.quadraturePosition.toDouble())
+                if(observedElevatorVelocity > maxElevatorV){
+                    maxElevatorV = observedElevatorVelocity
+                }
+                println("Max ElevatorV: " + maxElevatorV)
                 elevatorPower = -talon.motorOutputPercent
 
                 println("elevatorPos: $observedElevatorPosition")
