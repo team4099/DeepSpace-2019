@@ -43,8 +43,13 @@ class Robot : TimedRobot() {
     private val elevator = Elevator.instance
     private val superstructure = Superstructure.instance
     private val cheesyDriveHelper = CheesyDriveHelper()
-  
 
+    private var intakeState = IntakeState.HATCHPANEL
+
+  
+    public enum class IntakeState {
+        CARGO, HATCHPANEL
+    }
    // private val intake = Intake.instance
 
 
@@ -153,41 +158,76 @@ class Robot : TimedRobot() {
         try {
 //            leds.handleFrontDown()
             println("Period")
-//            if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER) {
-//                //elevator.setElevatorVelocity(controlBoard.elevatorPower * Constants.Elevator.MAX_SPEED)
-//                elevator.setOpenLoop(controlBoard.elevatorPower)
-//            } else {
-//                //elevator.setElevatorVelocity(0.0)
-//                elevator.setOpenLoop(0.0)
-//            }
 
-            if(controlBoard.runIntake){
-                intake.intakeState = Intake.IntakeState.IN
-            }
-            else{
-                intake.intakeState = Intake.IntakeState.STOP
-            }
-            if(controlBoard.reverseIntakeFast){
-                intake.intakeState = Intake.IntakeState.FAST_OUT
-            }
-            else if(intake.intakeState == Intake.IntakeState.FAST_OUT){
-                intake.intakeState = Intake.IntakeState.STOP
-            }
-
-
-
-            if(controlBoard.hatchPExtend){
-                intake.hatchState = Intake.HatchState.OUT
-            }
-            if(controlBoard.hatchPOut){
+            if (controlBoard.cargoMode){
+                intakeState = IntakeState.CARGO
                 intake.hatchState = Intake.HatchState.IN
+                intake.deployState = Intake.DeployState.IN
             }
-            if(controlBoard.hatchDePOut){
-                intake.extended = false
+            else if (controlBoard.hatchPanelMode) {
+                intakeState = IntakeState.HATCHPANEL
+                wrist.wristState = Wrist.WristState.VERTICAL
             }
-            if(controlBoard.hatchPDeExtend){
-                intake.hatchOut = false
+
+//            if(controlBoard.runIntake){
+//                intake.intakeState = Intake.IntakeState.IN
+//            }
+//            else{
+//                intake.intakeState = Intake.IntakeState.STOP
+//            }
+//            if(controlBoard.reverseIntakeFast){
+//                intake.intakeState = Intake.IntakeState.FAST_OUT
+//            }
+//            else if(intake.intakeState == Intake.IntakeState.FAST_OUT){
+//                intake.intakeState = Intake.IntakeState.STOP
+//            }
+            if (intakeState == IntakeState.CARGO){
+                if (Math.abs(controlBoard.wristPower)> 0.2) {
+                    wrist.setWristVelocity(-controlBoard.wristPower * Constants.Wrist.MAX_SPEED)
+                    //wrist.setOpenLoop(-controlBoard.wristPower)
+                }
+                else {
+                    wrist.setWristVelocity(0.0)
+                    //wrist.setOpenLoop(0.0)
+                }
+                if (controlBoard.runIntake){
+                    intake.setIntakePower(-0.8)
+                }
+                else if (controlBoard.reverseIntakeFast){
+                    intake.setIntakePower(0.8)
+                }
+                else if (controlBoard.holdCargoL) {
+                    intake.setIntakePower(-0.2)
+                }
+                else {
+                    intake.setIntakePower(0.0)
+                }
+
             }
+            else {
+                if (controlBoard.hatchPExtend) {
+                    intake.hatchState = Intake.HatchState.OUT
+                }
+                if (controlBoard.hatchPDextend) {
+                    intake.hatchState = Intake.HatchState.IN
+                }
+                if (controlBoard.hatchPOut) {
+                    intake.deployState = Intake.DeployState.OUT
+                } else {
+                    intake.deployState = Intake.DeployState.IN
+                }
+            }
+//            if (controlBoard.hatchPExtend) {
+//                intake.hatchState = Intake.HatchState.OUT
+//            }
+//            if (controlBoard.hatchPDextend) {
+//                intake.hatchState = Intake.HatchState.IN
+//            }
+//            if (controlBoard.hatchPOut) {
+//                intake.extended = true
+//            } else {
+//                intake.extended = false
+//            }
 
 //            elevator.elevatorState = when{
 //                controlBoard.elevatorHigh -> if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHHIGH else Elevator.ElevatorState.PORTHIGH;
@@ -247,31 +287,32 @@ class Robot : TimedRobot() {
 //                }
 //            }
 //
-            if (Math.abs(controlBoard.wristPower)> 0.2) {
-                wrist.setWristVelocity(-controlBoard.wristPower * Constants.Wrist.MAX_SPEED)
-                //wrist.setOpenLoop(-controlBoard.wristPower)
-            }
-            else {
-                wrist.setWristVelocity(0.0)
-                //wrist.setOpenLoop(0.0)
-            }
+//            if (Math.abs(controlBoard.wristPower)> 0.2) {
+//                wrist.setWristVelocity(-controlBoard.wristPower * Constants.Wrist.MAX_SPEED)
+//                //wrist.setOpenLoop(-controlBoard.wristPower)
+//            }
+//            else {
+//                wrist.setWristVelocity(0.0)
+//                //wrist.setOpenLoop(0.0)
+//            }
             //wrist.setWristMode(Wrist.WristState.HORIZONTAL)
             //elevator.elevatorState = Elevator.ElevatorState.HATCHHIGH
             outputAllToSmartDashboard()
             //elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
-//            if (controlBoard.elevatorLow){
-//                elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
-//            }
-//            else if (controlBoard.elevatorMid){
-//                elevator.elevatorState = Elevator.ElevatorState.HATCHMID
-//            }
-//            else if (controlBoard.elevatorHigh){
-//                elevator.elevatorState = Elevator.ElevatorState.HATCHHIGH
-//            }
-//            else if (controlBoard.toggleIntake){
-//                elevator.elevatorState = Elevator.ElevatorState.GROUND
-//            }
-            elevator.setElevatorVelocity(400.0 * controlBoard.elevatorPower)
+            if (controlBoard.elevatorLow){
+                elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
+            }
+            else if (controlBoard.elevatorMid){
+                elevator.elevatorState = Elevator.ElevatorState.HATCHMID
+            }
+            else if (controlBoard.elevatorHigh){
+                elevator.elevatorState = Elevator.ElevatorState.HATCHHIGH
+            }
+            if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER) {
+                elevator.setElevatorVelocity(1000.0 * controlBoard.elevatorPower)
+            }
+
+            //elevator.setElevatorVelocity(1000.0 * controlBoard.elevatorPower)
             //elevator.setOpenLoop(controlBoard.elevatorPower)
            // wrist.setOpenLoop(controlBoard.wristPower)
         } catch (t: Throwable) {

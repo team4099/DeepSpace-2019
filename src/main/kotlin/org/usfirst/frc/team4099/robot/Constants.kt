@@ -154,10 +154,10 @@ class Constants {
 
     object Intake {
         val INTAKE_TALON_ID = 12
-        val EXTENDER_FORWARD_ID = 1
-        val EXTENDER_REVERSE_ID = 6
-        val DEPLOYER_FORWARD_ID = 0
-        val DEPLOYER_REVERSE_ID = 7
+        val EXTENDER_FORWARD_ID = 6
+        val EXTENDER_REVERSE_ID = 1
+        val DEPLOYER_FORWARD_ID = 7
+        val DEPLOYER_REVERSE_ID = 0
     }
 
 
@@ -179,6 +179,6 @@ class Constants {
         val WRiST_VELOCITY_KP = 0.5
         val WRiST_VELOCITY_KI = 0.0
         val WRiST_VELOCITY_KD = 0.0
-        val WRiST_VELOCITY_KF = 1.3
+        val WRiST_VELOCITY_KF = 3.7
     }
 }

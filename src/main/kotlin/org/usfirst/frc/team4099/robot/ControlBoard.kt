@@ -21,25 +21,27 @@ class ControlBoard private constructor() {
         get() = driver.leftShoulderButton
 
     val hatchPExtend : Boolean
-        get() = operator.dPadDown //change back to operator
+        get() = operator.rightYAxis < -0.2 //change back to operator
 
     val hatchPOut: Boolean      //refactor
-        get() = operator.dPadLeft
-    val hatchPDeExtend : Boolean
-        get() = operator.dPadUp //change back to operator
+        get() = operator.bButton
+    val hatchPDextend : Boolean
+        get() = operator.rightYAxis > 0.2 //change back to operator
 
     val hatchDePOut: Boolean      //refactor
         get() = operator.dPadRight
+    val holdCargoL: Boolean
+        get() = operator.bButton
 
 
     val reverseIntakeSlow: Boolean
         get() = operator.bButton
 
     val reverseIntakeFast: Boolean
-        get() = operator.yButton
+        get() = operator.xButton
 
     val intakePower : Double
-        get() = operator.leftYAxis
+        get() = operator.rightYAxis
 
     val runIntake: Boolean
         get() = operator.aButton
@@ -56,16 +58,20 @@ class ControlBoard private constructor() {
         get() = operator.leftShoulderButton*/
 
     val elevatorLow : Boolean
-        get() = operator.aButton
+        get() = operator.dPadDown
 
     val elevatorMid : Boolean
-        get() = operator.bButton
+        get() = operator.dPadRight
 
     val elevatorHigh : Boolean
-        get() = operator.yButton
+        get() = operator.dPadUp
 
     val toggleIntake: Boolean
         get() = operator.xButton
+    val hatchPanelMode: Boolean
+        get() = operator.leftShoulderButton
+    val cargoMode: Boolean
+        get() = operator.rightShoulderButton
 
     val elevatorPower: Double
         get() = (operator.rightTriggerAxis - operator.leftTriggerAxis) * 1

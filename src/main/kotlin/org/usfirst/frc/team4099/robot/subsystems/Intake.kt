@@ -29,6 +29,7 @@ class Intake private constructor() : Subsystem {
 
     var intakeState = IntakeState.IN
     var hatchState = HatchState.IN
+    var deployState = DeployState.IN
     private var hatchOutStart = 0.0
     private var intakePower = 0.0
     var hatchOut = false
@@ -37,15 +38,15 @@ class Intake private constructor() : Subsystem {
             field = wantsOut
         }
 
-    var extended = false
-        set (wantsExtended) {
-//            if(wantsExtended){
-//                hatchOutStart = Timer.getFPGATimestamp()
-//            }
-            extender.set(if (wantsExtended) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
-            println(wantsExtended)
-            field = wantsExtended
-        }
+//    var extended = false
+//        set (wantsExtended) {
+////            if(wantsExtended){
+////                hatchOutStart = Timer.getFPGATimestamp()
+////            }
+//            extender.set(if (wantsExtended) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
+//            println(wantsExtended)
+//            field = wantsExtended
+//        }
 
 
     enum class IntakeState {
@@ -53,6 +54,9 @@ class Intake private constructor() : Subsystem {
     }
 
     enum class HatchState {
+        OUT, IN
+    }
+    enum class DeployState {
         OUT, IN
     }
 
@@ -78,7 +82,7 @@ class Intake private constructor() : Subsystem {
      * sets rightTalon to positive power and Talon to negative power
      * @param power a double that is the power for the intake
      */
-    private fun setIntakePower(power: Double) {
+    public  fun setIntakePower(power: Double) {
         talon.set(ControlMode.PercentOutput,power)
     }
 
@@ -106,12 +110,22 @@ class Intake private constructor() : Subsystem {
                 }
                 when (hatchState){
                     HatchState.IN -> {
-                        extender.set(DoubleSolenoid.Value.kReverse)
+                        extender.set(DoubleSolenoid.Value.kForward)
                         //deployer.set(DoubleSolenoid.Value.kReverse)
                     }
                     HatchState.OUT -> {
-                        extender.set(DoubleSolenoid.Value.kForward)
+                        extender.set(DoubleSolenoid.Value.kReverse)
                         //deployer.set(DoubleSolenoid.Value.kForward)
+                    }
+                }
+                when (deployState){
+                    DeployState.IN -> {
+                        //extender.set(DoubleSolenoid.Value.kReverse)
+                        deployer.set(DoubleSolenoid.Value.kReverse)
+                    }
+                    DeployState.OUT -> {
+                        //extender.set(DoubleSolenoid.Value.kForward)
+                        deployer.set(DoubleSolenoid.Value.kForward)
                     }
                 }
             }
