@@ -271,7 +271,7 @@ class Robot : TimedRobot() {
 //            else if (controlBoard.toggleIntake){
 //                elevator.elevatorState = Elevator.ElevatorState.GROUND
 //            }
-            //elevator.setElevatorVelocity(400.0 * controlBoard.elevatorPower+300)
+            elevator.setElevatorVelocity(400.0 * controlBoard.elevatorPower)
             //elevator.setOpenLoop(controlBoard.elevatorPower)
            // wrist.setOpenLoop(controlBoard.wristPower)
         } catch (t: Throwable) {

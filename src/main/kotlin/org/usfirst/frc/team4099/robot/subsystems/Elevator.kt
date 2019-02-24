@@ -61,6 +61,16 @@ class Elevator private constructor(): Subsystem {
         talon.config_kD(1, Constants.Gains.ELEVATOR_DOWN_KD, 0)
         talon.config_kF(1, Constants.Gains.ELEVATOR_DOWN_KF, 0)
 
+        talon.config_kP(2, Constants.Gains.ELEVATOR_UP_KP_V, 0)
+        talon.config_kI(2, Constants.Gains.ELEVATOR_UP_KI_V, 0)
+        talon.config_kD(2, Constants.Gains.ELEVATOR_UP_KD_V, 0)
+        talon.config_kF(2, Constants.Gains.ELEVATOR_UP_KF_V, 0)
+
+        talon.config_kP(3, Constants.Gains.ELEVATOR_DOWN_KP_V, 0)
+        talon.config_kI(3, Constants.Gains.ELEVATOR_DOWN_KI_V, 0)
+        talon.config_kD(3, Constants.Gains.ELEVATOR_DOWN_KD_V, 0)
+        talon.config_kF(3, Constants.Gains.ELEVATOR_DOWN_KF_V, 0)
+
         talon.configMotionCruiseVelocity(1600, 0)
         talon.configMotionAcceleration(1000, 0)
 

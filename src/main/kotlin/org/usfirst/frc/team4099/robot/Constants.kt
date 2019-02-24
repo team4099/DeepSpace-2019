@@ -68,15 +68,15 @@ class Constants {
         val ELEVATOR_DOWN_KD = 150.0
         val ELEVATOR_DOWN_KF = 1.0
 
-//        val ELEVATOR_UP_KP = 0.6  //VELOCITY CONTROL PID, UNFINISHED
-//        val ELEVATOR_UP_KI = 0.0
-//        val ELEVATOR_UP_KD = 0.0
-//        val ELEVATOR_UP_KF = 2.0
-//
-//        val ELEVATOR_DOWN_KP = 1.0
-//        val ELEVATOR_DOWN_KI = 0.0
-//        val ELEVATOR_DOWN_KD = 0.0
-//        val ELEVATOR_DOWN_KF = 0.78
+        val ELEVATOR_UP_KP_V = 0.6  //VELOCITY CONTROL PID, UNFINISHED
+        val ELEVATOR_UP_KI_V = 0.0
+        val ELEVATOR_UP_KD_V = 0.0
+        val ELEVATOR_UP_KF_V = 2.0
+
+        val ELEVATOR_DOWN_KP_V = 1.0
+        val ELEVATOR_DOWN_KI_V = 0.0
+        val ELEVATOR_DOWN_KD_V = 0.0
+        val ELEVATOR_DOWN_KF_V = 0.78
 
     }
 
