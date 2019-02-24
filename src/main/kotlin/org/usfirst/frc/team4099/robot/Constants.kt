@@ -68,13 +68,13 @@ class Constants {
         val ELEVATOR_DOWN_KD = 150.0
         val ELEVATOR_DOWN_KF = 1.0
 
-        val ELEVATOR_UP_KP_V = 0.6  //VELOCITY CONTROL PID, UNFINISHED
+        val ELEVATOR_UP_KP_V = 0.4
         val ELEVATOR_UP_KI_V = 0.0
         val ELEVATOR_UP_KD_V = 0.0
-        val ELEVATOR_UP_KF_V = 2.0
+        val ELEVATOR_UP_KF_V = 0.81
 
-        val ELEVATOR_DOWN_KP_V = 1.0
-        val ELEVATOR_DOWN_KI_V = 0.0
+        val ELEVATOR_DOWN_KP_V = 1.00
+        val ELEVATOR_DOWN_KI_V = 0.00
         val ELEVATOR_DOWN_KD_V = 0.0
         val ELEVATOR_DOWN_KF_V = 0.78
 
@@ -176,9 +176,9 @@ class Constants {
         val WRIST_DOWN_KD = 50.0
         val WRIST_DOWN_KF = 1.0
 
-        val WRiST_VELOCITY_KP = 3.0
+        val WRiST_VELOCITY_KP = 0.5
         val WRiST_VELOCITY_KI = 0.0
-        val WRiST_VELOCITY_KD = 100.0
-        val WRiST_VELOCITY_KF = 2.0
+        val WRiST_VELOCITY_KD = 0.0
+        val WRiST_VELOCITY_KF = 1.3
     }
 }
