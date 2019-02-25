@@ -25,8 +25,8 @@ class Elevator private constructor(): Subsystem {
     var isHatchPanel = true
 
     enum class ElevatorState (val targetPos : Double) {
-        HATCHLOW(  20.0), HATCHMID(40.0), HATCHHIGH(60.0),
-        PORTLOW(30.0), PORTMID(50.0), PORTHIGH(70.0),
+        HATCHLOW(  19.0), HATCHMID(47.0), HATCHHIGH(75.0),
+        PORTLOW(27.5), PORTMID(55.5), PORTHIGH(83.5),
         VELOCITY_CONTROL(Double.NaN), OPEN_LOOP(Double.NaN)
     }
 
