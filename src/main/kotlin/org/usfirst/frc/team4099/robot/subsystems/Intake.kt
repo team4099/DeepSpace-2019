@@ -3,12 +3,8 @@ package org.usfirst.frc.team4099.robot.subsystems
 import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.motorcontrol.can.TalonSRX
 import edu.wpi.first.wpilibj.DoubleSolenoid
-import edu.wpi.first.wpilibj.Talon
-import edu.wpi.first.wpilibj.Timer
 import org.usfirst.frc.team4099.robot.Constants
 import org.usfirst.frc.team4099.robot.loops.Loop
-import java.sql.Time
-import kotlin.system.measureTimeMillis
 
 
 /**
@@ -28,36 +24,15 @@ class Intake private constructor() : Subsystem {
             Constants.Intake.DEPLOYER_REVERSE_ID)
 
     var intakeState = IntakeState.IN
-    var hatchState = HatchState.IN
-    var deployState = DeployState.IN
-    private var hatchOutStart = 0.0
+    var hatchState = HatchState.CLOSED
     private var intakePower = 0.0
-    var hatchOut = false
-        set (wantsOut) {
-            deployer.set(if (wantsOut) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
-            field = wantsOut
-        }
-
-//    var extended = false
-//        set (wantsExtended) {
-////            if(wantsExtended){
-////                hatchOutStart = Timer.getFPGATimestamp()
-////            }
-//            extender.set(if (wantsExtended) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
-//            println(wantsExtended)
-//            field = wantsExtended
-//        }
-
 
     enum class IntakeState {
-        IN, STOP, SLOW_OUT, FAST_OUT, SLOW
+        IN, STOP, HOLDING, OUT, SLOW
     }
 
     enum class HatchState {
-        OUT, IN
-    }
-    enum class DeployState {
-        OUT, IN
+        OPEN, CLOSED
     }
 
     override fun outputToSmartDashboard() {
@@ -82,7 +57,7 @@ class Intake private constructor() : Subsystem {
      * sets rightTalon to positive power and Talon to negative power
      * @param power a double that is the power for the intake
      */
-    public  fun setIntakePower(power: Double) {
+    fun setIntakePower(power: Double) {
         talon.set(ControlMode.PercentOutput,power)
     }
 
@@ -92,7 +67,7 @@ class Intake private constructor() : Subsystem {
      */
     val loop: Loop = object : Loop {
         override fun onStart() {
-            hatchState = HatchState.IN
+            hatchState = HatchState.CLOSED
             intakeState = IntakeState.STOP
         }
 
@@ -103,29 +78,16 @@ class Intake private constructor() : Subsystem {
             synchronized(this@Intake) {
                 when (intakeState) {
                     IntakeState.IN -> setIntakePower(-1.0)
+                    IntakeState.HOLDING -> setIntakePower(-0.2)
                     IntakeState.STOP -> setIntakePower(0.0)
-                    IntakeState.SLOW_OUT -> setIntakePower(0.5)
-                    IntakeState.FAST_OUT -> setIntakePower(1.0)
-                    IntakeState.SLOW -> setIntakePower(-0.5)
+                    IntakeState.OUT -> setIntakePower(1.0)
                 }
                 when (hatchState){
-                    HatchState.IN -> {
-                        extender.set(DoubleSolenoid.Value.kForward)
-                        //deployer.set(DoubleSolenoid.Value.kReverse)
-                    }
-                    HatchState.OUT -> {
+                    HatchState.CLOSED -> {
                         extender.set(DoubleSolenoid.Value.kReverse)
-                        //deployer.set(DoubleSolenoid.Value.kForward)
                     }
-                }
-                when (deployState){
-                    DeployState.IN -> {
-                        //extender.set(DoubleSolenoid.Value.kReverse)
-                        deployer.set(DoubleSolenoid.Value.kReverse)
-                    }
-                    DeployState.OUT -> {
-                        //extender.set(DoubleSolenoid.Value.kForward)
-                        deployer.set(DoubleSolenoid.Value.kForward)
+                    HatchState.OPEN -> {
+                        extender.set(DoubleSolenoid.Value.kForward)
                     }
                 }
             }

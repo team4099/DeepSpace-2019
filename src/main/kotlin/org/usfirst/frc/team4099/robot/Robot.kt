@@ -3,19 +3,14 @@ package org.usfirst.frc.team4099.robot
 import org.usfirst.frc.team4099.lib.util.Utils
 
 
-import edu.wpi.first.wpilibj.CameraServer
-import edu.wpi.first.wpilibj.IterativeRobot
-import edu.wpi.first.wpilibj.livewindow.LiveWindow
 import org.usfirst.frc.team4099.DashboardConfigurator
 import org.usfirst.frc.team4099.auto.AutoModeExecuter
 import org.usfirst.frc.team4099.auto.modes.HatchPanelOnly
-import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.TimedRobot
 //import org.usfirst.frc.team4099.auto.AutoModeExecuter
 import org.usfirst.frc.team4099.lib.util.CrashTracker
 
 import org.usfirst.frc.team4099.robot.drive.CheesyDriveHelper
-import org.usfirst.frc.team4099.robot.drive.TankDriveHelper
 import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
 import org.usfirst.frc.team4099.robot.loops.Looper
 import org.usfirst.frc.team4099.robot.loops.VoltageEstimator
@@ -161,12 +156,12 @@ class Robot : TimedRobot() {
 
             if (controlBoard.cargoMode){
                 intakeState = IntakeState.CARGO
-                intake.hatchState = Intake.HatchState.IN
-                intake.deployState = Intake.DeployState.IN
+                intake.hatchState = Intake.HatchState.CLOSED
             }
             else if (controlBoard.hatchPanelMode) {
                 intakeState = IntakeState.HATCHPANEL
-                wrist.wristState = Wrist.WristState.VERTICAL
+                wrist.wristState = Wrist.WristState.HORIZONTAL
+                elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
             }
 
 //            if(controlBoard.runIntake){
@@ -190,31 +185,26 @@ class Robot : TimedRobot() {
                     wrist.setWristVelocity(0.0)
                     //wrist.setOpenLoop(0.0)
                 }
-                if (controlBoard.runIntake){
-                    intake.setIntakePower(-0.8)
+                if (controlBoard.runCargoIntake){
+                    intake.intakeState = Intake.IntakeState.IN
                 }
-                else if (controlBoard.reverseIntakeFast){
-                    intake.setIntakePower(0.8)
+                else if (controlBoard.reverseCargoIntake){
+                    intake.intakeState = Intake.IntakeState.OUT
                 }
-                else if (controlBoard.holdCargoL) {
-                    intake.setIntakePower(-0.2)
+                else if (controlBoard.holdCargo) {
+                    intake.intakeState = Intake.IntakeState.HOLDING
                 }
                 else {
-                    intake.setIntakePower(0.0)
+                    intake.intakeState = Intake.IntakeState.STOP
                 }
 
             }
             else {
-                if (controlBoard.hatchPExtend) {
-                    intake.hatchState = Intake.HatchState.OUT
+                if(controlBoard.openHatch){
+                    intake.hatchState = Intake.HatchState.OPEN
                 }
-                if (controlBoard.hatchPDextend) {
-                    intake.hatchState = Intake.HatchState.IN
-                }
-                if (controlBoard.hatchPOut) {
-                    intake.deployState = Intake.DeployState.OUT
-                } else {
-                    intake.deployState = Intake.DeployState.IN
+                if(controlBoard.closeHatch){
+                    intake.hatchState = Intake.HatchState.CLOSED
                 }
             }
 //            if (controlBoard.hatchPExtend) {

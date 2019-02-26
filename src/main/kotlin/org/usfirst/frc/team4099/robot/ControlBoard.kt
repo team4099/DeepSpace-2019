@@ -30,32 +30,21 @@ class ControlBoard private constructor() {
 
     val hatchDePOut: Boolean      //refactor
         get() = operator.dPadRight
-    val holdCargoL: Boolean
-        get() = operator.bButton
 
-
-    val reverseIntakeSlow: Boolean
-        get() = operator.bButton
-
-    val reverseIntakeFast: Boolean
+    val reverseCargoIntake: Boolean
         get() = operator.xButton
 
-    val intakePower : Double
-        get() = operator.rightYAxis
-
-    val runIntake: Boolean
+    val runCargoIntake: Boolean
         get() = operator.aButton
 
-    val actuateFrontClimb: Boolean
-        get() = driver.dPadUp
+    val holdCargo: Boolean
+        get() = operator.bButton
 
-    val actuateBackClimb: Boolean
-        get() = driver.dPadDown
-  
-    val moveUp: Boolean
-        get() = operator.dPadUp
-/*    val eject : Boolean
-        get() = operator.leftShoulderButton*/
+    val openHatch : Boolean
+        get() = operator.aButton
+
+    val closeHatch : Boolean
+        get() = operator.bButton
 
     val elevatorLow : Boolean
         get() = operator.dPadDown
@@ -85,19 +74,14 @@ class ControlBoard private constructor() {
 //        get() = operator.dPadDown
 //
 
-    val togglePistons : Boolean
-        get() = operator.aButton
-
-    val toggleWrist : Boolean
-        get() = operator.leftShoulderButton
     val wristPower: Double
         get() = operator.leftYAxis
 
     val aimingOn: Boolean
-        get() = driver.bButton
+        get() = false//driver.bButton
 
     val aimingOff: Boolean
-        get() = driver.aButton
+        get() = false//driver.aButton
 
     companion object {
         val instance = ControlBoard()
