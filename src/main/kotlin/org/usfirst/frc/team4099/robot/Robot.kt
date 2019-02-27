@@ -292,14 +292,17 @@ class Robot : TimedRobot() {
             if (controlBoard.elevatorLow){
                 elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
             }
-            else if (controlBoard.elevatorMid){
+            if (controlBoard.elevatorMid){
                 elevator.elevatorState = Elevator.ElevatorState.HATCHMID
             }
-            else if (controlBoard.elevatorHigh){
+            if (controlBoard.elevatorHigh){
                 elevator.elevatorState = Elevator.ElevatorState.HATCHHIGH
             }
             if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER) {
                 elevator.setElevatorVelocity(1000.0 * controlBoard.elevatorPower)
+            }
+            else{
+                elevator.setElevatorVelocity(0.0)
             }
 
             //elevator.setElevatorVelocity(1000.0 * controlBoard.elevatorPower)

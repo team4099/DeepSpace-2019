@@ -17,7 +17,7 @@ class Elevator private constructor(): Subsystem {
     private var elevatorPower = 0.0
     var maxElevatorV = 0.0
     var wantedElevatorPower = 0.0
-    var elevatorState = ElevatorState.HATCHLOW //change now
+    var elevatorState = ElevatorState.VELOCITY_CONTROL //change now
     var movementState = MovementState.STILL
         private set
     var observedElevatorPosition = 0.0
@@ -74,9 +74,9 @@ class Elevator private constructor(): Subsystem {
         talon.configMotionCruiseVelocity(1600, 0)
         talon.configMotionAcceleration(1000, 0)
 
-        talon.configReverseSoftLimitEnable(true, 0)
-        talon.configReverseSoftLimitThreshold(ElevatorConversion.inchesToPulses(Constants.Elevator.BOTTOM_SOFT_LIMIT).toInt(), 0)
-        talon.overrideSoftLimitsEnable(true)
+//        talon.configReverseSoftLimitEnable(true, 0)
+//        talon.configReverseSoftLimitThreshold(ElevatorConversion.inchesToPulses(Constants.Elevator.BOTTOM_SOFT_LIMIT).toInt(), 0)
+//        talon.overrideSoftLimitsEnable(true)
 
         //SmartDashboard.putNumber("elevator/pidPDown", Constants.Gains.ELEVATOR_DOWN_KP)
         //SmartDashboard.putNumber("elevator/pidIDown", Constants.Gains.ELEVATOR_DOWN_KI)
@@ -102,17 +102,20 @@ class Elevator private constructor(): Subsystem {
 
 
     fun setElevatorVelocity(inchesPerSecond: Double) {
-        if (inchesPerSecond <= 0.1 && observedElevatorPosition < 5.0) {
-            setOpenLoop(0.0)
-            talon.sensorCollection.setQuadraturePosition(0, 0)
-//            println("exiting at 0 power, $inchesPerSecond")
-            return
-        }
+//        if (inchesPerSecond <= 0.1 && observedElevatorPosition < 5.0) {
+//            setOpenLoop(0.0)
+//            talon.sensorCollection.setQuadraturePosition(0, 0)
+////            println("exiting at 0 power, $inchesPerSecond")
+//            return
+//        }
         elevatorState = ElevatorState.VELOCITY_CONTROL
-        if(inchesPerSecond >= 0) {
+        if(inchesPerSecond == 0.0){
+            talon.set(ControlMode.MotionMagic, ElevatorConversion.inchesToPulses(observedElevatorPosition).toDouble())
+        }
+        if(inchesPerSecond > 0) {
             talon.selectProfileSlot(2, 0)
         } else {
-            talon.selectProfileSlot(2, 0)
+            talon.selectProfileSlot(3, 0)
         }
         talon.set(ControlMode.Velocity, inchesPerSecond)
 //        println("nativeVel: $inchesPerSecond, observedVel: ${talon.sensorCollection.quadratureVelocity}")
