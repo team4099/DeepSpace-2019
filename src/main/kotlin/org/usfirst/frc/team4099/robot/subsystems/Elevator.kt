@@ -28,8 +28,8 @@ class Elevator private constructor(): Subsystem {
 
     enum class ElevatorState (val targetPos : Double) {
         GROUND(0.0),
-        HATCHLOW(92.0), HATCHMID(180.0), HATCHHIGH(270.0),
-        PORTLOW(30.0), PORTMID(50.0), PORTHIGH(70.0),
+        HATCHLOW(10.0), HATCHMID(133.0), HATCHHIGH(281.0),  //not set
+        PORTLOW(25.0), PORTMID(150.0), PORTHIGH(309.0),     //low, mid set
         VELOCITY_CONTROL(Double.NaN), OPEN_LOOP(Double.NaN)
     }
 
@@ -220,7 +220,7 @@ class Elevator private constructor(): Subsystem {
                 println("Max ElevatorV: " + maxElevatorV)
                 elevatorPower = -talon.motorOutputPercent
 
-                println("elevatorPos: $observedElevatorPosition")
+                println("elevatorPos: " +  observedElevatorPosition)
 
                 when (elevatorState){
                     ElevatorState.OPEN_LOOP -> {
