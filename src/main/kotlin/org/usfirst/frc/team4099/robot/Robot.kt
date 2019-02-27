@@ -318,7 +318,6 @@ class Robot : TimedRobot() {
             }
             else{
                 elevator.setElevatorVelocity(0.0)
-                elevator.setOpenLoop(0.0)
             }
 
             //elevator.setElevatorVelocity(1000.0 * controlBoard.elevatorPower)

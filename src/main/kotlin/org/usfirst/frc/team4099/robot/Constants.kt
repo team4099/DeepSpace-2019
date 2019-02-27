@@ -73,10 +73,10 @@ class Constants {
         val ELEVATOR_UP_KD_V = 0.0
         val ELEVATOR_UP_KF_V = 0.81
 
-        val ELEVATOR_DOWN_KP_V = 1.00
+        val ELEVATOR_DOWN_KP_V = 0.3
         val ELEVATOR_DOWN_KI_V = 0.00
         val ELEVATOR_DOWN_KD_V = 0.0
-        val ELEVATOR_DOWN_KF_V = 0.78
+        val ELEVATOR_DOWN_KF_V = 0.1
 
     }
 
@@ -179,6 +179,6 @@ class Constants {
         val WRiST_VELOCITY_KP = 0.5
         val WRiST_VELOCITY_KI = 0.0
         val WRiST_VELOCITY_KD = 0.0
-        val WRiST_VELOCITY_KF = 3.7
+        val WRiST_VELOCITY_KF = 5.4
     }
 }

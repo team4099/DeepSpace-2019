@@ -26,6 +26,8 @@ class Elevator private constructor(): Subsystem {
         private set
     var isHatchPanel = true
 
+    var stopPosition = 0.0
+
     enum class ElevatorState (val targetPos : Double) {
         GROUND(0.0),
         HATCHLOW(10.0), HATCHMID(133.0), HATCHHIGH(281.0),  //not set
@@ -110,14 +112,16 @@ class Elevator private constructor(): Subsystem {
 //        }
         elevatorState = ElevatorState.VELOCITY_CONTROL
         if(inchesPerSecond == 0.0){
-            talon.set(ControlMode.MotionMagic, ElevatorConversion.inchesToPulses(observedElevatorPosition).toDouble())
-        }
-        if(inchesPerSecond > 0) {
-            talon.selectProfileSlot(2, 0)
+            talon.set(ControlMode.MotionMagic, stopPosition)
         } else {
-            talon.selectProfileSlot(3, 0)
+            if (inchesPerSecond > 0) {
+                talon.selectProfileSlot(2, 0)
+            } else {
+                talon.selectProfileSlot(3, 0)
+            }
+            talon.set(ControlMode.Velocity, inchesPerSecond)
+            stopPosition = ElevatorConversion.inchesToPulses(observedElevatorPosition).toDouble()
         }
-        talon.set(ControlMode.Velocity, inchesPerSecond)
 //        println("nativeVel: $inchesPerSecond, observedVel: ${talon.sensorCollection.quadratureVelocity}")
     }
 

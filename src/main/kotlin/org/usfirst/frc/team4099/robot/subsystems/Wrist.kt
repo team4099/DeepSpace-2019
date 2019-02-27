@@ -2,6 +2,7 @@ package org.usfirst.frc.team4099.robot.subsystems
 
 import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.motorcontrol.FeedbackDevice
+import com.ctre.phoenix.motorcontrol.NeutralMode
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import org.usfirst.frc.team4099.lib.util.CANMotorControllerFactory
 import org.usfirst.frc.team4099.lib.util.conversions.ElevatorConversion
@@ -50,6 +51,8 @@ class Wrist private constructor(): Subsystem {
         slave.inverted = false
         talon.setSensorPhase(true)
         talon.configPeakCurrentLimit(20)
+        talon.setNeutralMode(NeutralMode.Brake)
+        slave.setNeutralMode(NeutralMode.Brake)
 
         talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0)
         talon.configNominalOutputForward(0.0, 0)
@@ -143,11 +146,12 @@ class Wrist private constructor(): Subsystem {
         } else {
             talon.selectProfileSlot(2, 0)
         }
-        if(radiansPerSecond == 0.0) {
-            talon.set(ControlMode.MotionMagic, WristConversion.radiansToPulses(observedVelocity))
-        } else {
-            talon.set(ControlMode.Velocity, WristConversion.radiansToPulses(radiansPerSecond))
-        }
+//        if(radiansPerSecond == 0.0) {
+//            talon.set(ControlMode.MotionMagic, WristConversion.radiansToPulses(observedVelocity))
+//        } else {
+//            talon.set(ControlMode.Velocity, WristConversion.radiansToPulses(radiansPerSecond))
+//        }
+        talon.set(ControlMode.Velocity, WristConversion.radiansToPulses(radiansPerSecond))
 
         //println("nativeVel: $radiansPerSecond, observedVel: ${talon.sensorCollection.quadratureVelocity}, error: ${talon.sensorCollection.quadratureVelocity - radiansPerSecond}")
 
