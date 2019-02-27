@@ -290,19 +290,34 @@ class Robot : TimedRobot() {
             outputAllToSmartDashboard()
             //elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
             if (controlBoard.elevatorLow){
-                elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
+                if(intakeState == IntakeState.HATCHPANEL) {
+                    elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
+                }
+                else {
+                    elevator.elevatorState = Elevator.ElevatorState.PORTLOW
+                }
             }
             if (controlBoard.elevatorMid){
-                elevator.elevatorState = Elevator.ElevatorState.HATCHMID
+                if(intakeState == IntakeState.HATCHPANEL) {
+                    elevator.elevatorState = Elevator.ElevatorState.HATCHMID
+                }
+                else {
+                    elevator.elevatorState = Elevator.ElevatorState.PORTMID
+                }
             }
             if (controlBoard.elevatorHigh){
-                elevator.elevatorState = Elevator.ElevatorState.HATCHHIGH
+                if(intakeState == IntakeState.HATCHPANEL) {
+                    elevator.elevatorState = Elevator.ElevatorState.HATCHHIGH
+                }
+                else {
+                    elevator.elevatorState = Elevator.ElevatorState.PORTHIGH
+                }
             }
             if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER) {
                 elevator.setElevatorVelocity(1000.0 * controlBoard.elevatorPower)
             }
             else{
-                //elevator.setElevatorVelocity(0.0)
+                elevator.setElevatorVelocity(0.0)
                 elevator.setOpenLoop(0.0)
             }
 
