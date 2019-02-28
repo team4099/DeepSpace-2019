@@ -111,8 +111,6 @@ class Robot : TimedRobot() {
 //            throw t
 //        }
         teleopInit()
-        wrist.wristState = Wrist.WristState.HORIZONTAL
-        intake.hatchState = Intake.HatchState.CLOSED
 
     }
 
@@ -168,7 +166,6 @@ class Robot : TimedRobot() {
             }
             else if (controlBoard.hatchPanelMode) {
                 intakeState = IntakeState.HATCHPANEL
-                wrist.wristState = Wrist.WristState.HORIZONTAL
                 //elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
             }
 
@@ -208,6 +205,7 @@ class Robot : TimedRobot() {
 
             }
             else {
+                wrist.wristState = Wrist.WristState.HORIZONTAL
                 if(controlBoard.openHatch){
                     intake.hatchState = Intake.HatchState.OPEN
                 }

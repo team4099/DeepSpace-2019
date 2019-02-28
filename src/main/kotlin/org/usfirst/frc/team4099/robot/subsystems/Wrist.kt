@@ -197,7 +197,11 @@ class Wrist private constructor(): Subsystem {
             }
         }
 
-        override fun onStop() = stop()
+        override fun onStop(){
+            talon.setNeutralMode(NeutralMode.Coast)
+            slave.setNeutralMode(NeutralMode.Coast)
+            stop()
+        }
 
     }
 
