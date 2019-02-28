@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import org.usfirst.frc.team4099.robot.Constants
 import org.usfirst.frc.team4099.robot.loops.Loop
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 
 
 /**
@@ -36,6 +37,8 @@ class Intake private constructor() : Subsystem {
     }
 
     override fun outputToSmartDashboard() {
+        SmartDashboard.putString("intake/hatchState", hatchState.toString())
+        SmartDashboard.putString("intake/intakeState", intakeState.toString())
         //SmartDashboard.putNumber("intake/intakePower", intakePower)
         //SmartDashboard.putBoolean("intake/isUp", up)
         //SmartDashboard.putNumber("intake/current", BrownoutDefender.instance.getCurrent(7))

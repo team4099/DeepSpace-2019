@@ -127,10 +127,10 @@ class Elevator private constructor(): Subsystem {
 
 
     override fun outputToSmartDashboard() {
-        //SmartDashboard.putNumber("elevator/elevatorVoltage", talon.motorOutputVoltage)
-        //SmartDashboard.putNumber("elevator/elevatorVelocity", talon.sensorCollection.quadratureVelocity.toDouble())
-        //SmartDashboard.putNumber("elevator/elevatorHeight", observedElevatorPosition)
-        //SmartDashboard.putNumber("elevator/closedLoopError", talon.getClosedLoopError(0).toDouble())
+        SmartDashboard.putNumber("elevator/elevatorVoltage", talon.motorOutputVoltage)
+        SmartDashboard.putNumber("elevator/elevatorVelocity", talon.sensorCollection.quadratureVelocity.toDouble())
+        SmartDashboard.putNumber("elevator/elevatorHeight", observedElevatorPosition)
+        SmartDashboard.putNumber("elevator/closedLoopError", talon.getClosedLoopError(0).toDouble())
 
 
 //        talon.config_kP(1, SmartDashboard.getNumber("elevator/pidPDown", Constants.Gains.ELEVATOR_DOWN_KP), 0)
