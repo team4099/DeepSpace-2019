@@ -71,7 +71,7 @@ class Constants {
         val ELEVATOR_UP_KP_V = 0.4
         val ELEVATOR_UP_KI_V = 0.0
         val ELEVATOR_UP_KD_V = 0.0
-        val ELEVATOR_UP_KF_V = 0.81
+        val ELEVATOR_UP_KF_V = 0.3
 
         val ELEVATOR_DOWN_KP_V = 0.3
         val ELEVATOR_DOWN_KI_V = 0.00

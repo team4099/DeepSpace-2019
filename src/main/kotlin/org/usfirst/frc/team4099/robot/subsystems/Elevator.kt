@@ -42,8 +42,8 @@ class Elevator private constructor(): Subsystem {
     init {
         talon.inverted = false
         slave.inverted = false
-        talon.setNeutralMode(NeutralMode.Brake)
-        slave.setNeutralMode(NeutralMode.Brake)
+        //talon.setNeutralMode(NeutralMode.Brake)
+        //slave.setNeutralMode(NeutralMode.Brake)
         talon.clearStickyFaults(0)
         talon.setSensorPhase(false)
         //talon.configPeakCurrentLimit(30)

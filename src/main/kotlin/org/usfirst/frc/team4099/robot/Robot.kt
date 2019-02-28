@@ -96,20 +96,23 @@ class Robot : TimedRobot() {
     }
 
     override fun autonomousInit() {
-        try {
-            autoModeExecuter?.stop()
-            autoModeExecuter = null
-
-            disabledLooper.stop() // end DisabledLooper
-            enabledLooper.start() // start EnabledLooper
-
-            autoModeExecuter = AutoModeExecuter()
-            autoModeExecuter?.setAutoMode(HatchPanelOnly(DashboardConfigurator.StartingPosition.LEFT, 0.0))
-            autoModeExecuter?.start()
-        } catch (t: Throwable) {
-            CrashTracker.logThrowableCrash("autonomousInit", t)
-            throw t
-        }
+//        try {
+//            autoModeExecuter?.stop()
+//            autoModeExecuter = null
+//
+//            disabledLooper.stop() // end DisabledLooper
+//            enabledLooper.start() // start EnabledLooper
+//
+//            autoModeExecuter = AutoModeExecuter()
+//            autoModeExecuter?.setAutoMode(HatchPanelOnly(DashboardConfigurator.StartingPosition.LEFT, 0.0))
+//            autoModeExecuter?.start()
+//        } catch (t: Throwable) {
+//            CrashTracker.logThrowableCrash("autonomousInit", t)
+//            throw t
+//        }
+        teleopInit()
+        wrist.wristState = Wrist.WristState.HORIZONTAL
+        intake.hatchState = Intake.HatchState.CLOSED
 
     }
 
@@ -142,13 +145,14 @@ class Robot : TimedRobot() {
     }
 
     override fun autonomousPeriodic() {
-        try {
-            outputAllToSmartDashboard()
-            updateDashboardFeedback()
-        } catch (t: Throwable) {
-            CrashTracker.logThrowableCrash("autonomousPeriodic", t)
-            throw t
-        }
+//        try {
+//            outputAllToSmartDashboard()
+//            updateDashboardFeedback()
+//        } catch (t: Throwable) {
+//            CrashTracker.logThrowableCrash("autonomousPeriodic", t)
+//            throw t
+//        }
+        teleopPeriodic()
 
     }
 
@@ -165,7 +169,7 @@ class Robot : TimedRobot() {
             else if (controlBoard.hatchPanelMode) {
                 intakeState = IntakeState.HATCHPANEL
                 wrist.wristState = Wrist.WristState.HORIZONTAL
-                elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
+                //elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
             }
 
 //            if(controlBoard.runIntake){

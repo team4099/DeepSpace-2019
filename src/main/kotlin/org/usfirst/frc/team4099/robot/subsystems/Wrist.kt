@@ -37,7 +37,7 @@ class Wrist private constructor(): Subsystem {
 //                talon.motorOutputPercent < 0 && talon.sensorCollection.quadraturePosition > 1600
 
     enum class WristState(val targetAngle: Double) {
-        HORIZONTAL(-27.9),
+        HORIZONTAL(-25.74),
         VERTICAL(-2.0),
         CARGO(-23.9),
         OPEN_LOOP(Double.NaN),
@@ -175,7 +175,7 @@ class Wrist private constructor(): Subsystem {
                 }
                 println("Max WristV = " + maxVel)
                 //println("IAccumulator: " + talon.integralAccumulator)
-                //println("Wrist: " + wristAngle)
+                println("Wrist: " + wristAngle)
                 if (wristState == WristState.OPEN_LOOP || wristState == WristState.VELOCITY_CONTROL) {
                     //println("Wrist: " + wristAngle)
                     //println("Target: " + wristState.targetAngle)
