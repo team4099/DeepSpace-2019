@@ -9,7 +9,7 @@ import org.usfirst.frc.team4099.auto.modes.HatchPanelOnly
 import edu.wpi.first.wpilibj.TimedRobot
 //import org.usfirst.frc.team4099.auto.AutoModeExecuter
 import org.usfirst.frc.team4099.lib.util.CrashTracker
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import org.usfirst.frc.team4099.robot.drive.CheesyDriveHelper
 import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
 import org.usfirst.frc.team4099.robot.loops.Looper
@@ -40,6 +40,7 @@ class Robot : TimedRobot() {
     private val cheesyDriveHelper = CheesyDriveHelper()
 
     private var intakeState = IntakeState.HATCHPANEL
+    var dashBoardTest = 0
 
   
     public enum class IntakeState {
@@ -129,6 +130,8 @@ class Robot : TimedRobot() {
 
     override fun disabledPeriodic() {
         try {
+            SmartDashboard.putNumber("Dashboard Test", dashBoardTest * 1.0)
+            dashBoardTest++
             outputAllToSmartDashboard()
 
         } catch (t: Throwable) {
@@ -153,7 +156,8 @@ class Robot : TimedRobot() {
         try {
 //            leds.handleFrontDown()
             println("Period")
-
+            SmartDashboard.putNumber("Dashboard Test", dashBoardTest * 1.0)
+            dashBoardTest++
             if (controlBoard.cargoMode){
                 intakeState = IntakeState.CARGO
                 intake.hatchState = Intake.HatchState.CLOSED
@@ -316,9 +320,9 @@ class Robot : TimedRobot() {
             if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER) {
                 elevator.setElevatorVelocity(1000.0 * controlBoard.elevatorPower)
             }
-            else{
-                elevator.setElevatorVelocity(0.0)
-            }
+//            else{
+//                elevator.setElevatorVelocity(0.0)
+//            }
 
             //elevator.setElevatorVelocity(1000.0 * controlBoard.elevatorPower)
             //elevator.setOpenLoop(controlBoard.elevatorPower)

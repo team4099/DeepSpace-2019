@@ -96,9 +96,9 @@ class Wrist private constructor(): Subsystem {
      * Outputs the angle of the wrist
      */
     override fun outputToSmartDashboard() {
-        //SmartDashboard.putNumber("wrist/wristAngle", wristAngle)
-        //SmartDashboard.putBoolean("wrist/wristUp", wristAngle > PI / 4)
-        //SmartDashboard.putNumber("wrist/wristSpeed", talon.sensorCollection.quadratureVelocity.toDouble())
+        SmartDashboard.putNumber("wrist/wristAngle", wristAngle)
+        SmartDashboard.putBoolean("wrist/wristUp", wristAngle > PI / 4)
+        SmartDashboard.putNumber("wrist/wristSpeed", talon.sensorCollection.quadratureVelocity.toDouble())
     }
 
     @Synchronized override fun stop() {

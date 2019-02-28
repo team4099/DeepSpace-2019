@@ -212,6 +212,7 @@ class Elevator private constructor(): Subsystem {
         override fun onStart() {
             zeroSensors()
             elevatorState = ElevatorState.OPEN_LOOP
+            isHatchPanel = false
         }
 
         override fun onLoop() {
