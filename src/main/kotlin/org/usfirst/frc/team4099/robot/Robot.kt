@@ -352,7 +352,9 @@ class Robot : TimedRobot() {
      * Log information from all subsystems onto the SmartDashboard
      */
     private fun outputAllToSmartDashboard() {
-
+        wrist.outputToSmartDashboard()
+        intake.outputToSmartDashboard()
+        elevator.outputToSmartDashboard()
     }
 
     private fun startLiveWindowMode() {
