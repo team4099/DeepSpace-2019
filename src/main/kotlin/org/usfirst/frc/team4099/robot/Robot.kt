@@ -40,7 +40,7 @@ class Robot : TimedRobot() {
     private val superstructure = Superstructure.instance
     private val cheesyDriveHelper = CheesyDriveHelper()
 
-    private var intakeState = IntakeState.CARGO
+    private var intakeState = IntakeState.HATCHPANEL
     var dashBoardTest = 0
 
   
@@ -335,21 +335,21 @@ class Robot : TimedRobot() {
                     elevator.elevatorState = Elevator.ElevatorState.PORTMID
                 }
             }
-            if (controlBoard.elevatorHigh){
-                println("elevator high")
-                if(intakeState == IntakeState.HATCHPANEL) {
-                    elevator.elevatorState = Elevator.ElevatorState.HATCHHIGH
-                }
-                else {
-                    elevator.elevatorState = Elevator.ElevatorState.PORTHIGH
-                }
-            }
+//            if (controlBoard.elevatorHigh){
+//                println("elevator high")
+//                if(intakeState == IntakeState.HATCHPANEL) {
+//                    elevator.elevatorState = Elevator.ElevatorState.HATCHHIGH
+//                }
+//                else {
+//                    elevator.elevatorState = Elevator.ElevatorState.PORTHIGH
+//                }
+//            }
             if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER) {
                 elevator.setElevatorVelocity(1000.0 * controlBoard.elevatorPower)
             }
-//            else{
-//                elevator.setElevatorVelocity(0.0)
-//            }
+            else if(elevator.elevatorState == Elevator.ElevatorState.VELOCITY_CONTROL){
+                elevator.setElevatorVelocity(0.0)
+            }
 
             //elevator.setElevatorVelocity(1000.0 * controlBoard.elevatorPower)
             //elevator.setOpenLoop(controlBoard.elevatorPower)
@@ -363,73 +363,7 @@ class Robot : TimedRobot() {
 
     override fun testInit() {
         try {
-            println("Running Intake")
-            intake.intakeState = Intake.IntakeState.IN
-            TimeUnit.SECONDS.sleep(1)
-
-            println("Holding")
-            intake.intakeState = Intake.IntakeState.HOLDING
-            TimeUnit.SECONDS.sleep(1)
-            println("Intake Off")
-            intake.intakeState = Intake.IntakeState.STOP
-
-            println("Hatch Open")
-            intake.hatchState = Intake.HatchState.OPEN
-            TimeUnit.SECONDS.sleep(1)
-
-            println("Hatch Close")
-            intake.hatchState = Intake.HatchState.CLOSED
-            TimeUnit.SECONDS.sleep(1)
-
-            println("Wrist horizontal")
-            wrist.wristState = Wrist.WristState.HORIZONTAL
-            TimeUnit.SECONDS.sleep(1)
-
-            println("Elevator Hatch low")
-            elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
-            TimeUnit.SECONDS.sleep(3)
-
-            println("Elevator Hatch mid")
-            elevator.elevatorState = Elevator.ElevatorState.HATCHMID
-            TimeUnit.SECONDS.sleep(3)
-
-            println("Elevator Hatch high")
-            elevator.elevatorState = Elevator.ElevatorState.HATCHHIGH
-            TimeUnit.SECONDS.sleep(3)
-
-            println("Elevator Port Low")
-            elevator.elevatorState = Elevator.ElevatorState.PORTLOW
-            TimeUnit.SECONDS.sleep(3)
-
-            println("Elevator port mid")
-            elevator.elevatorState = Elevator.ElevatorState.PORTMID
-            TimeUnit.SECONDS.sleep(3)
-
-            println("Elevator port high")
-            elevator.elevatorState = Elevator.ElevatorState.PORTHIGH
-            TimeUnit.SECONDS.sleep(3)
-
-            println("Elevator ground")
-            elevator.elevatorState = Elevator.ElevatorState.GROUND
-            TimeUnit.SECONDS.sleep(3)
-
-            println("DT Forward")
-            drive.setLeftRightPower(1.0,1.0)
-            TimeUnit.SECONDS.sleep(3)
-
-            println("DT Backward")
-            drive.setLeftRightPower(-1.0,-1.0)
-            TimeUnit.SECONDS.sleep(3)
-
-            println("Shift DT Gear low")
-            drive.highGear = false
-            TimeUnit.SECONDS.sleep(1)
-
-
-            println("Shift DT Gear high")
-            drive.highGear = true
-            TimeUnit.SECONDS.sleep(1)
-
+            enabledLooper.start()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("testInit", t)
             throw t
@@ -439,8 +373,80 @@ class Robot : TimedRobot() {
 
 
 
-    override fun testPeriodic() = teleopPeriodic()
+    override fun testPeriodic(){
 
+        println("Running Intake")
+        intake.intakeState = Intake.IntakeState.IN
+        Thread.sleep(2000)
+
+        println("Intake Off")
+        intake.intakeState = Intake.IntakeState.STOP
+        Thread.sleep(3000)
+
+        println("Holding")
+        intake.intakeState = Intake.IntakeState.HOLDING
+        Thread.sleep(2000)
+        println("Intake Off")
+        intake.intakeState = Intake.IntakeState.STOP
+
+        println("Hatch Open")
+        intake.hatchState = Intake.HatchState.OPEN
+        Thread.sleep(3000)
+
+        println("Hatch Close")
+        intake.hatchState = Intake.HatchState.CLOSED
+        Thread.sleep(3000)
+
+        println("Wrist horizontal")
+        wrist.wristState = Wrist.WristState.HORIZONTAL
+        Thread.sleep(3000)
+
+//            println("Elevator Hatch low")
+//            elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
+//            TimeUnit.SECONDS.sleep(3)
+//
+//            println("Elevator Hatch mid")
+//            elevator.elevatorState = Elevator.ElevatorState.HATCHMID
+//            TimeUnit.SECONDS.sleep(3)
+//
+//            println("Elevator Hatch high")
+//            elevator.elevatorState = Elevator.ElevatorState.HATCHHIGH
+//            TimeUnit.SECONDS.sleep(3)
+//
+//            println("Elevator Port Low")
+//            elevator.elevatorState = Elevator.ElevatorState.PORTLOW
+//            TimeUnit.SECONDS.sleep(3)
+//
+//            println("Elevator port mid")
+//            elevator.elevatorState = Elevator.ElevatorState.PORTMID
+//            TimeUnit.SECONDS.sleep(3)
+//
+//            println("Elevator port high")
+//            elevator.elevatorState = Elevator.ElevatorState.PORTHIGH
+//            TimeUnit.SECONDS.sleep(3)
+//
+//            println("Elevator ground")
+//            elevator.elevatorState = Elevator.ElevatorState.GROUND
+//            TimeUnit.SECONDS.sleep(3)
+
+//            println("DT Forward")
+//            drive.setLeftRightPower(0.2,0.2)
+//            TimeUnit.MILLISECONDS.sleep(500)
+//
+//            println("DT Backward")
+//            drive.setLeftRightPower(-0.2,-0.2)
+//            TimeUnit.MILLISECONDS.sleep(500)
+
+        println("Shift DT Gear low")
+        drive.highGear = false
+        Thread.sleep(3000)
+
+
+        println("Shift DT Gear high")
+        drive.highGear = true
+        Thread.sleep(3000)
+        outputAllToSmartDashboard()
+    }
     /**
      * Log information from all subsystems onto the SmartDashboard
      */

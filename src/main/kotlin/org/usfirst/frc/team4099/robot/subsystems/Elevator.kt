@@ -76,9 +76,11 @@ class Elevator private constructor(): Subsystem {
         talon.configMotionCruiseVelocity(1600, 0)
         talon.configMotionAcceleration(1000, 0)
 
-//        talon.configReverseSoftLimitEnable(true, 0)
-//        talon.configReverseSoftLimitThreshold(ElevatorConversion.inchesToPulses(Constants.Elevator.BOTTOM_SOFT_LIMIT).toInt(), 0)
-//        talon.overrideSoftLimitsEnable(true)
+        zeroSensors()
+
+        talon.configReverseSoftLimitEnable(true, 0)
+        talon.configReverseSoftLimitThreshold(ElevatorConversion.inchesToPulses(Constants.Elevator.BOTTOM_SOFT_LIMIT).toInt(), 0)
+        talon.overrideSoftLimitsEnable(true)
 
         //SmartDashboard.putNumber("elevator/pidPDown", Constants.Gains.ELEVATOR_DOWN_KP)
         //SmartDashboard.putNumber("elevator/pidIDown", Constants.Gains.ELEVATOR_DOWN_KI)
@@ -210,7 +212,6 @@ class Elevator private constructor(): Subsystem {
 
     val loop: Loop = object : Loop {
         override fun onStart() {
-            zeroSensors()
             elevatorState = ElevatorState.OPEN_LOOP
             isHatchPanel = false
         }

@@ -31,6 +31,7 @@ class Wrist private constructor(): Subsystem {
     var wristState = WristState.OPEN_LOOP
     private var wristPower = 0.0
     private var wristAngle = 0.0
+    private var lastVelControlPosition = 0.0
     var observedVelocity = 0.0
     var maxVel = 0.0
 //    private var outOfBounds: Boolean = true
@@ -52,9 +53,6 @@ class Wrist private constructor(): Subsystem {
         slave.inverted = false
         talon.setSensorPhase(true)
         talon.configPeakCurrentLimit(20)
-        talon.setNeutralMode(NeutralMode.Brake)
-        slave.setNeutralMode(NeutralMode.Brake)
-
         talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0)
         talon.configNominalOutputForward(0.0, 0)
         talon.configNominalOutputReverse(0.0, 0)
@@ -85,6 +83,7 @@ class Wrist private constructor(): Subsystem {
         talon.configMotionCruiseVelocity(2000, 0)
         talon.configMotionAcceleration(1500, 0)
 
+        zeroSensors()
 //        talon.configForwardSoftLimitEnable(true, 0)
 //        talon.configForwardSoftLimitThreshold(100, 0)
 //        talon.configReverseSoftLimitEnable(true, 0)
@@ -104,6 +103,9 @@ class Wrist private constructor(): Subsystem {
     }
 
     @Synchronized override fun stop() {
+        talon.set(ControlMode.PercentOutput,0.0)
+        slave.set(ControlMode.PercentOutput,0.0)
+        talon.setNeutralMode(NeutralMode.Coast)
 //        setWristMode(WristState.HORIZONTAL)
     }
 
@@ -142,17 +144,19 @@ class Wrist private constructor(): Subsystem {
 //            println("wrist exiting at 0 power, $radiansPerSecond")
 //            return
 //        }
-        wristState = WristState.VELOCITY_CONTROL
-        if(radiansPerSecond > 0) {
-            talon.selectProfileSlot(2, 0)
-        } else {
-            talon.selectProfileSlot(2, 0)
+        if(radiansPerSecond == 0.0){
+            //talon.set(ControlMode.MotionMagic, WristConversion.radiansToPulses(lastVelControlPosition))   //use when pids are better
         }
-//        if(radiansPerSecond == 0.0) {
-//            talon.set(ControlMode.MotionMagic, WristConversion.radiansToPulses(observedVelocity))
-//        } else {
-//            talon.set(ControlMode.Velocity, WristConversion.radiansToPulses(radiansPerSecond))
-//        }
+        else{
+            lastVelControlPosition = wristAngle
+            wristState = WristState.VELOCITY_CONTROL
+            if(radiansPerSecond > 0) {
+                talon.selectProfileSlot(2, 0)
+            } else {
+                talon.selectProfileSlot(2, 0)
+            }
+            talon.set(ControlMode.Velocity, WristConversion.radiansToPulses(radiansPerSecond))
+        }
         talon.set(ControlMode.Velocity, WristConversion.radiansToPulses(radiansPerSecond))
 
         //println("nativeVel: $radiansPerSecond, observedVel: ${talon.sensorCollection.quadratureVelocity}, error: ${talon.sensorCollection.quadratureVelocity - radiansPerSecond}")
@@ -162,8 +166,8 @@ class Wrist private constructor(): Subsystem {
 
     val loop: Loop = object : Loop {
         override fun onStart() {
-           zeroSensors()
             wristState = WristState.VELOCITY_CONTROL
+            talon.setNeutralMode(NeutralMode.Coast)
             print("onStart-------------------------------------------------------------------------------------------------")
         }
 
@@ -199,8 +203,6 @@ class Wrist private constructor(): Subsystem {
         }
 
         override fun onStop(){
-            talon.set(ControlMode.PercentOutput,0.0)
-            slave.set(ControlMode.PercentOutput,0.0)
             stop()
         }
 

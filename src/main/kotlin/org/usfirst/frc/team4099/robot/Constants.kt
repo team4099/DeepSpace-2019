@@ -88,7 +88,7 @@ class Constants {
         val SLAVE_VICTOR_ID = 13 //CHANGE
         val MAX_SPEED = 180 //CHANGE
         val MIN_TRIGGER = 0.1
-        val BOTTOM_SOFT_LIMIT = 5.0 //set later - CHANGE
+        val BOTTOM_SOFT_LIMIT = 0.0 //set later - CHANGE
     }
 
 
