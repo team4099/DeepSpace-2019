@@ -17,6 +17,7 @@ import org.usfirst.frc.team4099.robot.loops.VoltageEstimator
 
 import org.usfirst.frc.team4099.robot.subsystems.*
 import src.main.kotlin.org.usfirst.frc.team4099.robot.subsystems.Superstructure
+import java.util.concurrent.TimeUnit
 
 class Robot : TimedRobot() {
     private val vision = Vision.instance
@@ -362,6 +363,72 @@ class Robot : TimedRobot() {
 
     override fun testInit() {
         try {
+            println("Running Intake")
+            intake.intakeState = Intake.IntakeState.IN
+            TimeUnit.SECONDS.sleep(1)
+
+            println("Holding")
+            intake.intakeState = Intake.IntakeState.HOLDING
+            TimeUnit.SECONDS.sleep(1)
+            println("Intake Off")
+            intake.intakeState = Intake.IntakeState.STOP
+
+            println("Hatch Open")
+            intake.hatchState = Intake.HatchState.OPEN
+            TimeUnit.SECONDS.sleep(1)
+
+            println("Hatch Close")
+            intake.hatchState = Intake.HatchState.CLOSED
+            TimeUnit.SECONDS.sleep(1)
+
+            println("Wrist horizontal")
+            wrist.wristState = Wrist.WristState.HORIZONTAL
+            TimeUnit.SECONDS.sleep(1)
+
+            println("Elevator Hatch low")
+            elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
+            TimeUnit.SECONDS.sleep(3)
+
+            println("Elevator Hatch mid")
+            elevator.elevatorState = Elevator.ElevatorState.HATCHMID
+            TimeUnit.SECONDS.sleep(3)
+
+            println("Elevator Hatch high")
+            elevator.elevatorState = Elevator.ElevatorState.HATCHHIGH
+            TimeUnit.SECONDS.sleep(3)
+
+            println("Elevator Port Low")
+            elevator.elevatorState = Elevator.ElevatorState.PORTLOW
+            TimeUnit.SECONDS.sleep(3)
+
+            println("Elevator port mid")
+            elevator.elevatorState = Elevator.ElevatorState.PORTMID
+            TimeUnit.SECONDS.sleep(3)
+
+            println("Elevator port high")
+            elevator.elevatorState = Elevator.ElevatorState.PORTHIGH
+            TimeUnit.SECONDS.sleep(3)
+
+            println("Elevator ground")
+            elevator.elevatorState = Elevator.ElevatorState.GROUND
+            TimeUnit.SECONDS.sleep(3)
+
+            println("DT Forward")
+            drive.setLeftRightPower(1.0,1.0)
+            TimeUnit.SECONDS.sleep(3)
+
+            println("DT Backward")
+            drive.setLeftRightPower(-1.0,-1.0)
+            TimeUnit.SECONDS.sleep(3)
+
+            println("Shift DT Gear low")
+            drive.highGear = false
+            TimeUnit.SECONDS.sleep(1)
+
+
+            println("Shift DT Gear high")
+            drive.highGear = true
+            TimeUnit.SECONDS.sleep(1)
 
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("testInit", t)
