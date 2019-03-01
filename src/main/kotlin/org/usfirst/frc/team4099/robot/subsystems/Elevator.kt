@@ -264,13 +264,13 @@ class Elevator private constructor(): Subsystem {
         }
 
         override fun onStop() {
-            //setElevatorVelocity(0.0)
+            setElevatorVelocity(0.0)
         }
     }
 
     override fun stop() {
         movementState = MovementState.STILL
-        //setElevatorVelocity(0.0)
+        setElevatorVelocity(0.0)
 
     }
 

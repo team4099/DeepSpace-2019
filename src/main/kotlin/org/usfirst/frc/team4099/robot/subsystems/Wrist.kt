@@ -163,7 +163,7 @@ class Wrist private constructor(): Subsystem {
     val loop: Loop = object : Loop {
         override fun onStart() {
            zeroSensors()
-            wristState = WristState.OPEN_LOOP
+            wristState = WristState.VELOCITY_CONTROL
             print("onStart-------------------------------------------------------------------------------------------------")
         }
 

@@ -25,9 +25,8 @@ class Robot : TimedRobot() {
 
 
 //    private val test3 : DoubleSolenoid = DoubleSolenoid(1,6)
-    //private val climber = Climber.instance
 
-    private val climber = Climber.instance
+    //private val climber = Climber.instance
     private val wrist = Wrist.instance
     private val intake = Intake.instance
 
@@ -40,7 +39,7 @@ class Robot : TimedRobot() {
     private val superstructure = Superstructure.instance
     private val cheesyDriveHelper = CheesyDriveHelper()
 
-    private var intakeState = IntakeState.HATCHPANEL
+    private var intakeState = IntakeState.CARGO
     var dashBoardTest = 0
 
   
@@ -65,7 +64,7 @@ class Robot : TimedRobot() {
             enabledLooper.register(intake.loop)
 //            enabledLooper.register(superstructure.loop)
 
-
+            //enabledLooper.register(climber.loop)
 
             enabledLooper.register(drive.loop)
     //        enabledLooper.register(leds.loop)
@@ -185,6 +184,7 @@ class Robot : TimedRobot() {
             if (intakeState == IntakeState.CARGO){
                 if (Math.abs(controlBoard.wristPower)> 0.2) {
                     wrist.setWristVelocity(-controlBoard.wristPower * Constants.Wrist.MAX_SPEED)
+                    //println("Set wrist velocity")
                     //wrist.setOpenLoop(-controlBoard.wristPower)
                 }
                 else {
@@ -193,12 +193,15 @@ class Robot : TimedRobot() {
                 }
                 if (controlBoard.runCargoIntake){
                     intake.intakeState = Intake.IntakeState.IN
+                    //println("intake in")
                 }
                 else if (controlBoard.reverseCargoIntake){
                     intake.intakeState = Intake.IntakeState.OUT
+                    //println("intake out")
                 }
                 else if (controlBoard.holdCargo) {
                     intake.intakeState = Intake.IntakeState.HOLDING
+                    //println("intake set to holding")
                 }
                 else {
                     intake.intakeState = Intake.IntakeState.STOP
@@ -209,26 +212,28 @@ class Robot : TimedRobot() {
                 wrist.wristState = Wrist.WristState.HORIZONTAL
                 if(controlBoard.openHatch){
                     intake.hatchState = Intake.HatchState.OPEN
+                    //println("open hatch")
                 }
                 if(controlBoard.closeHatch){
                     intake.hatchState = Intake.HatchState.CLOSED
+                    //println("close hatch")
                 }
             }
-            if (controlBoard.climberUp){
-                climber.climberUp()
-            }
-            if (controlBoard.climberDown){
-                climber.climberDown()
-            }
-            if (controlBoard.pushLatch){
-                climber.latchPush()
-            }
-            if (controlBoard.closeLatch){
-                climber.latchDown()
-            }
-            if (controlBoard.climberDrive){
-                climber.drive(1.0)
-            }
+//            if (controlBoard.climberUp){
+//                climber.climberUp()
+//            }
+//            if (controlBoard.climberDown){
+//                climber.climberDown()
+//            }
+//            if (controlBoard.pushLatch){
+//                climber.latchPush()
+//            }
+//            if (controlBoard.closeLatch){
+//                climber.latchDown()
+//            }
+//            if (controlBoard.climberDrive){
+//                climber.drive(1.0)
+//            }
 //            if (controlBoard.hatchPExtend) {
 //                intake.hatchState = Intake.HatchState.OUT
 //            }
@@ -312,6 +317,7 @@ class Robot : TimedRobot() {
             outputAllToSmartDashboard()
             //elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
             if (controlBoard.elevatorLow){
+                println("elevator low")
                 if(intakeState == IntakeState.HATCHPANEL) {
                     elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
                 }
@@ -320,6 +326,7 @@ class Robot : TimedRobot() {
                 }
             }
             if (controlBoard.elevatorMid){
+                println("elevator mid")
                 if(intakeState == IntakeState.HATCHPANEL) {
                     elevator.elevatorState = Elevator.ElevatorState.HATCHMID
                 }
@@ -328,6 +335,7 @@ class Robot : TimedRobot() {
                 }
             }
             if (controlBoard.elevatorHigh){
+                println("elevator high")
                 if(intakeState == IntakeState.HATCHPANEL) {
                     elevator.elevatorState = Elevator.ElevatorState.HATCHHIGH
                 }
