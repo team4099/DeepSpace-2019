@@ -22,6 +22,8 @@ class Constants {
     }
 
     object Climber {
+        val SHIFTER_FORWARD_ID = 0
+        val SHIFTER_REVERSE_ID = 0
         val CLIMBER_SPARK_ID = 0
         val DRIVE_SPARK_ID = 0
         val CLIMBER_KP = 0.0

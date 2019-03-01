@@ -27,6 +27,7 @@ class Robot : TimedRobot() {
 //    private val test3 : DoubleSolenoid = DoubleSolenoid(1,6)
     //private val climber = Climber.instance
 
+    private val climber = Climber.instance
     private val wrist = Wrist.instance
     private val intake = Intake.instance
 
@@ -212,6 +213,21 @@ class Robot : TimedRobot() {
                 if(controlBoard.closeHatch){
                     intake.hatchState = Intake.HatchState.CLOSED
                 }
+            }
+            if (controlBoard.climberUp){
+                climber.climberUp()
+            }
+            if (controlBoard.climberDown){
+                climber.climberDown()
+            }
+            if (controlBoard.pushLatch){
+                climber.latchPush()
+            }
+            if (controlBoard.closeLatch){
+                climber.latchDown()
+            }
+            if (controlBoard.climberDrive){
+                climber.drive(1.0)
             }
 //            if (controlBoard.hatchPExtend) {
 //                intake.hatchState = Intake.HatchState.OUT

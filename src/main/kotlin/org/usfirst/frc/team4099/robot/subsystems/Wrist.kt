@@ -9,6 +9,7 @@ import org.usfirst.frc.team4099.lib.util.conversions.ElevatorConversion
 import org.usfirst.frc.team4099.lib.util.conversions.WristConversion
 import org.usfirst.frc.team4099.robot.Constants
 import org.usfirst.frc.team4099.robot.loops.Loop
+import javax.naming.ldap.Control
 import kotlin.math.*
 
 /**
@@ -198,8 +199,8 @@ class Wrist private constructor(): Subsystem {
         }
 
         override fun onStop(){
-            talon.setNeutralMode(NeutralMode.Coast)
-            slave.setNeutralMode(NeutralMode.Coast)
+            talon.set(ControlMode.PercentOutput,0.0)
+            slave.set(ControlMode.PercentOutput,0.0)
             stop()
         }
 

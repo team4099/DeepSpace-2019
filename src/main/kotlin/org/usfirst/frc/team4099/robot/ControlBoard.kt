@@ -40,11 +40,26 @@ class ControlBoard private constructor() {
     val holdCargo: Boolean
         get() = operator.bButton
 
+    val climberUp : Boolean
+        get() = driver.dPadUp
+
+    val climberDown : Boolean
+        get() = driver.dPadDown
+
+    val climberDrive : Boolean
+        get() = driver.rightShoulderButton
+
     val openHatch : Boolean
         get() = operator.aButton
 
     val closeHatch : Boolean
         get() = operator.bButton
+
+    val pushLatch : Boolean
+        get() = driver.yButton
+
+    val closeLatch : Boolean
+        get() = driver.xButton
 
     val elevatorLow : Boolean
         get() = operator.dPadDown
