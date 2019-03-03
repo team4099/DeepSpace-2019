@@ -32,13 +32,13 @@ class ControlBoard private constructor() {
         get() = operator.dPadRight
 
     val reverseCargoIntake: Boolean
-        get() = operator.xButton
+        get() = operator.bButton
 
     val runCargoIntake: Boolean
         get() = operator.aButton
 
     val holdCargo: Boolean
-        get() = operator.bButton
+        get() = operator.xButton
 
     val climberUp : Boolean
         get() = driver.dPadUp
@@ -50,10 +50,10 @@ class ControlBoard private constructor() {
         get() = driver.rightShoulderButton
 
     val openHatch : Boolean
-        get() = operator.aButton
+        get() = operator.bButton
 
     val closeHatch : Boolean
-        get() = operator.bButton
+        get() = operator.aButton
 
     val pushLatch : Boolean
         get() = driver.yButton
@@ -69,6 +69,8 @@ class ControlBoard private constructor() {
 
     val elevatorHigh : Boolean
         get() = operator.dPadUp
+    val elevatorShip: Boolean
+        get() = operator.dPadLeft
 
     val toggleIntake: Boolean
         get() = operator.xButton

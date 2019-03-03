@@ -1,5 +1,6 @@
 package org.usfirst.frc.team4099.robot
 
+import edu.wpi.first.cameraserver.CameraServer
 import org.usfirst.frc.team4099.lib.util.Utils
 
 
@@ -20,7 +21,7 @@ import src.main.kotlin.org.usfirst.frc.team4099.robot.subsystems.Superstructure
 import java.util.concurrent.TimeUnit
 
 class Robot : TimedRobot() {
-    private val vision = Vision.instance
+//    private val vision = Vision.instance
 
     private var autoModeExecuter: AutoModeExecuter? = null
 
@@ -58,6 +59,7 @@ class Robot : TimedRobot() {
 
     override fun robotInit() {
         try {
+            CameraServer.getInstance().startAutomaticCapture();
 
             DashboardConfigurator.initDashboard()
 //            enabledLooper.register(drive.loop)
@@ -112,6 +114,7 @@ class Robot : TimedRobot() {
 //            throw t
 //        }
         teleopInit()
+        intake.hatchState = Intake.HatchState.CLOSED
 
     }
 
@@ -132,9 +135,9 @@ class Robot : TimedRobot() {
 
     override fun disabledPeriodic() {
         try {
-            SmartDashboard.putNumber("Dashboard Test", dashBoardTest * 1.0)
+            //SmartDashboard.putNumber("Dashboard Test", dashBoardTest * 1.0)
             dashBoardTest++
-            outputAllToSmartDashboard()
+           // outputAllToSmartDashboard()
 
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("disabledPeriodic", t)
@@ -159,7 +162,7 @@ class Robot : TimedRobot() {
         try {
 //            leds.handleFrontDown()
             println("Period")
-            SmartDashboard.putNumber("Dashboard Test", dashBoardTest * 1.0)
+//            SmartDashboard.putNumber("Dashboard Test", dashBoardTest * 1.0)
             dashBoardTest++
             if (controlBoard.cargoMode){
                 intakeState = IntakeState.CARGO
@@ -270,29 +273,29 @@ class Robot : TimedRobot() {
                 drive.highGear = true
                 println("Shifting to high gear")
             }
-            if (controlBoard.aimingOn) {
-                println("Activating vision")
-                println(vision.visionState)
-                vision.setState(Vision.VisionState.SEEKING)
-                println(vision.visionState)
-            }
-            if (controlBoard.aimingOff) {
-                println("Deactivating vision")
-                println(vision.visionState)
-                vision.setState(Vision.VisionState.INACTIVE)
-                println(vision.visionState)
-            }
+//            if (controlBoard.aimingOn) {
+//                println("Activating vision")
+//                println(vision.visionState)
+//                vision.setState(Vision.VisionState.AIMING)
+//                println(vision.visionState)
+//            }
+//            if (controlBoard.aimingOff) {
+//                println("Deactivating vision")
+//                println(vision.visionState)
+//                vision.setState(Vixsion.VisionState.INACTIVE)
+//                println(vision.visionState)
+//            }
 
 //            if (vision.visionState != Vision.VisionState.AIMING) {
 //                drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
 //            } else if (vision.visionState == Vision.VisionState.SEEKING) {
-                if (vision.onTarget) {
-                    drive.setLeftRightPower(0.3, 0.3)
-                } else if (vision.visionState != Vision.VisionState.INACTIVE) {
-                    drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
-                } else {
+//                if (vision.onTarget) {
+//                    drive.setLeftRightPower(0.3, 0.3)
+//                } else if (vision.visionState != Vision.VisionState.INACTIVE) {
+//                    drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
+//                } else {
                     drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
-                }
+//                }
 //            } else {
 //                drive.setLeftRightPower(vision.steeringAdjust, - vision.steeringAdjust)
 //            }
@@ -315,7 +318,7 @@ class Robot : TimedRobot() {
 //            }
             //wrist.setWristMode(Wrist.WristState.HORIZONTAL)
             //elevator.elevatorState = Elevator.ElevatorState.HATCHHIGH
-            outputAllToSmartDashboard()
+           // outputAllToSmartDashboard()
             //elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
             if (controlBoard.elevatorLow){
                 println("elevator low")
@@ -335,15 +338,15 @@ class Robot : TimedRobot() {
                     elevator.elevatorState = Elevator.ElevatorState.PORTMID
                 }
             }
-//            if (controlBoard.elevatorHigh){
-//                println("elevator high")
-//                if(intakeState == IntakeState.HATCHPANEL) {
-//                    elevator.elevatorState = Elevator.ElevatorState.HATCHHIGH
-//                }
-//                else {
-//                    elevator.elevatorState = Elevator.ElevatorState.PORTHIGH
-//                }
-//            }
+            if (controlBoard.elevatorHigh){
+                println("elevator high")
+                if(intakeState == IntakeState.HATCHPANEL) {
+                    elevator.elevatorState = Elevator.ElevatorState.HATCHHIGH
+                }
+                else {
+                    elevator.elevatorState = Elevator.ElevatorState.PORTHIGH
+                }
+            }
             if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER) {
                 elevator.setElevatorVelocity(1000.0 * controlBoard.elevatorPower)
             }
@@ -354,6 +357,7 @@ class Robot : TimedRobot() {
             //elevator.setElevatorVelocity(1000.0 * controlBoard.elevatorPower)
             //elevator.setOpenLoop(controlBoard.elevatorPower)
            // wrist.setOpenLoop(controlBoard.wristPower)
+            intake.outputToSmartDashboard()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)
             throw t
@@ -445,7 +449,7 @@ class Robot : TimedRobot() {
         println("Shift DT Gear high")
         drive.highGear = true
         Thread.sleep(3000)
-        outputAllToSmartDashboard()
+       // outputAllToSmartDashboard()
     }
     /**
      * Log information from all subsystems onto the SmartDashboard

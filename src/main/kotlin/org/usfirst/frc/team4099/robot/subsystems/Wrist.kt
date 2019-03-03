@@ -23,8 +23,8 @@ import kotlin.math.*
 
 class Wrist private constructor(): Subsystem {
     private val talon = CANMotorControllerFactory.createDefaultTalon(Constants.Wrist.WRIST_TALON_ID)
-    //private val slave = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, talon)
-    private val slave = CANMotorControllerFactory.createPermanentSlaveTalon(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, Constants.Wrist.WRIST_TALON_ID)
+    private val slave = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, talon)
+//    private val slave = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, Constants.Wrist.WRIST_TALON_ID)
     //^^^^ TALON FOR PRACTICE BOT CHANGE CHANGE CHANGE
 //    private val arm = Arm.instance
 
@@ -103,8 +103,8 @@ class Wrist private constructor(): Subsystem {
     }
 
     @Synchronized override fun stop() {
-        talon.set(ControlMode.PercentOutput,0.0)
-        slave.set(ControlMode.PercentOutput,0.0)
+        talon.set(ControlMode.Velocity,0.0)
+//        slave.set(ControlMode.PercentOutput,0.0)
         talon.setNeutralMode(NeutralMode.Coast)
 //        setWristMode(WristState.HORIZONTAL)
     }

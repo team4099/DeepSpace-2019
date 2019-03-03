@@ -27,6 +27,7 @@ class Intake private constructor() : Subsystem {
     var intakeState = IntakeState.IN
     var hatchState = HatchState.CLOSED
     private var intakePower = 0.0
+    public var isHatchOpen = false
 
     enum class IntakeState {
         IN, STOP, HOLDING, OUT, SLOW
@@ -37,15 +38,18 @@ class Intake private constructor() : Subsystem {
     }
 
     override fun outputToSmartDashboard() {
-        SmartDashboard.putString("intake/hatchState", hatchState.toString())
-        SmartDashboard.putString("intake/intakeState", intakeState.toString())
+//        SmartDashboard.putString("intake/hatchState", hatchState.toString())
+//        SmartDashboard.putString("intake/intakeState", intakeState.toString())
         //SmartDashboard.putNumber("intake/intakePower", intakePower)
-        //SmartDashboard.putBoolean("intake/isUp", up)
+        //SmartDashb
+        // oard.putBoolean("intake/isUp", up)
         //SmartDashboard.putNumber("intake/current", BrownoutDefender.instance.getCurrent(7))
+        SmartDashboard.putBoolean("intake/hatchOpen", isHatchOpen)
     }
 
     init{
         talon.configPeakCurrentLimit(10)
+        talon.inverted = true
     }
 
     /**
@@ -88,9 +92,11 @@ class Intake private constructor() : Subsystem {
                 when (hatchState){
                     HatchState.CLOSED -> {
                         extender.set(DoubleSolenoid.Value.kReverse)
+                        isHatchOpen = false
                     }
                     HatchState.OPEN -> {
                         extender.set(DoubleSolenoid.Value.kForward)
+                        isHatchOpen = true
                     }
                 }
             }
