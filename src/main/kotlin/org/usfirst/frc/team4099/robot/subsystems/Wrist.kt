@@ -183,8 +183,8 @@ class Wrist private constructor(): Subsystem {
                 //println("IAccumulator: " + talon.integralAccumulator)
                 println("Wrist: " + wristAngle)
                 if (wristState == WristState.OPEN_LOOP || wristState == WristState.VELOCITY_CONTROL) {
-                    //println("Wrist: " + wristAngle)
-                    //println("Target: " + wristState.targetAngle)
+                    println("Wrist: " + wristAngle)
+                    println("Target: " + wristState.targetAngle)
                     return
                 }
 //                if (outOfBounds()) {

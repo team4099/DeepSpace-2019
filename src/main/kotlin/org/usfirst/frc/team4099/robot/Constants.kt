@@ -168,15 +168,15 @@ class Constants {
         val WRIST_SLAVE_VICTOR_ID = 14
         val MAX_SPEED = 2.485
 
-        val WRIST_UP_KP = 4.0
+        val WRIST_UP_KP = 0.7
         val WRIST_UP_KI = 0.0
-        val WRIST_UP_KD = 50.0
-        val WRIST_UP_KF = 1.0
+        val WRIST_UP_KD = 85.0
+        val WRIST_UP_KF = 1.75
 
-        val WRIST_DOWN_KP = 4.0
+        val WRIST_DOWN_KP = 0.7
         val WRIST_DOWN_KI = 0.0
-        val WRIST_DOWN_KD = 50.0
-        val WRIST_DOWN_KF = 1.0
+        val WRIST_DOWN_KD = 85.0
+        val WRIST_DOWN_KF = 1.75
 
         val WRiST_VELOCITY_KP = 0.35
         val WRiST_VELOCITY_KI = 0.0
