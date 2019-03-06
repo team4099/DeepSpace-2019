@@ -26,7 +26,6 @@ class Wrist private constructor(): Subsystem {
     private val slave = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, talon)
 //    private val slave = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, Constants.Wrist.WRIST_TALON_ID)
     //^^^^ TALON FOR PRACTICE BOT CHANGE CHANGE CHANGE
-//    private val arm = Arm.instance
 
     var wristState = WristState.OPEN_LOOP
     private var wristPower = 0.0
@@ -104,9 +103,7 @@ class Wrist private constructor(): Subsystem {
 
     @Synchronized override fun stop() {
         talon.set(ControlMode.Velocity,0.0)
-//        slave.set(ControlMode.PercentOutput,0.0)
         talon.setNeutralMode(NeutralMode.Coast)
-//        setWristMode(WristState.HORIZONTAL)
     }
 
     /**

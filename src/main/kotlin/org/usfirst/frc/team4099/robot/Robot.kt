@@ -28,7 +28,7 @@ class Robot : TimedRobot() {
 
 //    private val test3 : DoubleSolenoid = DoubleSolenoid(1,6)
 
-    //private val climber = Climber.instance
+    private val climber = Climber.instance
     private val wrist = Wrist.instance
     private val intake = Intake.instance
 
@@ -67,7 +67,7 @@ class Robot : TimedRobot() {
             enabledLooper.register(intake.loop)
 //            enabledLooper.register(superstructure.loop)
 
-            //enabledLooper.register(climber.loop)
+            enabledLooper.register(climber.loop)
 
             enabledLooper.register(drive.loop)
     //        enabledLooper.register(leds.loop)
@@ -173,18 +173,6 @@ class Robot : TimedRobot() {
                 //elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
             }
 
-//            if(controlBoard.runIntake){
-//                intake.intakeState = Intake.IntakeState.IN
-//            }
-//            else{
-//                intake.intakeState = Intake.IntakeState.STOP
-//            }
-//            if(controlBoard.reverseIntakeFast){
-//                intake.intakeState = Intake.IntakeState.FAST_OUT
-//            }
-//            else if(intake.intakeState == Intake.IntakeState.FAST_OUT){
-//                intake.intakeState = Intake.IntakeState.STOP
-//            }
             if (intakeState == IntakeState.CARGO){
                 if (Math.abs(controlBoard.wristPower)> 0.2) {
                     wrist.setWristVelocity(-controlBoard.wristPower * Constants.Wrist.MAX_SPEED)
@@ -223,33 +211,21 @@ class Robot : TimedRobot() {
                     //println("close hatch")
                 }
             }
-//            if (controlBoard.climberUp){
-//                climber.climberUp()
-//            }
-//            if (controlBoard.climberDown){
-//                climber.climberDown()
-//            }
-//            if (controlBoard.pushLatch){
-//                climber.latchPush()
-//            }
-//            if (controlBoard.closeLatch){
-//                climber.latchDown()
-//            }
-//            if (controlBoard.climberDrive){
-//                climber.drive(1.0)
-//            }
-//            if (controlBoard.hatchPExtend) {
-//                intake.hatchState = Intake.HatchState.OUT
-//            }
-//            if (controlBoard.hatchPDextend) {
-//                intake.hatchState = Intake.HatchState.IN
-//            }
-//            if (controlBoard.hatchPOut) {
-//                intake.extended = true
-//            } else {
-//                intake.extended = false
-//            }
-
+            if (controlBoard.climberUp){
+                climber.climberState = Climber.ClimberState.UP
+            }
+            else if (controlBoard.climberDown){
+                climber.climberState = Climber.ClimberState.DOWN
+            }
+            else if (controlBoard.climberDrive){
+                climber.climberState = Climber.ClimberState.FORWARD
+            }
+            else if (Math.abs(controlBoard.climberPower) > 0.2){
+                climber.setOpenLoop(controlBoard.climberPower)
+            }
+            else{
+                climber.climberState = Climber.ClimberState.STILL
+            }
 //            elevator.elevatorState = when{
 //                controlBoard.elevatorHigh -> if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHHIGH else Elevator.ElevatorState.PORTHIGH;
 //                controlBoard.elevatorMid -> if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHMID else Elevator.ElevatorState.PORTMID;
@@ -316,10 +292,6 @@ class Robot : TimedRobot() {
 //                wrist.setWristVelocity(0.0)
 //                //wrist.setOpenLoop(0.0)
 //            }
-            //wrist.setWristMode(Wrist.WristState.HORIZONTAL)
-            //elevator.elevatorState = Elevator.ElevatorState.HATCHHIGH
-           // outputAllToSmartDashboard()
-            //elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
             if (controlBoard.elevatorLow){
                 println("elevator low")
                 if(intakeState == IntakeState.HATCHPANEL) {
@@ -354,9 +326,6 @@ class Robot : TimedRobot() {
                 elevator.setElevatorVelocity(0.0)
             }
 
-            //elevator.setElevatorVelocity(1000.0 * controlBoard.elevatorPower)
-            //elevator.setOpenLoop(controlBoard.elevatorPower)
-           // wrist.setOpenLoop(controlBoard.wristPower)
             intake.outputToSmartDashboard()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)

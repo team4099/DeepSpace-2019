@@ -94,6 +94,9 @@ class ControlBoard private constructor() {
     val wristPower: Double
         get() = operator.leftYAxis
 
+    val climberPower : Double //openloop testing
+        get() = operator.rightYAxis
+
     val aimingOn: Boolean
         get() = false//driver.bButton
 

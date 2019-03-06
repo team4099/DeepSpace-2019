@@ -27,10 +27,10 @@ class Climber private constructor() : Subsystem {
         climbPIDController.setOutputRange(-Constants.Climber.MAX_OUTPUT, Constants.Climber.MAX_OUTPUT)
     }
 
-    enum class ClimberState {
-        UP, DOWN, FORWARD
+    enum class ClimberState (val target : Double) {
+        STILL (Double.NaN), OPENLOOP (Double.NaN), DOWN (-100.0), UP (0.0), FORWARD (Double.NaN)
     }
-    var climberState = ClimberState.UP
+    var climberState = ClimberState.STILL
 
     override fun outputToSmartDashboard() {
         SmartDashboard.putString("climber/climberState", climberState.toString())
@@ -44,19 +44,26 @@ class Climber private constructor() : Subsystem {
 
     val loop: Loop = object : Loop {
         override fun onStart() {
-            climberState = ClimberState.UP
+            climberState = ClimberState.STILL
 
         }
         override fun onLoop() {
+            println("Climber Position: " + climbEncoder.position)
             synchronized(this@Climber) {
                 when(climberState) {
-                    ClimberState.DOWN -> {
+                    ClimberState.STILL -> {
+                        climbMotor.set(0.0)
+                    }
+                    ClimberState.OPENLOOP -> {
+                        return
+                    }
+                    ClimberState.DOWN -> {      //climbing
                         climberDown()
                     }
-                    ClimberState.UP -> {
+                    ClimberState.UP -> {      //climbing
                         climberUp()
                     }
-                    ClimberState.FORWARD -> {
+                    ClimberState.FORWARD -> {   //climbed
                         drive(1.0)
                     }
 
@@ -66,32 +73,37 @@ class Climber private constructor() : Subsystem {
 
         }
         override fun onStop() {
-            climberState = ClimberState.UP
+            climberState = ClimberState.STILL
 
         }
     }
     companion object {
         val instance = Climber()
+    }
 
+    fun setOpenLoop(power : Double){
+        climberState = ClimberState.OPENLOOP
+        climbMotor.set(power)
+    }
+
+    fun setLatch(wantsOut : Boolean){
+        if (wantsOut){
+
+        }
     }
 
     fun drive(speed : Double){
+        climberDown()
         driveMotor.set(speed)
     }
 
     fun climberDown(){
-        climbPIDController.setReference(Constants.Climber.DOWN_POSITION, ControlType.kPosition);
+        pneumaticShifter.set(DoubleSolenoid.Value.kForward)
+        climbPIDController.setReference(climberState.target, ControlType.kPosition)
     }
 
     fun climberUp(){
-        climbPIDController.setReference(Constants.Climber.UP_POSITION, ControlType.kPosition);
-    }
-
-    fun latchPush(){
-        pneumaticShifter.set(DoubleSolenoid.Value.kForward)
-    }
-
-    fun latchDown(){
         pneumaticShifter.set(DoubleSolenoid.Value.kReverse)
+        climbPIDController.setReference(climberState.target, ControlType.kPosition)
     }
 }
