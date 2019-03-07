@@ -28,7 +28,7 @@ class Robot : TimedRobot() {
 
 //    private val test3 : DoubleSolenoid = DoubleSolenoid(1,6)
 
-    private val climber = Climber.instance
+//    private val climber = Climber.instance
     private val wrist = Wrist.instance
     private val intake = Intake.instance
 
@@ -67,7 +67,7 @@ class Robot : TimedRobot() {
             enabledLooper.register(intake.loop)
 //            enabledLooper.register(superstructure.loop)
 
-            enabledLooper.register(climber.loop)
+//            enabledLooper.register(climber.loop)
 
             enabledLooper.register(drive.loop)
     //        enabledLooper.register(leds.loop)
@@ -211,21 +211,21 @@ class Robot : TimedRobot() {
                     //println("close hatch")
                 }
             }
-            if (controlBoard.climberUp){
-                climber.climberState = Climber.ClimberState.UP
-            }
-            else if (controlBoard.climberDown){
-                climber.climberState = Climber.ClimberState.DOWN
-            }
-            else if (controlBoard.climberDrive){
-                climber.climberState = Climber.ClimberState.FORWARD
-            }
-            else if (Math.abs(controlBoard.climberPower) > 0.2){
-                climber.setOpenLoop(controlBoard.climberPower)
-            }
-            else{
-                climber.climberState = Climber.ClimberState.STILL
-            }
+//            if (controlBoard.climberUp){
+//                climber.climberState = Climber.ClimberState.UP
+//            }
+//            else if (controlBoard.climberDown){
+//                climber.climberState = Climber.ClimberState.DOWN
+//            }
+//            else if (controlBoard.climberDrive){
+//                climber.climberState = Climber.ClimberState.FORWARD
+//            }
+//            else if (Math.abs(controlBoard.climberPower) > 0.2){
+//                climber.setOpenLoop(controlBoard.climberPower)
+//            }
+//            else{
+//                climber.climberState = Climber.ClimberState.STILL
+//            }
 //            elevator.elevatorState = when{
 //                controlBoard.elevatorHigh -> if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHHIGH else Elevator.ElevatorState.PORTHIGH;
 //                controlBoard.elevatorMid -> if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHMID else Elevator.ElevatorState.PORTMID;
