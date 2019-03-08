@@ -23,8 +23,8 @@ import kotlin.math.*
 
 class Wrist private constructor(): Subsystem {
     private val talon = CANMotorControllerFactory.createDefaultTalon(Constants.Wrist.WRIST_TALON_ID)
-    private val slave = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, talon)
-//    private val slave = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, Constants.Wrist.WRIST_TALON_ID)
+//    private val slave = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, talon)
+    private val slave = CANMotorControllerFactory.createPermanentSlaveTalon(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, Constants.Wrist.WRIST_TALON_ID)
     //^^^^ TALON FOR PRACTICE BOT CHANGE CHANGE CHANGE
 
     var wristState = WristState.OPEN_LOOP
@@ -79,8 +79,8 @@ class Wrist private constructor(): Subsystem {
         talon.configMaxIntegralAccumulator(2,0.0,0)
         talon.config_IntegralZone(2,1,0)
 
-        talon.configMotionCruiseVelocity(2000, 0)
-        talon.configMotionAcceleration(1500, 0)
+        talon.configMotionCruiseVelocity(4000, 0)
+        talon.configMotionAcceleration(6000, 0)
 
         zeroSensors()
 //        talon.configForwardSoftLimitEnable(true, 0)
@@ -127,6 +127,8 @@ class Wrist private constructor(): Subsystem {
     }
 
     fun setWristPosition(radians: Double){
+        talon.configPeakOutputReverse(-0.3, 0)
+        talon.configPeakOutputForward(0.3, 0)
         if(radians > wristAngle) {
             talon.selectProfileSlot(0, 0)
         } else {
@@ -141,6 +143,8 @@ class Wrist private constructor(): Subsystem {
 //            println("wrist exiting at 0 power, $radiansPerSecond")
 //            return
 //        }
+        talon.configPeakOutputReverse(-0.45, 0)
+        talon.configPeakOutputForward(0.45, 0)
         if(radiansPerSecond == 0.0){
             //talon.set(ControlMode.MotionMagic, WristConversion.radiansToPulses(lastVelControlPosition))   //use when pids are better
         }

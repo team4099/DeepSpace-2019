@@ -166,7 +166,7 @@ class Constants {
     object Wrist {
         val WRIST_TALON_ID = 15 //MAY NOT MATCH FINAL BOT FIX LATER
         val WRIST_SLAVE_VICTOR_ID = 14
-        val MAX_SPEED = 2.485
+        val MAX_SPEED = 999.9
 
         val WRIST_UP_KP = 0.7
         val WRIST_UP_KI = 0.0
