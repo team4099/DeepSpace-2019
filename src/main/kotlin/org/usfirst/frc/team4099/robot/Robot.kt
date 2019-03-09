@@ -167,13 +167,16 @@ class Robot : TimedRobot() {
             if (controlBoard.cargoMode){
                 intakeState = IntakeState.CARGO
                 intake.hatchState = Intake.HatchState.CLOSED
+                intake.deployState = Intake.DeployState.IN
             }
             else if (controlBoard.hatchPanelMode) {
                 intakeState = IntakeState.HATCHPANEL
+                intake.deployState = Intake.DeployState.OUT
                 //elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
             }
 
             if (intakeState == IntakeState.CARGO){
+                intake.deployState = Intake.DeployState.IN
                 if (Math.abs(controlBoard.wristPower)> 0.2) {
                     wrist.setWristVelocity(-controlBoard.wristPower * Constants.Wrist.MAX_SPEED)
                     //println("Set wrist velocity")
@@ -201,7 +204,8 @@ class Robot : TimedRobot() {
 
             }
             else {
-                wrist.wristState = Wrist.WristState.HORIZONTAL
+                intake.deployState = Intake.DeployState.OUT
+                wrist.wristState = Wrist.WristState.VERTICAL
                 if(controlBoard.openHatch){
                     intake.hatchState = Intake.HatchState.OPEN
                     //println("open hatch")

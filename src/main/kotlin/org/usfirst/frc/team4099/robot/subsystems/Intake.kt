@@ -26,6 +26,7 @@ class Intake private constructor() : Subsystem {
 
     var intakeState = IntakeState.IN
     var hatchState = HatchState.CLOSED
+    var deployState = DeployState.IN
     private var intakePower = 0.0
     public var isHatchOpen = false
 
@@ -35,6 +36,9 @@ class Intake private constructor() : Subsystem {
 
     enum class HatchState {
         OPEN, CLOSED
+    }
+    enum class DeployState {
+        IN, OUT
     }
 
     override fun outputToSmartDashboard() {
@@ -97,6 +101,14 @@ class Intake private constructor() : Subsystem {
                     HatchState.OPEN -> {
                         extender.set(DoubleSolenoid.Value.kForward)
                         isHatchOpen = true
+                    }
+                }
+                when (deployState){
+                    DeployState.IN -> {
+                        deployer.set(DoubleSolenoid.Value.kReverse)
+                    }
+                    DeployState.OUT -> {
+                        deployer.set(DoubleSolenoid.Value.kForward)
                     }
                 }
             }
