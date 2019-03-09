@@ -30,8 +30,8 @@ class Elevator private constructor(): Subsystem {
 
     enum class ElevatorState (val targetPos : Double) {
         GROUND(0.0),
-        HATCHLOW(10.0), HATCHMID(133.0), HATCHHIGH(281.0),  //not set
-        PORTLOW(25.0), PORTMID(150.0), PORTHIGH(309.0),     //low, mid set
+        HATCHLOW(10.0), HATCHMID(133.0), HATCHHIGH(235.0),  //not set
+        PORTLOW(28.0), PORTMID(160.0), PORTHIGH(253.0),     //low, mid set
         VELOCITY_CONTROL(Double.NaN), OPEN_LOOP(Double.NaN)
     }
 
