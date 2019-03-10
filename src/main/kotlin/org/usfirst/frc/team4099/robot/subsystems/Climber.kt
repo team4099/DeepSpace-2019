@@ -15,8 +15,38 @@ class Climber private constructor() : Subsystem {
     private val driveMotor: CANSparkMax = CANSparkMax(Constants.Climber.DRIVE_SPARK_ID, MotorType.kBrushless)
     private val climbEncoder: CANEncoder = climbMotor.encoder
     private val driveEncoder: CANEncoder = driveMotor.encoder
-    private val climbPIDController :CANPIDController = climbMotor.pidController
+    private val climbPIDController: CANPIDController = climbMotor.pidController
+    var movementState = MovementState.STILL
+        private set
+    var observedElevatorPosition = 0.0
+        private set
+    var observedClimberVelocity = 0.0
+    private set
 
+    private fun setClimberPosition(position: ClimberState) {
+        var target = position.targetPos
+        if (target == Double.NaN) {
+            target = observedElevatorPosition
+        } else {
+            //observedElevatorPosition = target
+        }
+    }
+
+    fun setOpenLoop(power: Double) {
+        climberState = ClimberState.OPEN_LOOP
+//        println("Elevator: " + observedElevatorPosition)
+        if(observedElevatorPosition > Constants.Climber.CLIMBER_SOFT_LIMIT  && power < 0.0){ //CHANGE SOFT LIMIT
+            climbMotor.setReference(power, ControlType.kVoltage)
+        }
+        else {
+            climbMotor.setReference(power, ControlType.kVoltage)
+        }
+    }
+
+    fun setClimberVelocity(inchesPerSecond: Double) {
+        climbMotor.setReference(inchesPerSecond, ControlType.kVelocity)
+
+    }
     init{
         climbPIDController.setP(Constants.Climber.CLIMBER_KP)
         climbPIDController.setI(Constants.Climber.CLIMBER_KI)
@@ -26,10 +56,16 @@ class Climber private constructor() : Subsystem {
         climbPIDController.setOutputRange(-Constants.Climber.MAX_OUTPUT, Constants.Climber.MAX_OUTPUT)
     }
 
-    enum class ClimberState {
-        UP, DOWN, FORWARD
+    enum class ClimberState (val targetPos: Double){
+        LEVEL_THREE(0.0), LEVEL_TWO(0.0), LEVEL_TWO_HALF(0.0), STOW(0.0), FORWARD(Double.NaN),
+        VELOCITY_CONTROL(Double.NaN), OPEN_LOOP(Double.NaN)
     }
-    var climberState = ClimberState.UP
+
+    enum class MovementState {
+        UP, DOWN, STILL
+    }
+
+    var climberState = ClimberState.STOW
 
     override fun outputToSmartDashboard() {
         SmartDashboard.putString("climber/climberState", climberState.toString())
@@ -40,33 +76,50 @@ class Climber private constructor() : Subsystem {
     }
 
     override fun zeroSensors() {
+        climbEncoder.setPosition(0.0)
     }
 
     val loop: Loop = object : Loop {
         override fun onStart() {
-            climberState = ClimberState.UP
+            climberState = ClimberState.STOW
 
         }
         override fun onLoop() {
             synchronized(this@Climber) {
                 when(climberState) {
-                    ClimberState.DOWN -> {
-                        climberDown()
+                    ClimberState.LEVEL_THREE -> {
+                        setClimberPosition(ClimberState.LEVEL_THREE)
                     }
-                    ClimberState.UP -> {
-                        climberUp()
+                    ClimberState.LEVEL_TWO -> {
+                        setClimberPosition(ClimberState.LEVEL_TWO)
+                    }
+                    ClimberState.LEVEL_TWO_HALF -> {
+                        setClimberPosition(ClimberState.LEVEL_TWO_HALF)
+                    }
+                    ClimberState.STOW -> {
+                        setClimberPosition(ClimberState.STOW)
                     }
                     ClimberState.FORWARD -> {
                         drive(1.0)
                     }
-
+                    ClimberState.VELOCITY_CONTROL -> {
+                        return
+                    }
+                    ClimberState.OPEN_LOOP -> {
+                        return
+                    }
+                }
+                when {
+                    observedClimberVelocity in -1 .. 1 -> movementState = MovementState.STILL
+                    observedClimberVelocity > 1 -> movementState = MovementState.UP
+                    observedClimberVelocity < 1 -> movementState = MovementState.DOWN
                 }
             }
 
 
         }
         override fun onStop() {
-            climberState = ClimberState.UP
+            climberState = ClimberState.STOW
 
         }
     }
@@ -79,11 +132,4 @@ class Climber private constructor() : Subsystem {
         driveMotor.set(speed)
     }
 
-    fun climberDown(){
-        climbPIDController.setReference(Constants.Climber.DOWN_POSITION, ControlType.kPosition);
-    }
-
-    fun climberUp(){
-        climbPIDController.setReference(Constants.Climber.UP_POSITION, ControlType.kPosition);
-    }
 }
