@@ -413,6 +413,8 @@ class Drive private constructor() : Subsystem {
 
         override fun onLoop() {
             synchronized(this@Drive) {
+                println("Left: " + leftMasterSRX.sensorCollection.quadraturePosition.toDouble())
+                println("Right: " + rightMasterSRX.sensorCollection.quadraturePosition.toDouble())
                 when (currentState) {
                     DriveControlState.OPEN_LOOP -> {
                         return

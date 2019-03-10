@@ -137,8 +137,8 @@ class Robot : TimedRobot() {
         try {
             //SmartDashboard.putNumber("Dashboard Test", dashBoardTest * 1.0)
             dashBoardTest++
-           // outputAllToSmartDashboard()
-            intake.outputToSmartDashboard()
+            outputAllToSmartDashboard()
+//            wrist.outputToSmartDashboard()
 
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("disabledPeriodic", t)
