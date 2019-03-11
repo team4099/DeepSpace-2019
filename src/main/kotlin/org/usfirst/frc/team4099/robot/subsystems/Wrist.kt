@@ -79,8 +79,8 @@ class Wrist private constructor(): Subsystem {
         talon.configMaxIntegralAccumulator(2,0.0,0)
         talon.config_IntegralZone(2,1,0)
 
-        talon.configMotionCruiseVelocity(4000, 0)
-        talon.configMotionAcceleration(6000, 0)
+        talon.configMotionCruiseVelocity(4500, 0)
+        talon.configMotionAcceleration(5500, 0)
 
         zeroSensors()
 //        talon.configForwardSoftLimitEnable(true, 0)

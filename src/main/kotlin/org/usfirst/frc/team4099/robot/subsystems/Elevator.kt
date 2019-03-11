@@ -74,7 +74,7 @@ class Elevator private constructor(): Subsystem {
         talon.config_kF(3, Constants.Gains.ELEVATOR_DOWN_KF_V, 0)
 
         talon.configMotionCruiseVelocity(1600, 0)
-        talon.configMotionAcceleration(1000, 0)
+        talon.configMotionAcceleration(1700, 0)
 
         zeroSensors()
 
