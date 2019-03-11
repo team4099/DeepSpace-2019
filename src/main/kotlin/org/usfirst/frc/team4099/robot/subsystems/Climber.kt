@@ -1,20 +1,22 @@
 package org.usfirst.frc.team4099.robot.subsystems
 
+import com.ctre.phoenix.motorcontrol.ControlMode
+import com.ctre.phoenix.motorcontrol.can.TalonSRX
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import com.revrobotics.CANEncoder
 import com.revrobotics.CANPIDController
 import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMaxLowLevel.MotorType
 import com.revrobotics.ControlType
+import org.usfirst.frc.team4099.lib.util.CANMotorControllerFactory
 import org.usfirst.frc.team4099.robot.Constants
 import org.usfirst.frc.team4099.robot.loops.Loop
 
 
 class Climber private constructor() : Subsystem {
     private val climbMotor: CANSparkMax = CANSparkMax(Constants.Climber.CLIMBER_SPARK_ID, MotorType.kBrushless)
-    private val driveMotor: CANSparkMax = CANSparkMax(Constants.Climber.DRIVE_SPARK_ID, MotorType.kBrushless)
+    private val driveMotor: TalonSRX = CANMotorControllerFactory.createDefaultTalon(Constants.Climber.DRIVE_TALON_ID)
     private val climbEncoder: CANEncoder = climbMotor.encoder
-    private val driveEncoder: CANEncoder = driveMotor.encoder
     private val climbPIDController: CANPIDController = climbMotor.pidController
     var movementState = MovementState.STILL
         private set
@@ -47,6 +49,10 @@ class Climber private constructor() : Subsystem {
         climbMotor.setReference(inchesPerSecond, ControlType.kVelocity)
 
     }
+
+    fun setOpenDrive(power: Double){
+        driveMotor.set(ControlMode.PercentOutput, power)
+    }
     init{
         climbPIDController.setP(Constants.Climber.CLIMBER_KP)
         climbPIDController.setI(Constants.Climber.CLIMBER_KI)
@@ -57,7 +63,7 @@ class Climber private constructor() : Subsystem {
     }
 
     enum class ClimberState (val targetPos: Double){
-        LEVEL_THREE(0.0), LEVEL_TWO(0.0), LEVEL_TWO_HALF(0.0), STOW(0.0), FORWARD(Double.NaN),
+        LEVEL_THREE(0.0), LEVEL_TWO(0.0), LEVEL_TWO_HALF(0.0), STOW(0.0),
         VELOCITY_CONTROL(Double.NaN), OPEN_LOOP(Double.NaN)
     }
 
@@ -99,9 +105,6 @@ class Climber private constructor() : Subsystem {
                     ClimberState.STOW -> {
                         setClimberPosition(ClimberState.STOW)
                     }
-                    ClimberState.FORWARD -> {
-                        drive(1.0)
-                    }
                     ClimberState.VELOCITY_CONTROL -> {
                         return
                     }
@@ -128,8 +131,5 @@ class Climber private constructor() : Subsystem {
 
     }
 
-    fun drive(speed : Double){
-        driveMotor.set(speed)
-    }
 
 }

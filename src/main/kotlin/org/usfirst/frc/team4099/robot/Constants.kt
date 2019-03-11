@@ -23,7 +23,7 @@ class Constants {
 
     object Climber {
         val CLIMBER_SPARK_ID = 0
-        val DRIVE_SPARK_ID = 0
+        val DRIVE_TALON_ID = 0
         val CLIMBER_KP = 0.0
         val CLIMBER_KI = 0.0
         val CLIMBER_KD = 0.0
