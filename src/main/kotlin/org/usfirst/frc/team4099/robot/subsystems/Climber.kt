@@ -67,7 +67,7 @@ class Climber private constructor() : Subsystem {
     }
 
     enum class ClimberState (val targetPos: Double){
-        LEVEL_THREE(0.0), LEVEL_TWO(0.0), LEVEL_TWO_HALF(0.0), STOW(0.0),
+        LEVEL_THREE(Constants.Climber.LEVEL_THREE_POSITION), LEVEL_TWO(Constants.Climber.LEVEL_TWO), LEVEL_TWO_HALF(Constants.Climber.LEVEL_TWO_HALF), STOW(0.0),
         VELOCITY_CONTROL(Double.NaN), OPEN_LOOP(Double.NaN)
     }
 
