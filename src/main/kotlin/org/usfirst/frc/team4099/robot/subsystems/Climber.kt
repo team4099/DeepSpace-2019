@@ -11,13 +11,14 @@ import com.revrobotics.ControlType
 import org.usfirst.frc.team4099.lib.util.CANMotorControllerFactory
 import org.usfirst.frc.team4099.robot.Constants
 import org.usfirst.frc.team4099.robot.loops.Loop
-
+import edu.wpi.first.wpilibj.DoubleSolenoid
 
 class Climber private constructor() : Subsystem {
     private val climbMotor: CANSparkMax = CANSparkMax(Constants.Climber.CLIMBER_SPARK_ID, MotorType.kBrushless)
     private val driveMotor: TalonSRX = CANMotorControllerFactory.createDefaultTalon(Constants.Climber.DRIVE_TALON_ID)
     private val climbEncoder: CANEncoder = climbMotor.encoder
     private val climbPIDController: CANPIDController = climbMotor.pidController
+    private var tare: Double = 0.0
     var movementState = MovementState.STILL
         private set
     var observedElevatorPosition = 0.0
@@ -26,27 +27,30 @@ class Climber private constructor() : Subsystem {
     private set
 
     private fun setClimberPosition(position: ClimberState) {
-        var target = position.targetPos
+        var target = position.targetPos + tare
         if (target == Double.NaN) {
             target = observedElevatorPosition
         } else {
             //observedElevatorPosition = target
         }
+        climbPIDController.setReference(target, ControlType.kPosition)
+
+
     }
 
     fun setOpenLoop(power: Double) {
         climberState = ClimberState.OPEN_LOOP
 //        println("Elevator: " + observedElevatorPosition)
         if(observedElevatorPosition > Constants.Climber.CLIMBER_SOFT_LIMIT  && power < 0.0){ //CHANGE SOFT LIMIT
-            climbMotor.setReference(power, ControlType.kVoltage)
+            climbPIDController.setReference(power, ControlType.kVoltage)
         }
         else {
-            climbMotor.setReference(power, ControlType.kVoltage)
+            climbPIDController.setReference(power, ControlType.kVoltage)
         }
     }
 
     fun setClimberVelocity(inchesPerSecond: Double) {
-        climbMotor.setReference(inchesPerSecond, ControlType.kVelocity)
+        climbPIDController.setReference(inchesPerSecond, ControlType.kVelocity)
 
     }
 
@@ -73,16 +77,17 @@ class Climber private constructor() : Subsystem {
 
     var climberState = ClimberState.STOW
 
+
+
     override fun outputToSmartDashboard() {
         SmartDashboard.putString("climber/climberState", climberState.toString())
     }
 
     override fun stop() {
-
     }
 
     override fun zeroSensors() {
-        climbEncoder.setPosition(0.0)
+        tare = climbEncoder.position
     }
 
     val loop: Loop = object : Loop {
@@ -91,6 +96,7 @@ class Climber private constructor() : Subsystem {
 
         }
         override fun onLoop() {
+            println("Climber Position: " + climbEncoder.position)
             synchronized(this@Climber) {
                 when(climberState) {
                     ClimberState.LEVEL_THREE -> {
@@ -110,6 +116,7 @@ class Climber private constructor() : Subsystem {
                     }
                     ClimberState.OPEN_LOOP -> {
                         return
+
                     }
                 }
                 when {
@@ -123,13 +130,9 @@ class Climber private constructor() : Subsystem {
         }
         override fun onStop() {
             climberState = ClimberState.STOW
-
         }
     }
     companion object {
         val instance = Climber()
-
     }
-
-
 }

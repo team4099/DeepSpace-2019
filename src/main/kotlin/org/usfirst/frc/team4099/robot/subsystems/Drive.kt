@@ -353,30 +353,30 @@ class Drive private constructor() : Subsystem {
     fun updatePathFollowing(){
         //note *12 is to convert ft to inches
         if (segment < trajLength) {
-            var leftTurn: Double = path.getLeftVelocityIndex(segment) * 12 *2
-            var rightTurn: Double = path.getRightVelocityIndex(segment) * 12*2
+            var leftTurn: Double = path.getLeftVelocityIndex(segment) * 12
+            var rightTurn: Double = path.getRightVelocityIndex(segment) * 12
             val gyroHeading: Float = ahrs.yaw
             val desiredHeading: Double = radiansToDegrees(path.getHeadingIndex(segment))
             val angleDifference: Double = boundHalfDegrees(desiredHeading - gyroHeading)
             val turn: Double = 0.8 * 12 * (-1.0 / 80.0) * angleDifference
 
-            //val leftDistance: Double = getLeftDistanceInches()
-            //val rightDistance: Double = getRightDistanceInches()
+            val leftDistance: Double = getLeftDistanceInches()
+            val rightDistance: Double = getRightDistanceInches()
 
-            //val leftErrorDistance: Double = path.getLeftDistanceIndex(segment)*12 - leftDistance
-            //val rightErrorDistance: Double = path.getRightDistanceIndex(segment)*12 - rightDistance
+            val leftErrorDistance: Double = path.getLeftDistanceIndex(segment)*12 - leftDistance
+            val rightErrorDistance: Double = path.getRightDistanceIndex(segment)*12 - rightDistance
 
-            //val leftVelocityAdjustment = Constants.Gains.LEFT_LOW_KP * leftErrorDistance + Constants.Gains.LEFT_LOW_KD * ((leftErrorDistance - lastLeftError)/path.getDeltaTime())
-            //val rightVelocityAdjustment = Constants.Gains.RIGHT_LOW_KP * rightErrorDistance + Constants.Gains.RIGHT_LOW_KD * ((rightErrorDistance - lastRightError)/path.getDeltaTime())
+            val leftVelocityAdjustment = Constants.Gains.LEFT_LOW_KP * leftErrorDistance + Constants.Gains.LEFT_LOW_KD * ((leftErrorDistance - lastLeftError)/path.getDeltaTime())
+            val rightVelocityAdjustment = Constants.Gains.RIGHT_LOW_KP * rightErrorDistance + Constants.Gains.RIGHT_LOW_KD * ((rightErrorDistance - lastRightError)/path.getDeltaTime())
 
-            //leftTurn = leftTurn + leftVelocityAdjustment
-            //rightTurn = rightTurn + rightVelocityAdjustment
+         //   leftTurn = leftTurn + leftVelocityAdjustment
+           // rightTurn = rightTurn + rightVelocityAdjustment
 
-            //lastLeftError = leftErrorDistance
+            lastLeftError = leftErrorDistance
 
 
-            leftTurn = leftTurn + turn
-            rightTurn = rightTurn - turn
+            //leftTurn = leftTurn + turn
+//            rightTurn = rightTurn - turn
 
             setVelocitySetpoint(leftTurn, rightTurn)
             println(" " +segment  + " " +leftTurn+" " + rightTurn)
@@ -413,6 +413,8 @@ class Drive private constructor() : Subsystem {
 
         override fun onLoop() {
             synchronized(this@Drive) {
+                println("Left: " + leftMasterSRX.sensorCollection.quadraturePosition.toDouble())
+                println("Right: " + rightMasterSRX.sensorCollection.quadraturePosition.toDouble())
                 when (currentState) {
                     DriveControlState.OPEN_LOOP -> {
                         return

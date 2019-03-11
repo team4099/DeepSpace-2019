@@ -10,7 +10,7 @@ import org.usfirst.frc.team4099.robot.subsystems.Elevator
 
 
 /*
-Vision Processing for FRC 2019
+Vision Processing for FRC 4099 2019
 Written by Rithvik Bhogavilli and Jason Liu
 
  */
@@ -19,7 +19,7 @@ class Vision private constructor(): Subsystem {
     val elevator = Elevator.instance
     var onTarget = false
     var steeringAdjust = 0.0
-    var distance = 0
+    private var distance = 0.0
     var dHeight = 0.0
 
 
@@ -63,7 +63,7 @@ class Vision private constructor(): Subsystem {
                 else{
                     dHeight = Constants.Vision.CARGO_HEIGHT - Constants.Vision.TARGET_HEIGHT_ADJUST - elevator.observedElevatorPosition
                 }
-                distance = (dHeight / Math.tan(ty + Constants.Vision.CAMERA_ANGLE)).toInt()
+                distance = (dHeight / Math.tan(ty + Constants.Vision.CAMERA_ANGLE))
                 tx = table.getEntry("tx").getDouble(0.0)
                 tv = table.getEntry("tv").getDouble(0.0)
                 ty = table.getEntry("ty").getDouble(0.0)
@@ -119,6 +119,9 @@ class Vision private constructor(): Subsystem {
 
     fun setState (state: VisionState) {
         visionState = state
+    }
+    fun getDistance(): Double {
+        return distance
     }
 
     companion object {

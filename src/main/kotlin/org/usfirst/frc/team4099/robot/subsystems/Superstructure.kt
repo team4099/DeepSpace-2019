@@ -24,7 +24,7 @@ class Superstructure : Subsystem {
 //    private val led = LED.instance
 //    private val grabber = Grabber.instance
 
-    private val climber = Climber.instance
+    //private val climber = Climber.instance
 
     enum class SystemState {
         IDLE,
@@ -68,7 +68,7 @@ class Superstructure : Subsystem {
 
                 when (systemState) {
                     SystemState.IDLE -> handleIdle()
-                    SystemState.ALIGNING_VISION -> handleVision()
+//                    SystemState.ALIGNING_VISION -> handleVision()
 //                SystemState.INTAKE_UP -> handleElevatorUp()
 //                SystemState.CLIMBING -> handleClimb()
 //                SystemState.INTAKE_CARGO -> handleCargoIntake()
@@ -87,8 +87,8 @@ class Superstructure : Subsystem {
     }
 
     private fun handleVision() {
-//        vision.visionState = Vision.VisionState.AIMING
-//        println("vision handled")
+        vision.visionState = Vision.VisionState.AIMING
+        println("vision handled")
 
         //led.setStateColors("PURPLE", LED.SystemState.SOLID)
     }
