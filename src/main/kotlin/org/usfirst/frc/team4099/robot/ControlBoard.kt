@@ -9,7 +9,7 @@ class ControlBoard private constructor() {
     private val operator: Gamepad = XboxOneGamepad(Constants.Joysticks.SHOTGUN_PORT)
 
     val throttle: Double
-        get() = (-driver.rightTriggerAxis + driver.leftTriggerAxis) * -1.0
+        get() = driver.rightTriggerAxis - driver.leftTriggerAxis
 
     val turn: Double
         get() = -driver.leftXAxis
@@ -19,6 +19,22 @@ class ControlBoard private constructor() {
 
     val switchToLowGear: Boolean
         get() = driver.leftShoulderButton
+
+    val climbToTwo: Boolean
+        get() = driver.bButton
+
+    val climbToTwoHalf: Boolean
+        get() = driver.yButton
+
+    val climbToThree: Boolean
+        get() = driver.xButton
+
+    val climbVeloUp: Boolean
+        get() = driver.dPadUp
+
+    val climbVeloDown: Boolean
+        get() = driver.dPadUp
+
 
     val hatchPExtend : Boolean
         get() = operator.rightYAxis < -0.2 //change back to operator

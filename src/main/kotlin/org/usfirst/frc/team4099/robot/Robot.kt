@@ -275,7 +275,7 @@ class Robot : TimedRobot() {
 //                } else if (vision.visionState != Vision.VisionState.INACTIVE) {
 //                    drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
 //                } else {
-                    drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
+//                    drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
 //                }
 //            } else {
 //                drive.setLeftRightPower(vision.steeringAdjust, - vision.steeringAdjust)
@@ -330,6 +330,7 @@ class Robot : TimedRobot() {
             else if(elevator.elevatorState == Elevator.ElevatorState.VELOCITY_CONTROL){
                 elevator.setElevatorVelocity(0.0)
             }
+            if (controlBoard.)
 
             intake.outputToSmartDashboard()
         } catch (t: Throwable) {
