@@ -330,10 +330,39 @@ class Robot : TimedRobot() {
             else if(elevator.elevatorState == Elevator.ElevatorState.VELOCITY_CONTROL){
                 elevator.setElevatorVelocity(0.0)
             }
-            if (controlBoard.)
 
-            intake.outputToSmartDashboard()
-        } catch (t: Throwable) {
+
+            if (controlBoard.climbToTwo) {
+                println("climb to two")
+                climber.climberState = Climber.ClimberState.LEVEL_TWO
+            }
+            if (controlBoard.climbToTwoHalf){
+                println("climb to two half")
+                climber.climberState = Climber.ClimberState.LEVEL_TWO_HALF
+            }
+            if (controlBoard.climbToThree){
+                println("climb to three")
+                climber.climberState = Climber.ClimberState.LEVEL_THREE
+            }
+            if (controlBoard.climbVeloUp){
+                println("climb velocity up")
+                climber.climberState = Climber.ClimberState.VELOCITY_CONTROL)
+                climber.setClimberVelocity(400.0)
+            }
+            if (controlBoard.climbVeloDown){
+                println("climb velocity down")
+                climber.climberState = Climber.ClimberState.VELOCITY_CONTROL)
+                climber.setClimberVelocity(-400.0)
+            }
+            if (climber.climberState != Climber.ClimberState.STOW){
+                println("climber drive")
+                climber.setOpenDrive(400 * controlBoard.climberDrive)
+            }
+        }
+
+
+
+            catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)
             throw t
         }

@@ -93,23 +93,23 @@ class Climber private constructor() : Subsystem {
     val loop: Loop = object : Loop {
         override fun onStart() {
             climberState = ClimberState.STOW
-
+            zeroSensors()
         }
         override fun onLoop() {
-            println("Climber Position: " + climbEncoder.position)
+            println("Climber Position: " + climbEncoder.position - tare)
             synchronized(this@Climber) {
                 when(climberState) {
                     ClimberState.LEVEL_THREE -> {
-                        setClimberPosition(ClimberState.LEVEL_THREE)
+                        setClimberPosition(tare + ClimberState.LEVEL_THREE)
                     }
                     ClimberState.LEVEL_TWO -> {
-                        setClimberPosition(ClimberState.LEVEL_TWO)
+                        setClimberPosition(tare + ClimberState.LEVEL_TWO)
                     }
                     ClimberState.LEVEL_TWO_HALF -> {
-                        setClimberPosition(ClimberState.LEVEL_TWO_HALF)
+                        setClimberPosition(tare + ClimberState.LEVEL_TWO_HALF)
                     }
                     ClimberState.STOW -> {
-                        setClimberPosition(ClimberState.STOW)
+                        setClimberPosition(tare + ClimberState.STOW)
                     }
                     ClimberState.VELOCITY_CONTROL -> {
                         return
