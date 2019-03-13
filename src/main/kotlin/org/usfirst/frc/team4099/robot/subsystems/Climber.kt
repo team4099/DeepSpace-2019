@@ -30,6 +30,10 @@ class Climber private constructor() : Subsystem {
 
     private fun setClimberPosition(position: ClimberState) {
         var target = position.targetPos + tare
+    }
+
+    private fun setClimberPosition(targetPos : Double) {
+        var target = targetPos + tare
         if (target == Double.NaN) {
             target = observedElevatorPosition
         } else {
@@ -52,8 +56,8 @@ class Climber private constructor() : Subsystem {
     }
 
     fun setClimberVelocity(inchesPerSecond: Double) {
-        climbPIDController.setReference(inchesPerSecond, ControlType.kVelocity)
-
+        climbMotor.set(inchesPerSecond) //remove, just for testing
+        //climbPIDController.setReference(inchesPerSecond, ControlType.kVelocity)
     }
 
     fun setOpenDrive(power: Double){
@@ -96,23 +100,25 @@ class Climber private constructor() : Subsystem {
     val loop: Loop = object : Loop {
         override fun onStart() {
             climberState = ClimberState.STOW
-
+            zeroSensors()
         }
         override fun onLoop() {
-            println("Climber Position: " + climbEncoder.position)
+            println("Climber Position: " + (climbEncoder.position - tare))
+            observedElevatorPosition = climbEncoder.position
+            observedClimberVelocity = climbEncoder.velocity
             synchronized(this@Climber) {
                 when(climberState) {
                     ClimberState.LEVEL_THREE -> {
-                        setClimberPosition(ClimberState.LEVEL_THREE)
+                        setClimberPosition(ClimberState.LEVEL_THREE.targetPos)
                     }
                     ClimberState.LEVEL_TWO -> {
-                        setClimberPosition(ClimberState.LEVEL_TWO)
+                        setClimberPosition(ClimberState.LEVEL_TWO.targetPos)
                     }
                     ClimberState.LEVEL_TWO_HALF -> {
-                        setClimberPosition(ClimberState.LEVEL_TWO_HALF)
+                        setClimberPosition(ClimberState.LEVEL_TWO_HALF.targetPos)
                     }
                     ClimberState.STOW -> {
-                        setClimberPosition(ClimberState.STOW)
+                        setClimberPosition(ClimberState.STOW.targetPos)
                     }
                     ClimberState.VELOCITY_CONTROL -> {
                         return

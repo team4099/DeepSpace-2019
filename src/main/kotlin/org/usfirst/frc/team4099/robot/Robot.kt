@@ -6,11 +6,9 @@ import org.usfirst.frc.team4099.lib.util.Utils
 
 import org.usfirst.frc.team4099.DashboardConfigurator
 import org.usfirst.frc.team4099.auto.AutoModeExecuter
-import org.usfirst.frc.team4099.auto.modes.HatchPanelOnly
 import edu.wpi.first.wpilibj.TimedRobot
 //import org.usfirst.frc.team4099.auto.AutoModeExecuter
 import org.usfirst.frc.team4099.lib.util.CrashTracker
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import org.usfirst.frc.team4099.robot.drive.CheesyDriveHelper
 import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
 import org.usfirst.frc.team4099.robot.loops.Looper
@@ -18,7 +16,6 @@ import org.usfirst.frc.team4099.robot.loops.VoltageEstimator
 
 import org.usfirst.frc.team4099.robot.subsystems.*
 import src.main.kotlin.org.usfirst.frc.team4099.robot.subsystems.Superstructure
-import java.util.concurrent.TimeUnit
 
 class Robot : TimedRobot() {
 //    private val vision = Vision.instance
@@ -28,7 +25,6 @@ class Robot : TimedRobot() {
 
 //    private val test3 : DoubleSolenoid = DoubleSolenoid(1,6)
 
-//    private val climber = Climber.instance
     private val wrist = Wrist.instance
     private val intake = Intake.instance
     private val climber  = Climber.instance
@@ -67,7 +63,7 @@ class Robot : TimedRobot() {
             enabledLooper.register(intake.loop)
 //            enabledLooper.register(superstructure.loop)
 
-//            enabledLooper.register(climber.loop)
+            enabledLooper.register(climber.loop)
 
             enabledLooper.register(drive.loop)
     //        enabledLooper.register(leds.loop)
@@ -330,7 +326,44 @@ class Robot : TimedRobot() {
             else if(elevator.elevatorState == Elevator.ElevatorState.VELOCITY_CONTROL){
                 elevator.setElevatorVelocity(0.0)
             }
-        } catch (t: Throwable) {
+
+
+
+
+            if (controlBoard.climbToTwo) {
+                println("climb to two")
+                climber.climberState = Climber.ClimberState.LEVEL_TWO
+            }
+            else if (controlBoard.climbToTwoHalf){
+                println("climb to two half")
+                climber.climberState = Climber.ClimberState.LEVEL_TWO_HALF
+            }
+            else if (controlBoard.climbToThree){
+                println("climb to three")
+                climber.climberState = Climber.ClimberState.LEVEL_THREE
+            }
+            else if (controlBoard.climbVeloUp){
+                println("climb velocity up")
+                climber.climberState = Climber.ClimberState.VELOCITY_CONTROL
+                climber.setClimberVelocity(Constants.Climber.MAX_CLIMB_VEL)
+            }
+            else if (controlBoard.climbVeloDown){
+                println("climb velocity down")
+                climber.climberState = Climber.ClimberState.VELOCITY_CONTROL
+                climber.setClimberVelocity(Constants.Climber.MAX_CLIMB_VEL)
+            }
+            else{
+                climber.setClimberVelocity(0.0)
+            }
+            if (climber.climberState != Climber.ClimberState.STOW){
+                println("climber drive")
+                climber.setOpenDrive(Constants.Climber.MAX_DRIVE_VEL * controlBoard.climberDrive)
+            }
+        }
+
+
+
+        catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)
             throw t
         }

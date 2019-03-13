@@ -33,7 +33,10 @@ class ControlBoard private constructor() {
         get() = driver.dPadUp
 
     val climbVeloDown: Boolean
-        get() = driver.dPadUp
+        get() = driver.dPadDown
+
+    val climberDrive : Double
+        get() = if(driver.rightShoulderButton) 1.0 else 0.0 - if(driver.leftShoulderButton) 1.0 else 0.0
 
 
     val hatchPExtend : Boolean
@@ -55,15 +58,6 @@ class ControlBoard private constructor() {
 
     val holdCargo: Boolean
         get() = operator.xButton
-
-    val climberUp : Boolean
-        get() = driver.dPadUp
-
-    val climberDown : Boolean
-        get() = driver.dPadDown
-
-    val climberDrive : Boolean
-        get() = driver.rightShoulderButton
 
     val openHatch : Boolean
         get() = operator.bButton
