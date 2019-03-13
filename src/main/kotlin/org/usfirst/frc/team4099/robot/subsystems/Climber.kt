@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid
 
 class Climber private constructor() : Subsystem {
     private val climbMotor: CANSparkMax = CANSparkMax(Constants.Climber.CLIMBER_SPARK_ID, MotorType.kBrushless)
-    private val driveMotor: VictorSPX = CANMotorControllerFactory.createDefaultVictor(Constants.Climber.DRIVE_TALON_ID) //final
+    private val driveMotor: TalonSRX = CANMotorControllerFactory.createDefaultTalon(Constants.Climber.DRIVE_TALON_ID) //final
     private val climbEncoder: CANEncoder = climbMotor.encoder
     private val climbPIDController: CANPIDController = climbMotor.pidController
     private var tare: Double = 0.0

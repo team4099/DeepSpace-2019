@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
  */
 class Intake private constructor() : Subsystem {
 
-    private val talon = VictorSPX(Constants.Intake.INTAKE_TALON_ID)
+    private val talon = TalonSRX(Constants.Intake.INTAKE_TALON_ID)
     private val extender: DoubleSolenoid = DoubleSolenoid(Constants.Intake.EXTENDER_FORWARD_ID,
             Constants.Intake.EXTENDER_REVERSE_ID)
     private val deployer: DoubleSolenoid = DoubleSolenoid(Constants.Intake.DEPLOYER_FORWARD_ID,
