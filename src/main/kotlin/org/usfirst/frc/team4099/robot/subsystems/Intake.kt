@@ -44,7 +44,7 @@ class Intake private constructor() : Subsystem {
 
     override fun outputToSmartDashboard() {
 //        SmartDashboard.putString("intake/hatchState", hatchState.toString())
-//        SmartDashboard.putString("intake/intakeState", intakeState.toString())
+        SmartDashboard.putString("intake/intakeState", intakeState.toString())
         //SmartDashboard.putNumber("intake/intakePower", intakePower)
         //SmartDashb
         // oard.putBoolean("intake/isUp", up)
