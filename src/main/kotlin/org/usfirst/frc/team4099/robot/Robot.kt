@@ -206,7 +206,7 @@ class Robot : TimedRobot() {
             }
             else {
                 intake.deployState = Intake.DeployState.OUT
-                wrist.wristState = Wrist.WristState.VERTICAL
+                wrist.wristState = Wrist.WristState.HORIZONTAL
                 if(controlBoard.openHatch){
                     intake.hatchState = Intake.HatchState.OPEN
                     //println("open hatch")
