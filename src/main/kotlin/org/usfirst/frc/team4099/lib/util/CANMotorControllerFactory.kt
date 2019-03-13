@@ -125,5 +125,8 @@ object CANMotorControllerFactory {
 
         return talon
     }
+    fun createDefaultVictor(id: Int): VictorSPX{
+        return VictorSPX(id)
+    }
 
 }
