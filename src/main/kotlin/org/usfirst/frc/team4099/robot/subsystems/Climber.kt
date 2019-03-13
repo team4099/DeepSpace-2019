@@ -26,6 +26,8 @@ class Climber private constructor() : Subsystem {
     var observedClimberVelocity = 0.0
     private set
 
+    var climberState = ClimberState.STOW
+
     private fun setClimberPosition(position: ClimberState) {
         var target = position.targetPos + tare
         if (target == Double.NaN) {
@@ -67,16 +69,17 @@ class Climber private constructor() : Subsystem {
     }
 
     enum class ClimberState (val targetPos: Double){
-        LEVEL_THREE(Constants.Climber.LEVEL_THREE_POSITION), LEVEL_TWO(Constants.Climber.LEVEL_TWO), LEVEL_TWO_HALF(Constants.Climber.LEVEL_TWO_HALF), STOW(0.0),
-        VELOCITY_CONTROL(Double.NaN), OPEN_LOOP(Double.NaN)
+        LEVEL_THREE(Constants.Climber.LEVEL_THREE_POSITION),
+        LEVEL_TWO(Constants.Climber.LEVEL_TWO),
+        LEVEL_TWO_HALF(Constants.Climber.LEVEL_TWO_HALF),
+        STOW(0.0),
+        VELOCITY_CONTROL(Double.NaN),
+        OPEN_LOOP(Double.NaN)
     }
 
     enum class MovementState {
         UP, DOWN, STILL
     }
-
-    var climberState = ClimberState.STOW
-
 
 
     override fun outputToSmartDashboard() {

@@ -31,7 +31,7 @@ class Robot : TimedRobot() {
 //    private val climber = Climber.instance
     private val wrist = Wrist.instance
     private val intake = Intake.instance
-
+    private val climber  = Climber.instance
     private val drive = Drive.instance
     private val controlBoard = ControlBoard.instance
     private val disabledLooper = Looper("disabledLooper")
@@ -330,9 +330,6 @@ class Robot : TimedRobot() {
             else if(elevator.elevatorState == Elevator.ElevatorState.VELOCITY_CONTROL){
                 elevator.setElevatorVelocity(0.0)
             }
-            if (controlBoard.)
-
-            intake.outputToSmartDashboard()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)
             throw t
