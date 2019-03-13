@@ -351,10 +351,15 @@ class Robot : TimedRobot() {
             else if (controlBoard.climbVeloDown){
                 println("climb velocity down")
                 climber.climberState = Climber.ClimberState.VELOCITY_CONTROL
-                climber.setClimberVelocity(Constants.Climber.MAX_CLIMB_VEL)
+                climber.setClimberVelocity(-Constants.Climber.MAX_CLIMB_VEL)
+            }
+            else if (climber.climberState == Climber.ClimberState.VELOCITY_CONTROL){
+                climber.setClimberVelocity(0.0)
             }
             if (climber.climberState != Climber.ClimberState.STOW){
-                println("climber drive")
+                if(controlBoard.climberDrive != 0.0){
+                    println("climber drive")
+                }
                 climber.setOpenDrive(Constants.Climber.MAX_DRIVE_VEL * controlBoard.climberDrive)
             }
         }
