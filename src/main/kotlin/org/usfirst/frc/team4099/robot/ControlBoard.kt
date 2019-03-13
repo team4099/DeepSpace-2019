@@ -29,6 +29,9 @@ class ControlBoard private constructor() {
     val climbToThree: Boolean
         get() = driver.xButton
 
+    val stowClimber : Boolean
+        get() = driver.aButton
+
     val climbVeloUp: Boolean
         get() = driver.dPadUp
 

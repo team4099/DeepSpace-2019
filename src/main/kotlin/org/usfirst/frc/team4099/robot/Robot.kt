@@ -327,10 +327,11 @@ class Robot : TimedRobot() {
                 elevator.setElevatorVelocity(0.0)
             }
 
-
-
-
-            if (controlBoard.climbToTwo) {
+            if (controlBoard.stowClimber){
+                println("stow climber")
+                climber.climberState = Climber.ClimberState.STOW
+            }
+            else if (controlBoard.climbToTwo) {
                 println("climb to two")
                 climber.climberState = Climber.ClimberState.LEVEL_TWO
             }
@@ -351,9 +352,6 @@ class Robot : TimedRobot() {
                 println("climb velocity down")
                 climber.climberState = Climber.ClimberState.VELOCITY_CONTROL
                 climber.setClimberVelocity(Constants.Climber.MAX_CLIMB_VEL)
-            }
-            else{
-                climber.setClimberVelocity(0.0)
             }
             if (climber.climberState != Climber.ClimberState.STOW){
                 println("climber drive")

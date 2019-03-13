@@ -26,20 +26,20 @@ class Climber private constructor() : Subsystem {
     var observedClimberVelocity = 0.0
     private set
 
-    var climberState = ClimberState.STOW
+    var climberState = ClimberState.OPEN_LOOP
 
     private fun setClimberPosition(position: ClimberState) {
         var target = position.targetPos + tare
     }
 
     private fun setClimberPosition(targetPos : Double) {
-        var target = targetPos + tare
+        var target = targetPos
         if (target == Double.NaN) {
             target = observedElevatorPosition
         } else {
             //observedElevatorPosition = target
         }
-        climbPIDController.setReference(target, ControlType.kPosition)
+        climbPIDController.setReference(target + tare, ControlType.kPosition)
 
 
     }
@@ -99,7 +99,7 @@ class Climber private constructor() : Subsystem {
 
     val loop: Loop = object : Loop {
         override fun onStart() {
-            climberState = ClimberState.STOW
+            climberState = ClimberState.OPEN_LOOP
             zeroSensors()
         }
         override fun onLoop() {
