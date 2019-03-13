@@ -215,6 +215,13 @@ class Robot : TimedRobot() {
                     intake.hatchState = Intake.HatchState.CLOSED
                     //println("close hatch")
                 }
+                if (controlBoard.openDeployer){
+                    intake.deployState = Intake.DeployState.OUT
+                }
+                if (controlBoard.closeDeployer){
+                    intake.deployState = Intake.DeployState.IN
+
+                }
             }
 //            if (controlBoard.climberUp){
 //                climber.climberState = Climber.ClimberState.UP
