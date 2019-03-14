@@ -69,6 +69,10 @@ class ControlBoard private constructor() {
 
     val closeHatch : Boolean
         get() = operator.aButton
+    val openDeployer: Boolean
+        get() = operator.xButton
+    val closeDeployer: Boolean
+        get() = operator.yButton
 
     val pushLatch : Boolean
         get() = driver.yButton

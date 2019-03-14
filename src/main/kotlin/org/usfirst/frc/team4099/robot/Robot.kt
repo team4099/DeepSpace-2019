@@ -202,7 +202,7 @@ class Robot : TimedRobot() {
             }
             else {
                 intake.deployState = Intake.DeployState.OUT
-                wrist.wristState = Wrist.WristState.VERTICAL
+                wrist.wristState = Wrist.WristState.HORIZONTAL
                 if(controlBoard.openHatch){
                     intake.hatchState = Intake.HatchState.OPEN
                     //println("open hatch")
@@ -210,6 +210,13 @@ class Robot : TimedRobot() {
                 if(controlBoard.closeHatch){
                     intake.hatchState = Intake.HatchState.CLOSED
                     //println("close hatch")
+                }
+                if (controlBoard.openDeployer){
+                    intake.deployState = Intake.DeployState.OUT
+                }
+                if (controlBoard.closeDeployer){
+                    intake.deployState = Intake.DeployState.IN
+
                 }
             }
 //            if (controlBoard.climberUp){
@@ -360,14 +367,17 @@ class Robot : TimedRobot() {
             else if (climber.climberState == Climber.ClimberState.VELOCITY_CONTROL){
                 climber.setClimberVelocity(0.0)
             }
+            else{
+                climber.setOpenLoop(0.0)
+            }
             if (climber.climberState != Climber.ClimberState.STOW){
                 if(controlBoard.climberDrive != 0.0){
                     println("climber drive")
                 }
                 climber.setOpenDrive(Constants.Climber.MAX_DRIVE_VEL * controlBoard.climberDrive)
             }
+            climber.setOpenDrive(controlBoard.throttle)
         }
-
 
 
         catch (t: Throwable) {
