@@ -2,6 +2,7 @@ package org.usfirst.frc.team4099.robot.subsystems
 
 import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.motorcontrol.can.TalonSRX
+import com.ctre.phoenix.motorcontrol.can.VictorSPX
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import org.usfirst.frc.team4099.robot.Constants
 import org.usfirst.frc.team4099.robot.loops.Loop
