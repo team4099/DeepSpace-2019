@@ -356,14 +356,17 @@ class Robot : TimedRobot() {
             else if (climber.climberState == Climber.ClimberState.VELOCITY_CONTROL){
                 climber.setClimberVelocity(0.0)
             }
+            else{
+                climber.setOpenLoop(0.0)
+            }
             if (climber.climberState != Climber.ClimberState.STOW){
                 if(controlBoard.climberDrive != 0.0){
                     println("climber drive")
                 }
                 climber.setOpenDrive(Constants.Climber.MAX_DRIVE_VEL * controlBoard.climberDrive)
             }
+            climber.setOpenDrive(controlBoard.throttle)
         }
-
 
 
         catch (t: Throwable) {
