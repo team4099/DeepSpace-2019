@@ -202,7 +202,7 @@ class Robot : TimedRobot() {
             }
             else {
                 intake.deployState = Intake.DeployState.OUT
-                wrist.wristState = Wrist.WristState.VERTICAL
+                wrist.wristState = Wrist.WristState.HORIZONTAL
                 if(controlBoard.openHatch){
                     intake.hatchState = Intake.HatchState.OPEN
                     //println("open hatch")
@@ -210,6 +210,13 @@ class Robot : TimedRobot() {
                 if(controlBoard.closeHatch){
                     intake.hatchState = Intake.HatchState.CLOSED
                     //println("close hatch")
+                }
+                if (controlBoard.openDeployer){
+                    intake.deployState = Intake.DeployState.OUT
+                }
+                if (controlBoard.closeDeployer){
+                    intake.deployState = Intake.DeployState.IN
+
                 }
             }
 //            if (controlBoard.climberUp){
