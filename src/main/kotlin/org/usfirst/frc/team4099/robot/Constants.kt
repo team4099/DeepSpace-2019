@@ -93,6 +93,8 @@ class Constants {
         val MAX_SPEED = 180 //CHANGE
         val MIN_TRIGGER = 0.1
         val BOTTOM_SOFT_LIMIT = 0.0 //set later - CHANGE
+        val LATCH_FORWARD_ID = 2
+        val LATCH_REVERSE_ID = 5
     }
 
 
