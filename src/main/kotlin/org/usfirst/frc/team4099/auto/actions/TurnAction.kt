@@ -45,7 +45,7 @@ class TurnAction(angleToTurn: Double) : Action {
             while (!Utils.around(mDrive.getAHRS()!!.yaw.toDouble(), 0.0, 1.0)) {
                 mDrive.getAHRS()!!.zeroYaw()
             }
-            Timer.delay(1.0)
+            Timer.delay(0.1)
         }
         startAngle = mDrive.getAHRS()!!.yaw.toDouble()
         println("------- NEW START AUTONOMOUS RUN -------")

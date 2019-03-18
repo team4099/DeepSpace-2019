@@ -1,9 +1,11 @@
 package org.usfirst.frc.team4099.robot.subsystems
 
+import com.ctre.phoenix.motorcontrol.ControlMode
+import com.ctre.phoenix.motorcontrol.can.TalonSRX
 import edu.wpi.first.wpilibj.DoubleSolenoid
-import edu.wpi.first.wpilibj.Talon
 import org.usfirst.frc.team4099.robot.Constants
 import org.usfirst.frc.team4099.robot.loops.Loop
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 
 
 /**
@@ -16,37 +18,43 @@ import org.usfirst.frc.team4099.robot.loops.Loop
  */
 class Intake private constructor() : Subsystem {
 
-    private val talon = Talon(Constants.Intake.INTAKE_TALON_ID)
-//    private val extender: DoubleSolenoid = DoubleSolenoid(Constants.Intake.EXTENDER_FORWARD_ID,
-//            Constants.Intake.EXTENDER_REVERSE_ID)
-//    private val deployer: DoubleSolenoid = DoubleSolenoid(Constants.Intake.DEPLOY_FORWARD_ID,
-//            Constants.Intake.DEPLOY_REVERSE_ID)
+    private val talon = TalonSRX(Constants.Intake.INTAKE_TALON_ID)
+    private val extender: DoubleSolenoid = DoubleSolenoid(Constants.Intake.EXTENDER_FORWARD_ID,
+            Constants.Intake.EXTENDER_REVERSE_ID)
+    private val deployer: DoubleSolenoid = DoubleSolenoid(Constants.Intake.DEPLOYER_FORWARD_ID,
+            Constants.Intake.DEPLOYER_REVERSE_ID)
 
     var intakeState = IntakeState.IN
+    var hatchState = HatchState.CLOSED
+    var deployState = DeployState.IN
     private var intakePower = 0.0
-    var intakeOut = false
-        set (wantsUp) {
-            //extender.set(if (wantsUp) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
-            field = wantsUp
-        }
-
-    var deploying = false
-        set (wantsOut) {
-            //deployer.set(if (wantsOut) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
-            field = wantsOut
-        }
-
+    public var isHatchOpen = false
 
     enum class IntakeState {
-        IN, STOP, SLOW_OUT, FAST_OUT, SLOW
+        IN, STOP, HOLDING, OUT, SLOW
+    }
+
+    enum class HatchState {
+        OPEN, CLOSED
+    }
+    enum class DeployState {
+        IN, OUT
     }
 
     override fun outputToSmartDashboard() {
+//        SmartDashboard.putString("intake/hatchState", hatchState.toString())
+//        SmartDashboard.putString("intake/intakeState", intakeState.toString())
         //SmartDashboard.putNumber("intake/intakePower", intakePower)
-        //SmartDashboard.putBoolean("intake/isUp", up)
+        //SmartDashb
+        // oard.putBoolean("intake/isUp", up)
         //SmartDashboard.putNumber("intake/current", BrownoutDefender.instance.getCurrent(7))
+        SmartDashboard.putBoolean("intake/hatchOpen", isHatchOpen)
     }
 
+    init{
+        talon.configPeakCurrentLimit(10)
+        talon.inverted = true
+    }
 
     /**
      * stops intake
@@ -60,8 +68,8 @@ class Intake private constructor() : Subsystem {
      * sets rightTalon to positive power and Talon to negative power
      * @param power a double that is the power for the intake
      */
-    private fun setIntakePower(power: Double) {
-        talon.set(power)
+    fun setIntakePower(power: Double) {
+        talon.set(ControlMode.PercentOutput,power)
     }
 
     /**
@@ -70,7 +78,7 @@ class Intake private constructor() : Subsystem {
      */
     val loop: Loop = object : Loop {
         override fun onStart() {
-            intakeOut = false
+            hatchState = HatchState.CLOSED
             intakeState = IntakeState.STOP
         }
 
@@ -81,12 +89,36 @@ class Intake private constructor() : Subsystem {
             synchronized(this@Intake) {
                 when (intakeState) {
                     IntakeState.IN -> setIntakePower(-1.0)
+                    IntakeState.HOLDING -> setIntakePower(-0.2)
                     IntakeState.STOP -> setIntakePower(0.0)
-                    IntakeState.SLOW_OUT -> setIntakePower(0.5)
-                    IntakeState.FAST_OUT -> setIntakePower(1.0)
-                    IntakeState.SLOW -> setIntakePower(-0.5)
+                    IntakeState.OUT -> setIntakePower(1.0)
+                }
+                when (hatchState){
+                    HatchState.CLOSED -> {
+                        extender.set(DoubleSolenoid.Value.kReverse)
+                        isHatchOpen = false
+                    }
+                    HatchState.OPEN -> {
+                        extender.set(DoubleSolenoid.Value.kForward)
+                        isHatchOpen = true
+                    }
+                }
+                when (deployState){
+                    DeployState.IN -> {
+                        deployer.set(DoubleSolenoid.Value.kReverse)
+                    }
+                    DeployState.OUT -> {
+                        deployer.set(DoubleSolenoid.Value.kForward)
+                    }
                 }
             }
+//            extended = false
+//            println(extended)
+//            if(hatchOut && Timer.getFPGATimestamp() - hatchOutStart > 0.2){
+//                extended = false
+//                //hatchOut = false
+//            }
+//            hatchOut = false
         }
 
         override fun onStop() = stop()

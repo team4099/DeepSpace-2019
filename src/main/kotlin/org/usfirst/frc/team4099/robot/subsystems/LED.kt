@@ -6,7 +6,7 @@ import org.usfirst.frc.team4099.robot.loops.Loop
 
 class LED private constructor() : Subsystem  {
     private val photon: Photon
-    private val numStrips = 40
+    private val numStrips = 1
 
     enum class SystemState {
         OFF, AUTO, HATCH, CARGO, ALIGNING, BACK_DOWN, FRONT_DOWN, UNJAM, INTAKE_IN, BLINK, CYLON, PULSE_DUAL, SOLID
@@ -32,8 +32,9 @@ class LED private constructor() : Subsystem  {
     init {
         photon = Photon()
         for (i in 0..numStrips) {
-            photon.SetNumberOfLEDs(i, 60)
+            photon.SetNumberOfLEDs(i, 15)
         }
+
 
     }
 
@@ -114,7 +115,7 @@ class LED private constructor() : Subsystem  {
 
     fun handleBackDown() {
         for (i in 0..numStrips) {
-            photon.setAnimation(i, Photon.Animation.BLINK, Photon.Color.GREEN)
+            photon.setAnimation(i, Photon.Animation.BLINK_DUAL, Photon.Color.RED, Photon.Color.GREEN)
         }
     }
 
