@@ -337,6 +337,10 @@ class Robot : TimedRobot() {
                 elevator.setElevatorVelocity(0.0)
             }
 
+            if (controlBoard.elevatorClimberLatch) {
+                elevator.elevatorState = Elevator.ElevatorState.CLIMBING
+            }
+
             if (controlBoard.stowClimber){
                 println("stow climber")
                 climber.climberState = Climber.ClimberState.STOW
@@ -366,14 +370,17 @@ class Robot : TimedRobot() {
             else if (climber.climberState == Climber.ClimberState.VELOCITY_CONTROL){
                 climber.setClimberVelocity(0.0)
             }
+            else{
+                climber.setOpenLoop(0.0)
+            }
             if (climber.climberState != Climber.ClimberState.STOW){
                 if(controlBoard.climberDrive != 0.0){
                     println("climber drive")
                 }
                 climber.setOpenDrive(Constants.Climber.MAX_DRIVE_VEL * controlBoard.climberDrive)
             }
+            climber.setOpenDrive(controlBoard.throttle)
         }
-
 
 
         catch (t: Throwable) {

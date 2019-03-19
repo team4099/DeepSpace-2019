@@ -23,7 +23,7 @@ class Constants {
 
     object Climber {
         val CLIMBER_SPARK_ID = 24
-        val DRIVE_TALON_ID = 0
+        val DRIVE_TALON_ID = 14
         val CLIMBER_KP = 0.0
         val CLIMBER_KI = 0.0
         val CLIMBER_KD = 0.0
@@ -35,7 +35,7 @@ class Constants {
         val LEVEL_TWO_HALF = 0.0
         val LEVEL_TWO = 0.0
         val CLIMBER_SOFT_LIMIT = -10.0
-        val MAX_CLIMB_VEL = 400.0
+        val MAX_CLIMB_VEL = 60.0
         val MAX_DRIVE_VEL = 400.0
 
     }
@@ -93,6 +93,8 @@ class Constants {
         val MAX_SPEED = 180 //CHANGE
         val MIN_TRIGGER = 0.1
         val BOTTOM_SOFT_LIMIT = 0.0 //set later - CHANGE
+        val LATCH_FORWARD_ID = 2
+        val LATCH_REVERSE_ID = 5
     }
 
 

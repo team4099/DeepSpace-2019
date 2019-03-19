@@ -25,6 +25,7 @@ class Elevator private constructor(): Subsystem {
     var observedElevatorVelocity = 0.0
         private set
     var isHatchPanel = true
+    private val climberLatch: DoubleSolenoid = DoubleSolenoid(Constants.Elevator.LATCH_FORWARD_ID, Constants.Elevator.LATCH_REVERSE_ID)
 
     var stopPosition = 0.0
 
@@ -32,6 +33,7 @@ class Elevator private constructor(): Subsystem {
         GROUND(0.0),
         HATCHLOW(10.0), HATCHMID(133.0), HATCHHIGH(235.0),  //not set
         PORTLOW(28.0), PORTMID(160.0), PORTHIGH(253.0),     //low, mid set
+        CLIMBING(0.0),
         VELOCITY_CONTROL(Double.NaN), OPEN_LOOP(Double.NaN)
     }
 
@@ -255,6 +257,7 @@ class Elevator private constructor(): Subsystem {
                         setElevatorPosition(ElevatorState.PORTLOW)
                     }
                 }
+                climberLatch.set(if (elevatorState == ElevatorState.CLIMBING) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
                 when {
                     observedElevatorVelocity in -1 .. 1 -> movementState = MovementState.STILL
                     observedElevatorVelocity > 1 -> movementState = MovementState.UP
