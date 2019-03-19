@@ -115,10 +115,10 @@ class ControlBoard private constructor() {
         get() = operator.rightYAxis
 
     val aimingOn: Boolean
-        get() = false//driver.bButton
+        get() = driver.bButton
 
     val aimingOff: Boolean
-        get() = false//driver.aButton
+        get() = driver.aButton
 
     companion object {
         val instance = ControlBoard()

@@ -13,8 +13,8 @@ class Constants {
 
         val HIGH_GEAR_MAX_SETPOINT = 17.0  //17 fps
 
-        val SHIFTER_FORWARD_ID = 2
-        val SHIFTER_REVERSE_ID = 5
+        val SHIFTER_FORWARD_ID = 7
+        val SHIFTER_REVERSE_ID = 0
     }
 
     object Wheels {
@@ -151,7 +151,7 @@ class Constants {
         val SELECTED_AUTO_START_DELAY_KEY = "autonomous/selectedDelay"
 
         val CONNECTION_TIMEOUT_MILLIS = 1000
-        val NUMBER_OF_TRIES = 5
+        val NUMBER_OF_TRIES = 5 ;
     }
     object Joysticks {
         val DRIVER_PORT = 0
@@ -160,10 +160,10 @@ class Constants {
 
     object Intake {
         val INTAKE_TALON_ID = 12
-        val EXTENDER_FORWARD_ID = 6
-        val EXTENDER_REVERSE_ID = 1
-        val DEPLOYER_FORWARD_ID = 7
-        val DEPLOYER_REVERSE_ID = 0
+        val EXTENDER_FORWARD_ID = 5
+        val EXTENDER_REVERSE_ID = 2
+        val DEPLOYER_FORWARD_ID = 6
+        val DEPLOYER_REVERSE_ID = 1
     }
 
 
@@ -182,9 +182,9 @@ class Constants {
         val WRIST_DOWN_KD = 85.0
         val WRIST_DOWN_KF = 1.75
 
-        val WRiST_VELOCITY_KP = 0.4
-        val WRiST_VELOCITY_KI = 0.0
+        val WRiST_VELOCITY_KP = 0.5
+        val WRiST_VELOCITY_KI = 0.3
         val WRiST_VELOCITY_KD = 0.0
-        val WRiST_VELOCITY_KF = 7.35
+        val WRiST_VELOCITY_KF = 5.23
     }
 }

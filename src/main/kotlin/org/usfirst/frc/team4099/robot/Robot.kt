@@ -18,7 +18,7 @@ import org.usfirst.frc.team4099.robot.subsystems.*
 import src.main.kotlin.org.usfirst.frc.team4099.robot.subsystems.Superstructure
 
 class Robot : TimedRobot() {
-//    private val vision = Vision.instance
+   private val vision = Vision.instance
 
     private var autoModeExecuter: AutoModeExecuter? = null
 
@@ -74,6 +74,7 @@ class Robot : TimedRobot() {
             enabledLooper.register(BrownoutDefender.instance)
 
             disabledLooper.register(VoltageEstimator.instance)
+            enabledLooper.register(vision.loop)
 
 
         } catch (t: Throwable) {
@@ -99,6 +100,9 @@ class Robot : TimedRobot() {
 //            autoModeExecuter?.stop()
 //            autoModeExecuter = null
 //
+
+
+
 //            disabledLooper.stop() // end DisabledLooper
 //            enabledLooper.start() // start EnabledLooper
 //
@@ -168,7 +172,7 @@ class Robot : TimedRobot() {
             }
             else if (controlBoard.hatchPanelMode) {
                 intakeState = IntakeState.HATCHPANEL
-                intake.deployState = Intake.DeployState.OUT
+               // intake.deployState = Intake.DeployState.OUT
                 //elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
             }
 
@@ -191,17 +195,18 @@ class Robot : TimedRobot() {
                     intake.intakeState = Intake.IntakeState.OUT
                     //println("intake out")
                 }
-                else if (controlBoard.holdCargo) {
-                    intake.intakeState = Intake.IntakeState.HOLDING
-                    //println("intake set to holding")
-                }
+//                else if (controlBoard.holdCargo) {
+//                    intake.intakeState = Intake.IntakeState.HOLDING
+//                    //println("intake set to holding")
+
                 else {
-                    intake.intakeState = Intake.IntakeState.STOP
+                    intake.intakeState = Intake.IntakeState.HOLDING
                 }
 
             }
             else {
-                intake.deployState = Intake.DeployState.OUT
+                //intake.deployState = Intake.DeployState.OUT
+                intake.intakeState = Intake.IntakeState.STOP
                 wrist.wristState = Wrist.WristState.HORIZONTAL
                 if(controlBoard.openHatch){
                     intake.hatchState = Intake.HatchState.OPEN
@@ -257,32 +262,30 @@ class Robot : TimedRobot() {
                 drive.highGear = true
                 println("Shifting to high gear")
             }
-//            if (controlBoard.aimingOn) {
-//                println("Activating vision")
-//                println(vision.visionState)
-//                vision.setState(Vision.VisionState.AIMING)
-//                println(vision.visionState)
-//            }
-//            if (controlBoard.aimingOff) {
-//                println("Deactivating vision")
-//                println(vision.visionState)
-//                vision.setState(Vixsion.VisionState.INACTIVE)
-//                println(vision.visionState)
-//            }
+            if (controlBoard.aimingOn) {
+                println("Activating vision")
+                println(vision.visionState)
+                vision.setState(Vision.VisionState.AIMING)
+                println(vision.visionState)
+            }
+            else {
+                println("Deactivating vision")
+                println(vision.visionState)
+                vision.setState(Vision.VisionState.INACTIVE)
+                println(vision.visionState)
+            }
 
-//            if (vision.visionState != Vision.VisionState.AIMING) {
-//                drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
-//            } else if (vision.visionState == Vision.VisionState.SEEKING) {
-//                if (vision.onTarget) {
-//                    drive.setLeftRightPower(0.3, 0.3)
-//                } else if (vision.visionState != Vision.VisionState.INACTIVE) {
-//                    drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
-//                } else {
-//                    drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
-//                }
-//            } else {
+            if (vision.visionState != Vision.VisionState.AIMING) {
+                drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
+            } else if (vision.visionState == Vision.VisionState.AIMING) {
+                if (vision.visionState != Vision.VisionState.INACTIVE) {
+                    drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
+                } else {
+                    drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
+                }
+            } else {
 //                drive.setLeftRightPower(vision.steeringAdjust, - vision.steeringAdjust)
-//            }
+            }
 //            if(controlBoard.toggleWrist){
 //                if(wrist.wristState == Wrist.WristState.VERTICAL){
 //                    wrist.wristState = Wrist.WristState.HORIZONTAL
