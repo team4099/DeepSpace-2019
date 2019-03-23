@@ -19,6 +19,7 @@ class Vision private constructor(): Subsystem {
     val elevator = Elevator.instance
     var onTarget = false
     var steeringAdjust = 0.0
+    var driveAdjust = 0.0
     private var distance = 0.0
     var dHeight = 0.0
 
@@ -76,14 +77,16 @@ class Vision private constructor(): Subsystem {
                         } else {
                             if (tx > 1.0) {
                                 // right
-                                steeringAdjust = Constants.Vision.Kp * tx - Constants.Vision.minCommand
+                                steeringAdjust = Constants.Vision.STEER_Kp * tx - Constants.Vision.minCommand
                             } else if (tx < 1.0) {
                                 // left
-                                steeringAdjust = Constants.Vision.Kp * tx + Constants.Vision.minCommand
+                                steeringAdjust = Constants.Vision.STEER_Kp * tx + Constants.Vision.minCommand
                             }
                             else {}
                         }
+                        driveAdjust = (Constants.Vision.DESIRED_AREA - ta) * Constants.Vision.DRIVE_Kp // NEEDS MUCH TESTING
 
+                        driveAdjust = if (driveAdjust > Constants.Vision.MAX_DRIVE) driveAdjust else driveAdjust
 
 //                        steeringAdjust = -steeringAdjust
 
@@ -95,10 +98,10 @@ class Vision private constructor(): Subsystem {
                         } else {
                             if (tx > 0.0) {
                                 // right
-                                steeringAdjust = Constants.Vision.Kp * tx - Constants.Vision.minCommand
+                                steeringAdjust = Constants.Vision.STEER_Kp * tx - Constants.Vision.minCommand
                             } else if (tx < 0.0) {
                                 // left
-                                steeringAdjust = Constants.Vision.Kp * tx + Constants.Vision.minCommand
+                                steeringAdjust = Constants.Vision.STEER_Kp * tx + Constants.Vision.minCommand
                             } else if (tx == 1.0) {
                                 onTarget = ta < 0.8
                             } else {}

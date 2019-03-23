@@ -21,7 +21,7 @@ import src.main.kotlin.org.usfirst.frc.team4099.robot.subsystems.Superstructure
 import java.util.concurrent.TimeUnit
 
 class Robot : TimedRobot() {
-//    private val vision = Vision.instance
+    private val vision = Vision.instance
 
     private var autoModeExecuter: AutoModeExecuter? = null
 
@@ -274,19 +274,19 @@ class Robot : TimedRobot() {
 //                println(vision.visionState)
 //            }
 
-//            if (vision.visionState != Vision.VisionState.AIMING) {
-//                drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
-//            } else if (vision.visionState == Vision.VisionState.SEEKING) {
-//                if (vision.onTarget) {
-//                    drive.setLeftRightPower(0.3, 0.3)
-//                } else if (vision.visionState != Vision.VisionState.INACTIVE) {
-//                    drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
-//                } else {
+            if (vision.visionState != Vision.VisionState.AIMING) {
+                drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
+            } else if (vision.visionState == Vision.VisionState.SEEKING) {
+                if (vision.onTarget) {
+                    drive.setLeftRightPower(0.3, 0.3)
+                } else if (vision.visionState != Vision.VisionState.INACTIVE) {
+                    drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
+                } else {
                     drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
-//                }
-//            } else {
-//                drive.setLeftRightPower(vision.steeringAdjust, - vision.steeringAdjust)
-//            }
+                }
+            } else {
+                drive.setLeftRightPower(vision.steeringAdjust, - vision.steeringAdjust)
+            }
 //            if(controlBoard.toggleWrist){
 //                if(wrist.wristState == Wrist.WristState.VERTICAL){
 //                    wrist.wristState = Wrist.WristState.HORIZONTAL

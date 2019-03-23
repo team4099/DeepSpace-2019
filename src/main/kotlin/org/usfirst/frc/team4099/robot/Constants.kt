@@ -91,17 +91,18 @@ class Constants {
         val BOTTOM_SOFT_LIMIT = 0.0 //set later - CHANGE
     }
 
-
-
-
     object Vision {
-        val Kp = -0.02
+        val STEER_Kp = 0.02
+        val DRIVE_Kp = 0.25
+        val MAX_DRIVE = 0.6
+        val DESIRED_AREA = 0.5
         val minCommand = 0
         val HATCH_PANEL_HEIGHT = 20 // inches
         val CARGO_HEIGHT = 20 // inches
         val CAMERA_ANGLE = 0 // degrees, NOT SET
         val TARGET_HEIGHT_ADJUST = 10 //inches, NOT SET
     }
+
     object Velocity {
         val HIGH_GEAR_VELOCITY_CONTROL_SLOT = 0
         val LOW_GEAR_VELOCITY_CONTROL_SLOT = 0
