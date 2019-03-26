@@ -13,6 +13,9 @@ class Constants {
 
         val HIGH_GEAR_MAX_SETPOINT = 17.0  //17 fps
 
+        val MAX_LEFT_OPENLOOP_VEL = 1.0
+        val MAX_RIGHT_OPENLOOP_VEL = 1.0
+
         val SHIFTER_FORWARD_ID = 2
         val SHIFTER_REVERSE_ID = 5
     }
