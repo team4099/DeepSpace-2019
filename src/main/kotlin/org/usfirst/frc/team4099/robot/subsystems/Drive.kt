@@ -27,14 +27,12 @@ class Drive private constructor() : Subsystem {
 
     private val leftMasterSpark : CANSparkMax = CANSparkMax(Constants.Drive.LEFT_MASTER_ID, MotorType.kBrushless)
     private val leftSlave1Spark : CANSparkMax = CANSparkMax(Constants.Drive.LEFT_SLAVE_1_ID, MotorType.kBrushless)
-    private val leftSlave2Spark : CANSparkMax = CANSparkMax(Constants.Drive.LEFT_SLAVE_2_ID, MotorType.kBrushless)
     private val leftPIDController : CANPIDController = leftMasterSpark.pidController
     private val leftEncoder : CANEncoder = leftMasterSpark.encoder
     private var leftStartPos : Double = leftEncoder.position
 
     private val rightMasterSpark : CANSparkMax = CANSparkMax(Constants.Drive.RIGHT_MASTER_ID, MotorType.kBrushless)
     private val rightSlave1Spark : CANSparkMax = CANSparkMax(Constants.Drive.RIGHT_SLAVE_1_ID, MotorType.kBrushless)
-    private val rightSlave2Spark : CANSparkMax = CANSparkMax(Constants.Drive.RIGHT_SLAVE_2_ID, MotorType.kBrushless)
     private val rightPIDController : CANPIDController = rightMasterSpark.pidController
     private val rightEncoder : CANEncoder = rightMasterSpark.encoder
     private var rightStartPos : Double = rightEncoder.position
@@ -60,10 +58,8 @@ class Drive private constructor() : Subsystem {
             if (brakeMode != type) {
                 leftMasterSpark.setIdleMode(type)
                 leftSlave1Spark.setIdleMode(type)
-                leftSlave2Spark.setIdleMode(type)
                 rightMasterSpark.setIdleMode(type)
                 rightSlave1Spark.setIdleMode(type)
-                rightSlave2Spark.setIdleMode(type)
             }
         }
 
@@ -89,9 +85,7 @@ class Drive private constructor() : Subsystem {
 
     init {
         leftSlave1Spark.follow(leftMasterSpark)
-        leftSlave2Spark.follow(leftMasterSpark)
         rightSlave1Spark.follow(rightMasterSpark)
-        rightSlave2Spark.follow(rightMasterSpark)
 
         //TODO: SET CONVERSION FACTORS
 //        leftMasterSRX.setSensorPhase(true) //to align positive sensor velocity with positive motor output
@@ -127,10 +121,8 @@ class Drive private constructor() : Subsystem {
 
         leftMasterSpark.inverted = true
         leftSlave1Spark.inverted = true
-        leftSlave2Spark.inverted = true
         rightMasterSpark.inverted = false
         rightSlave1Spark.inverted = false
-        rightSlave2Spark.inverted = false
 
         highGear = false
 
@@ -357,7 +349,7 @@ class Drive private constructor() : Subsystem {
         segment = 0
         trajLength = path.getTrajLength()
         currentState = DriveControlState.PATH_FOLLOWING
-        brakeMode = CANSparkMax.IdleMode.kBrake
+        brakeMode = CANSparkMax.IdleMode.kCoast
 
     }
     fun updatePathFollowing(){
