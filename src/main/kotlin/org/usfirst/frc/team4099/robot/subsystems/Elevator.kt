@@ -3,6 +3,7 @@ package org.usfirst.frc.team4099.robot.subsystems
 import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.motorcontrol.FeedbackDevice
 import com.ctre.phoenix.motorcontrol.NeutralMode
+import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import org.usfirst.frc.team4099.lib.util.CANMotorControllerFactory
 import org.usfirst.frc.team4099.lib.util.Utils
@@ -25,7 +26,7 @@ class Elevator private constructor(): Subsystem {
     var observedElevatorVelocity = 0.0
         private set
     var isHatchPanel = true
-    private val climberLatch: DoubleSolenoid = DoubleSolenoid(Constants.Elevator.LATCH_FORWARD_ID, Constants.Elevator.LATCH_REVERSE_ID)
+   // private val climberLatch: DoubleSolenoid = DoubleSolenoid(Constants.Elevator.LATCH_FORWARD_ID, Constants.Elevator.LATCH_REVERSE_ID)
 
     var stopPosition = 0.0
 
@@ -257,7 +258,7 @@ class Elevator private constructor(): Subsystem {
                         setElevatorPosition(ElevatorState.PORTLOW)
                     }
                 }
-                climberLatch.set(if (elevatorState == ElevatorState.CLIMBING) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
+               // climberLatch.set(if (elevatorState == ElevatorState.CLIMBING) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
                 when {
                     observedElevatorVelocity in -1 .. 1 -> movementState = MovementState.STILL
                     observedElevatorVelocity > 1 -> movementState = MovementState.UP
