@@ -146,7 +146,7 @@ class Wrist private constructor(): Subsystem {
         talon.configPeakOutputReverse(-0.42, 0)
         talon.configPeakOutputForward(0.42, 0)
         if(radiansPerSecond == 0.0){
-            //talon.set(ControlModej.MotionMagic, WristConversion.radiansToPulses(lastVelControlPosition))   //use when pids are better
+            setWristPosition(lastVelControlPosition)   //use when pids are better
         }
         else{
             lastVelControlPosition = wristAngle
@@ -158,7 +158,7 @@ class Wrist private constructor(): Subsystem {
             }
             talon.set(ControlMode.Velocity, WristConversion.radiansToPulses(radiansPerSecond))
         }
-        talon.set(ControlMode.Velocity, WristConversion.radiansToPulses(radiansPerSecond))
+        //talon.set(ControlMode.Velocity, WristConversion.radiansToPulses(radiansPerSecond))
 
         //println("nativeVel: $radiansPerSecond, observedVel: ${talon.sensorCollection.quadratureVelocity}, error: ${talon.sensorCollection.quadratureVelocity - radiansPerSecond}")
 
