@@ -16,22 +16,32 @@ import org.usfirst.frc.team4099.lib.drive.DriveSignal
 import org.usfirst.frc.team4099.lib.util.CANMotorControllerFactory
 import org.usfirst.frc.team4099.robot.Constants
 import org.usfirst.frc.team4099.robot.loops.Loop
+import com.revrobotics.CANEncoder
+import com.revrobotics.CANPIDController
+import com.revrobotics.CANSparkMax
+import com.revrobotics.CANSparkMaxLowLevel.MotorType
+import com.revrobotics.ControlType
 
 
 class Drive private constructor() : Subsystem {
 
-    private val leftMasterSRX: TalonSRX = CANMotorControllerFactory.createDefaultTalon(Constants.Drive.LEFT_MASTER_ID)
-    private val leftSlave1SPX: VictorSPX = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Drive.LEFT_SLAVE_1_ID, leftMasterSRX)
-    private val leftSlave2SRX: TalonSRX = CANMotorControllerFactory.createPermanentSlaveTalon(Constants.Drive.LEFT_SLAVE_2_ID, Constants.Drive.LEFT_MASTER_ID)
-    private val rightMasterSRX: TalonSRX = CANMotorControllerFactory.createDefaultTalon(Constants.Drive.RIGHT_MASTER_ID)
-    private val rightSlave1SPX: VictorSPX = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Drive.RIGHT_SLAVE_1_ID, rightMasterSRX)
-    private val rightSlave2SRX: TalonSRX = CANMotorControllerFactory.createPermanentSlaveTalon(Constants.Drive.RIGHT_SLAVE_2_ID, Constants.Drive.RIGHT_MASTER_ID)
+    private val leftMasterSpark : CANSparkMax = CANSparkMax(Constants.Drive.LEFT_MASTER_ID, MotorType.kBrushless)
+    private val leftSlave1Spark : CANSparkMax = CANSparkMax(Constants.Drive.LEFT_SLAVE_1_ID, MotorType.kBrushless)
+    private val leftPIDController : CANPIDController = leftMasterSpark.pidController
+    private val leftEncoder : CANEncoder = leftMasterSpark.encoder
+    private var leftStartPos : Double = leftEncoder.position
+
+    private val rightMasterSpark : CANSparkMax = CANSparkMax(Constants.Drive.RIGHT_MASTER_ID, MotorType.kBrushless)
+    private val rightSlave1Spark : CANSparkMax = CANSparkMax(Constants.Drive.RIGHT_SLAVE_1_ID, MotorType.kBrushless)
+    private val rightPIDController : CANPIDController = rightMasterSpark.pidController
+    private val rightEncoder : CANEncoder = rightMasterSpark.encoder
+    private var rightStartPos : Double = rightEncoder.position
 
     private val pneumaticShifter: DoubleSolenoid = DoubleSolenoid(Constants.Drive.SHIFTER_FORWARD_ID, Constants.Drive.SHIFTER_REVERSE_ID)
 
 //    private val test1 : DoubleSolenoid = DoubleSolenoid(2,5)
 //    private val test2 : DoubleSolenoid = DoubleSolenoid(3,4)
-   // private val test3 : DoubleSolenoid = DoubleSolenoid(1,6)
+    // private val test3 : DoubleSolenoid = DoubleSolenoid(1,6)
 
     private val ahrs: AHRS
 
@@ -43,15 +53,13 @@ class Drive private constructor() : Subsystem {
     private var lastRightError: Double
 
 
-    var brakeMode: NeutralMode = NeutralMode.Coast //sets whether the break mode should be coast (no resistance) or by force
+    var brakeMode: CANSparkMax.IdleMode = CANSparkMax.IdleMode.kCoast //sets whether the brake mode should be coast (no resistance) or by force
         set(type) {
             if (brakeMode != type) {
-                rightMasterSRX.setNeutralMode(type)
-                rightSlave1SPX.setNeutralMode(type)
-                rightSlave2SRX.setNeutralMode(type)
-                leftMasterSRX.setNeutralMode(type)
-                leftSlave1SPX.setNeutralMode(type)
-                leftSlave2SRX.setNeutralMode(type)
+                leftMasterSpark.setIdleMode(type)
+                leftSlave1Spark.setIdleMode(type)
+                rightMasterSpark.setIdleMode(type)
+                rightSlave1Spark.setIdleMode(type)
             }
         }
 
@@ -76,44 +84,45 @@ class Drive private constructor() : Subsystem {
     private var currentState = DriveControlState.OPEN_LOOP
 
     init {
-        leftMasterSRX.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0) //configs sensor to a quad encoder
-        leftMasterSRX.setSensorPhase(true) //to align positive sensor velocity with positive motor output
-        leftMasterSRX.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 5, 0)//might change to 20 ms to align with looper
+        leftSlave1Spark.follow(leftMasterSpark)
+        rightSlave1Spark.follow(rightMasterSpark)
 
-        leftMasterSRX.config_kP(0, Constants.Gains.LEFT_LOW_KP, 0) //sets PIDF values
-        leftMasterSRX.config_kI(0, Constants.Gains.LEFT_LOW_KI, 0)
-        leftMasterSRX.config_kD(0, Constants.Gains.LEFT_LOW_KD, 0)
-        leftMasterSRX.config_kF(0, Constants.Gains.LEFT_LOW_KF, 0)
+        //TODO: SET CONVERSION FACTORS
+//        leftMasterSRX.setSensorPhase(true) //to align positive sensor velocity with positive motor output
+//        leftMasterSRX.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 5, 0)//might change to 20 ms to align with looper
 
-        leftMasterSRX.config_kP(1, Constants.Gains.LEFT_HIGH_KP, 0)
-        leftMasterSRX.config_kI(1, Constants.Gains.LEFT_HIGH_KI, 0)
-        leftMasterSRX.config_kD(1, Constants.Gains.LEFT_HIGH_KD, 0)
-        leftMasterSRX.config_kF(1, Constants.Gains.LEFT_HIGH_KF, 0)
+        leftPIDController.setP(Constants.Gains.LEFT_LOW_KP,0)
+        leftPIDController.setI(Constants.Gains.LEFT_LOW_KI,0)
+        leftPIDController.setD(Constants.Gains.LEFT_LOW_KD,0)
+        leftPIDController.setFF(Constants.Gains.LEFT_LOW_KF,0)
 
-        rightMasterSRX.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0) //configs sensor to a quad encoder
-        rightMasterSRX.setSensorPhase(true) //to align positive sensor velocity with positive motor output
-        rightMasterSRX.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 5, 0)
-        rightMasterSRX.config_kP(0, Constants.Gains.RIGHT_LOW_KP, 0) //sets PIdF values
-        rightMasterSRX.config_kI(0, Constants.Gains.RIGHT_LOW_KI, 0)
-        rightMasterSRX.config_kD(0, Constants.Gains.RIGHT_LOW_KD, 0)
-        rightMasterSRX.config_kF(0, Constants.Gains.RIGHT_LOW_KF, 0)
+        leftPIDController.setP(Constants.Gains.LEFT_HIGH_KP,1)
+        leftPIDController.setI(Constants.Gains.LEFT_HIGH_KI,1)
+        leftPIDController.setD(Constants.Gains.LEFT_HIGH_KD,1)
+        leftPIDController.setFF(Constants.Gains.LEFT_HIGH_KF,1)
 
-        rightMasterSRX.config_kP(1, Constants.Gains.RIGHT_HIGH_KP, 0)
-        rightMasterSRX.config_kI(1, Constants.Gains.RIGHT_HIGH_KI, 0)
-        rightMasterSRX.config_kD(1, Constants.Gains.RIGHT_HIGH_KD, 0)
-        rightMasterSRX.config_kF(1, Constants.Gains.RIGHT_HIGH_KF, 0)
+//        rightMasterSRX.setSensorPhase(true) //to align positive sensor velocity with positive motor output
+//        rightMasterSRX.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 5, 0)
 
-        leftMasterSRX.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_10Ms, 0)
-        leftMasterSRX.configVelocityMeasurementWindow(32, 0)
-        rightMasterSRX.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_10Ms, 0)
-        rightMasterSRX.configVelocityMeasurementWindow(32, 0)
+        rightPIDController.setP(Constants.Gains.RIGHT_LOW_KP,0)
+        rightPIDController.setI(Constants.Gains.RIGHT_LOW_KI,0)
+        rightPIDController.setD(Constants.Gains.RIGHT_LOW_KD,0)
+        rightPIDController.setFF(Constants.Gains.RIGHT_LOW_KF,0)
 
-        leftMasterSRX.inverted = true
-        leftSlave1SPX.inverted = true
-        leftSlave2SRX.inverted = true
-        rightMasterSRX.inverted = false
-        rightSlave1SPX.inverted = false
-        rightSlave2SRX.inverted = false
+        rightPIDController.setP(Constants.Gains.RIGHT_HIGH_KP,1)
+        rightPIDController.setI(Constants.Gains.RIGHT_HIGH_KI,1)
+        rightPIDController.setD(Constants.Gains.RIGHT_HIGH_KD,1)
+        rightPIDController.setFF(Constants.Gains.RIGHT_HIGH_KF,1)
+
+//        leftMasterSRX.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_10Ms, 0)
+//        leftMasterSRX.configVelocityMeasurementWindow(32, 0)
+//        rightMasterSRX.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_10Ms, 0)
+//        rightMasterSRX.configVelocityMeasurementWindow(32, 0)
+
+        leftMasterSpark.inverted = true
+        leftSlave1Spark.inverted = true
+        rightMasterSpark.inverted = false
+        rightSlave1Spark.inverted = false
 
         highGear = false
 
@@ -135,12 +144,10 @@ class Drive private constructor() : Subsystem {
     @Synchronized
     fun setOpenLoop(signal: DriveSignal) {
         if (currentState !== DriveControlState.OPEN_LOOP) {
-            leftMasterSRX.set(ControlMode.PercentOutput, 0.0)
-            rightMasterSRX.set(ControlMode.PercentOutput, 0.0)
-            leftMasterSRX.configNominalOutputForward(0.0, 0)
-            rightMasterSRX.configNominalOutputForward(0.0, 0)
+//            leftMasterSRX.configNominalOutputForward(0.0, 0)
+//            rightMasterSRX.configNominalOutputForward(0.0, 0)
             currentState = DriveControlState.OPEN_LOOP
-            brakeMode = NeutralMode.Coast
+            brakeMode = CANSparkMax.IdleMode.kCoast
         }
         setLeftRightPower(signal.leftMotor, signal.rightMotor)
     }
@@ -153,8 +160,8 @@ class Drive private constructor() : Subsystem {
     @Synchronized
     public fun setLeftRightPower(left: Double, right: Double) {
 //                println("power: $left, $right")
-        leftMasterSRX.set(ControlMode.PercentOutput, left)
-        rightMasterSRX.set(ControlMode.PercentOutput, right)
+        leftMasterSpark.set(left * Constants.Drive.MAX_LEFT_OPENLOOP_VEL)
+        rightMasterSpark.set(right * Constants.Drive.MAX_RIGHT_OPENLOOP_VEL)
         //        println("left out: $left, left speed: ${leftMasterSRX.getSelectedSensorVelocity(0)}")
         //        println("right out: $right, right speed: ${rightMasterSRX.getSelectedSensorVelocity(0)}")
         //        println("actual power: ${leftMasterSRX.motorOutputPercent}, ${rightMasterSRX.motorOutputPercent}")
@@ -169,15 +176,8 @@ class Drive private constructor() : Subsystem {
 
     @Synchronized
     fun resetEncoders() {
-        leftMasterSRX.setSelectedSensorPosition(0, 0, 0)
-        leftMasterSRX.sensorCollection.setPulseWidthPosition(0, 0)
-        leftSlave1SPX.setSelectedSensorPosition(0, 0, 0)
-        leftSlave2SRX.setSelectedSensorPosition(0, 0, 0)
-        rightMasterSRX.setSelectedSensorPosition(0, 0, 0)
-        rightMasterSRX.sensorCollection.setPulseWidthPosition(0, 0)
-        rightSlave1SPX.setSelectedSensorPosition(0, 0, 0)
-        rightSlave2SRX.setSelectedSensorPosition(0, 0, 0)
-
+        leftStartPos = leftEncoder.position
+        rightStartPos = rightEncoder.position
     }
 
     fun getAHRS(): AHRS? {
@@ -190,10 +190,10 @@ class Drive private constructor() : Subsystem {
         } else {
             SmartDashboard.putNumber("gyro", -31337.0)
         }
-        SmartDashboard.putNumber("leftTalon", leftMasterSRX.motorOutputVoltage)
-        SmartDashboard.putNumber("rightTalon", rightMasterSRX.motorOutputVoltage)
+        SmartDashboard.putNumber("leftSpark", leftMasterSpark.busVoltage)
+        SmartDashboard.putNumber("rightSpark", rightMasterSpark.busVoltage)
         SmartDashboard.putNumber("leftEncoderInches", getLeftDistanceInches())
-        SmartDashboard.putNumber("rightEncoderInches", rightMasterSRX.sensorCollection.quadraturePosition.toDouble())
+        SmartDashboard.putNumber("rightEncoderInches", getRightDistanceInches())
     }
 
     fun startLiveWindowMode() {
@@ -259,9 +259,9 @@ class Drive private constructor() : Subsystem {
     @Synchronized
     fun setVelocitySetpoint(leftInchesPerSec: Double, rightInchesPerSec: Double) {
         if (usesTalonVelocityControl(currentState)) {
-            leftMasterSRX.set(ControlMode.Velocity, leftInchesPerSec)
-            rightMasterSRX.set(ControlMode.Velocity, rightInchesPerSec)
-           // println("left err: ${leftMasterSRX.getClosedLoopError(0)} trg: $leftInchesPerSec actual: ${leftMasterSRX.getSelectedSensorVelocity(0)}")
+            leftPIDController.setReference(leftInchesPerSec,ControlType.kVelocity)
+            rightPIDController.setReference(rightInchesPerSec,ControlType.kVelocity)
+            // println("left err: ${leftMasterSRX.getClosedLoopError(0)} trg: $leftInchesPerSec actual: ${leftMasterSRX.getSelectedSensorVelocity(0)}")
             //println("right err: ${rightMasterSRX.getClosedLoopError(0)} trg: $rightInchesPerSec actual: ${rightMasterSRX.getSelectedSensorVelocity(0)}")
         }
         else {
@@ -274,8 +274,8 @@ class Drive private constructor() : Subsystem {
     @Synchronized
     fun setPositionSetpoint(leftInches: Double, rightInches: Double) {
         if (usesTalonPositionControl(currentState)) {
-            leftMasterSRX.set(ControlMode.MotionMagic, leftInches)
-            rightMasterSRX.set(ControlMode.MotionMagic, rightInches)
+            leftPIDController.setReference(leftInches, ControlType.kPosition)
+            rightPIDController.setReference(rightInches, ControlType.kPosition)
             // println("left err: ${leftMasterSRX.getClosedLoopError(0)} trg: $leftInchesPerSec actual: ${leftMasterSRX.getSelectedSensorVelocity(0)}")
             //println("right err: ${rightMasterSRX.getClosedLoopError(0)} trg: $rightInchesPerSec actual: ${rightMasterSRX.getSelectedSensorVelocity(0)}")
         }
@@ -290,12 +290,12 @@ class Drive private constructor() : Subsystem {
     @Synchronized
     private fun updatePositionSetpoint(leftPositionInches: Double, rightPositionInches: Double) {
         if (usesTalonPositionControl(currentState)) {
-            leftMasterSRX.set(ControlMode.MotionMagic, leftPositionInches)
-            rightMasterSRX.set(ControlMode.MotionMagic, rightPositionInches)
+            leftPIDController.setReference(leftPositionInches, ControlType.kPosition)
+            rightPIDController.setReference(rightPositionInches, ControlType.kPosition)
         } else {
             println("Bad position control state")
-            leftMasterSRX.set(ControlMode.MotionMagic, 0.0)
-            rightMasterSRX.set(ControlMode.MotionMagic, 0.0)
+            leftPIDController.setReference(leftPositionInches, ControlType.kPosition)
+            rightPIDController.setReference(rightPositionInches, ControlType.kPosition)
         }
     }
 
@@ -303,20 +303,23 @@ class Drive private constructor() : Subsystem {
     private fun configureTalonsForVelocityControl() { //should further review cause im bad
         if (!usesTalonVelocityControl(currentState)) {
             // We entered a velocity control state.
-            leftMasterSRX.set(ControlMode.Velocity, 0.0) //velocity  output value is in position change / 100ms
-            leftMasterSRX.configNominalOutputForward(Constants.Velocity.DRIVE_LOW_GEAR_NOMINAL_OUTPUT, 0)
-            leftMasterSRX.configNominalOutputReverse(Constants.Velocity.DRIVE_LOW_GEAR_NOMINAL_OUTPUT, 0)
-            leftMasterSRX.selectProfileSlot(Constants.Velocity.LOW_GEAR_VELOCITY_CONTROL_SLOT, 0)
-            leftMasterSRX.configPeakOutputForward(Constants.Velocity.DRIVE_LOW_GEAR_MAX_FORWARD_OUTPUT, 0)
-            leftMasterSRX.configPeakOutputReverse(Constants.Velocity.DRIVE_LOW_GEAR_MAX_REVERSE_OUTPUT, 0)
 
-            rightMasterSRX.set(ControlMode.Velocity, 0.0) //velocity  output value is in position change / 100ms
-            rightMasterSRX.configNominalOutputForward(Constants.Velocity.DRIVE_LOW_GEAR_NOMINAL_OUTPUT, 0)
-            rightMasterSRX.configNominalOutputReverse(Constants.Velocity.DRIVE_LOW_GEAR_NOMINAL_OUTPUT, 0)
-            rightMasterSRX.selectProfileSlot(Constants.Velocity.LOW_GEAR_VELOCITY_CONTROL_SLOT, 0)
-            rightMasterSRX.configPeakOutputForward(Constants.Velocity.DRIVE_LOW_GEAR_MAX_FORWARD_OUTPUT, 0)
-            rightMasterSRX.configPeakOutputReverse(Constants.Velocity.DRIVE_LOW_GEAR_MAX_REVERSE_OUTPUT, 0)
-            brakeMode = NeutralMode.Coast
+            leftPIDController.setReference(0.0,ControlType.kPosition)
+            rightPIDController.setReference(0.0,ControlType.kPosition)
+//            leftMasterSRX.set(ControlMode.Velocity, 0.0) //velocity  output value is in position change / 100ms
+//            leftMasterSRX.configNominalOutputForward(Constants.Velocity.DRIVE_LOW_GEAR_NOMINAL_OUTPUT, 0)
+//            leftMasterSRX.configNominalOutputReverse(Constants.Velocity.DRIVE_LOW_GEAR_NOMINAL_OUTPUT, 0)
+//            leftMasterSRX.selectProfileSlot(Constants.Velocity.LOW_GEAR_VELOCITY_CONTROL_SLOT, 0)
+//            leftMasterSRX.configPeakOutputForward(Constants.Velocity.DRIVE_LOW_GEAR_MAX_FORWARD_OUTPUT, 0)
+//            leftMasterSRX.configPeakOutputReverse(Constants.Velocity.DRIVE_LOW_GEAR_MAX_REVERSE_OUTPUT, 0)
+//
+//            rightMasterSRX.set(ControlMode.Velocity, 0.0) //velocity  output value is in position change / 100ms
+//            rightMasterSRX.configNominalOutputForward(Constants.Velocity.DRIVE_LOW_GEAR_NOMINAL_OUTPUT, 0)
+//            rightMasterSRX.configNominalOutputReverse(Constants.Velocity.DRIVE_LOW_GEAR_NOMINAL_OUTPUT, 0)
+//            rightMasterSRX.selectProfileSlot(Constants.Velocity.LOW_GEAR_VELOCITY_CONTROL_SLOT, 0)
+//            rightMasterSRX.configPeakOutputForward(Constants.Velocity.DRIVE_LOW_GEAR_MAX_FORWARD_OUTPUT, 0)
+//            rightMasterSRX.configPeakOutputReverse(Constants.Velocity.DRIVE_LOW_GEAR_MAX_REVERSE_OUTPUT, 0)
+            brakeMode = CANSparkMax.IdleMode.kCoast
         }
     }
 
@@ -324,19 +327,19 @@ class Drive private constructor() : Subsystem {
     private fun configureTalonsforPositionControl() {
         if (!usesTalonPositionControl(currentState)) {
             // We entered a position control state.
-            leftMasterSRX.set(ControlMode.MotionMagic, 0.0)
-            leftMasterSRX.configNominalOutputForward(Constants.Velocity.DRIVE_LOW_GEAR_NOMINAL_OUTPUT, 0)
-            leftMasterSRX.configNominalOutputReverse(Constants.Velocity.DRIVE_LOW_GEAR_NOMINAL_OUTPUT, 0)
-            leftMasterSRX.selectProfileSlot(Constants.Velocity.LOW_GEAR_VELOCITY_CONTROL_SLOT, 0)
-            leftMasterSRX.configPeakOutputForward(Constants.Velocity.DRIVE_LOW_GEAR_MAX_FORWARD_OUTPUT, 0)
-            leftMasterSRX.configPeakOutputReverse(Constants.Velocity.DRIVE_LOW_GEAR_MAX_REVERSE_OUTPUT, 0)
-            rightMasterSRX.set(ControlMode.MotionMagic, 0.0)
-            rightMasterSRX.configNominalOutputForward(Constants.Velocity.DRIVE_LOW_GEAR_NOMINAL_OUTPUT, 0)
-            rightMasterSRX.configNominalOutputReverse(Constants.Velocity.DRIVE_LOW_GEAR_NOMINAL_OUTPUT, 0)
-            rightMasterSRX.selectProfileSlot(Constants.Velocity.LOW_GEAR_VELOCITY_CONTROL_SLOT, 0)
-            rightMasterSRX.configPeakOutputForward(Constants.Velocity.DRIVE_LOW_GEAR_MAX_FORWARD_OUTPUT, 0)
-            rightMasterSRX.configPeakOutputReverse(Constants.Velocity.DRIVE_LOW_GEAR_MAX_REVERSE_OUTPUT, 0)
-            brakeMode = NeutralMode.Coast
+            leftPIDController.setReference(0.0,ControlType.kPosition)
+//            rightPIDController.setReference(0.0,ControlType.kPosition)
+//            leftMasterSRX.configNominalOutputForward(Constants.Velocity.DRIVE_LOW_GEAR_NOMINAL_OUTPUT, 0)
+//            leftMasterSRX.configNominalOutputReverse(Constants.Velocity.DRIVE_LOW_GEAR_NOMINAL_OUTPUT, 0)
+//            leftMasterSRX.selectProfileSlot(Constants.Velocity.LOW_GEAR_VELOCITY_CONTROL_SLOT, 0)
+//            leftMasterSRX.configPeakOutputForward(Constants.Velocity.DRIVE_LOW_GEAR_MAX_FORWARD_OUTPUT, 0)
+//            leftMasterSRX.configPeakOutputReverse(Constants.Velocity.DRIVE_LOW_GEAR_MAX_REVERSE_OUTPUT, 0)
+//            rightMasterSRX.configNominalOutputForward(Constants.Velocity.DRIVE_LOW_GEAR_NOMINAL_OUTPUT, 0)
+//            rightMasterSRX.configNominalOutputReverse(Constants.Velocity.DRIVE_LOW_GEAR_NOMINAL_OUTPUT, 0)
+//            rightMasterSRX.selectProfileSlot(Constants.Velocity.LOW_GEAR_VELOCITY_CONTROL_SLOT, 0)
+//            rightMasterSRX.configPeakOutputForward(Constants.Velocity.DRIVE_LOW_GEAR_MAX_FORWARD_OUTPUT, 0)
+//            rightMasterSRX.configPeakOutputReverse(Constants.Velocity.DRIVE_LOW_GEAR_MAX_REVERSE_OUTPUT, 0)
+            brakeMode = CANSparkMax.IdleMode.kCoast
         }
     }
     fun enablePathFollow(pathInput: Path){
@@ -346,8 +349,7 @@ class Drive private constructor() : Subsystem {
         segment = 0
         trajLength = path.getTrajLength()
         currentState = DriveControlState.PATH_FOLLOWING
-        brakeMode = NeutralMode.Brake
-
+        brakeMode = CANSparkMax.IdleMode.kCoast
 
     }
     fun updatePathFollowing(){
@@ -369,8 +371,8 @@ class Drive private constructor() : Subsystem {
             val leftVelocityAdjustment = Constants.Gains.LEFT_LOW_KP * leftErrorDistance + Constants.Gains.LEFT_LOW_KD * ((leftErrorDistance - lastLeftError)/path.getDeltaTime())
             val rightVelocityAdjustment = Constants.Gains.RIGHT_LOW_KP * rightErrorDistance + Constants.Gains.RIGHT_LOW_KD * ((rightErrorDistance - lastRightError)/path.getDeltaTime())
 
-         //   leftTurn = leftTurn + leftVelocityAdjustment
-           // rightTurn = rightTurn + rightVelocityAdjustment
+            //   leftTurn = leftTurn + leftVelocityAdjustment
+            // rightTurn = rightTurn + rightVelocityAdjustment
 
             lastLeftError = leftErrorDistance
 
@@ -395,7 +397,7 @@ class Drive private constructor() : Subsystem {
     fun onStart(timestamp: Double) {
         synchronized(this) {
             setOpenLoop(DriveSignal.NEUTRAL)
-            brakeMode = NeutralMode.Coast
+            brakeMode = CANSparkMax.IdleMode.kCoast
             setVelocitySetpoint(0.0, 0.0) //could update in future
         }
     }
@@ -413,8 +415,8 @@ class Drive private constructor() : Subsystem {
 
         override fun onLoop() {
             synchronized(this@Drive) {
-                println("Left: " + leftMasterSRX.sensorCollection.quadraturePosition.toDouble())
-                println("Right: " + rightMasterSRX.sensorCollection.quadraturePosition.toDouble())
+                println("Left: " + leftEncoder.position)
+                println("Right: " + rightEncoder.position)
                 when (currentState) {
                     DriveControlState.OPEN_LOOP -> {
                         return
@@ -458,19 +460,19 @@ class Drive private constructor() : Subsystem {
     }
 
     fun getLeftDistanceInches(): Double {
-        return pulsesToInches(leftMasterSRX.sensorCollection.quadraturePosition.toDouble())
+        return pulsesToInches(leftEncoder.position)
     }
 
     fun getRightDistanceInches(): Double {
-        return pulsesToInches(rightMasterSRX.sensorCollection.quadraturePosition.toDouble())
+        return pulsesToInches(rightEncoder.position)
     }
 
     fun getLeftVelocityInchesPerSec(): Double {
-        return rpmToInchesPerSecond(leftMasterSRX.getSelectedSensorVelocity(0).toDouble())
+        return rpmToInchesPerSecond(leftEncoder.velocity)
     }
 
     fun getRightVelocityInchesPerSec(): Double {
-        return rpmToInchesPerSecond(rightMasterSRX.getSelectedSensorVelocity(0).toDouble())
+        return rpmToInchesPerSecond(rightEncoder.velocity)
     }
     fun radiansToDegrees(rad: Double): Double{
         return rad * 180 / (2 * Math.PI)
