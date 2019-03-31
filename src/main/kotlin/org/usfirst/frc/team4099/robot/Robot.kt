@@ -63,9 +63,7 @@ class Robot : TimedRobot() {
 
             DashboardConfigurator.initDashboard()
 //            enabledLooper.register(drive.loop)
-            if (SmartDashboard.getString("intakeStartingState", "") == "Cargo") {
-                intakeState = IntakeState.CARGO
-            }
+
             enabledLooper.register(intake.loop)
 //            enabledLooper.register(superstructure.loop)
 
@@ -127,6 +125,9 @@ class Robot : TimedRobot() {
 //            enabledLooper.register(vision.loop)
 //            enabledLooper.register(elevator.loop)
 //            enabledLooper.register(intake.loop)
+            if (SmartDashboard.getString("intakeStartingState", "") == "Cargo") {
+                intakeState = IntakeState.CARGO
+            }
             enabledLooper.start()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopInit", t)
