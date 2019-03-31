@@ -45,7 +45,7 @@ class Robot : TimedRobot() {
     var dashBoardTest = 0
 
   
-    public enum class IntakeState {
+    enum class IntakeState {
         CARGO, HATCHPANEL
     }
    // private val intake = Intake.instance
@@ -59,11 +59,13 @@ class Robot : TimedRobot() {
 
     override fun robotInit() {
         try {
-            CameraServer.getInstance().startAutomaticCapture();
+            CameraServer.getInstance().startAutomaticCapture()
 
             DashboardConfigurator.initDashboard()
 //            enabledLooper.register(drive.loop)
-
+            if (SmartDashboard.getString("intakeStartingState", "") == "Cargo") {
+                intakeState = IntakeState.CARGO
+            }
             enabledLooper.register(intake.loop)
 //            enabledLooper.register(superstructure.loop)
 
