@@ -6,11 +6,9 @@ import org.usfirst.frc.team4099.lib.util.Utils
 
 import org.usfirst.frc.team4099.DashboardConfigurator
 import org.usfirst.frc.team4099.auto.AutoModeExecuter
-import org.usfirst.frc.team4099.auto.modes.HatchPanelOnly
 import edu.wpi.first.wpilibj.TimedRobot
 //import org.usfirst.frc.team4099.auto.AutoModeExecuter
 import org.usfirst.frc.team4099.lib.util.CrashTracker
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import org.usfirst.frc.team4099.robot.drive.CheesyDriveHelper
 import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
 import org.usfirst.frc.team4099.robot.loops.Looper
@@ -18,20 +16,18 @@ import org.usfirst.frc.team4099.robot.loops.VoltageEstimator
 
 import org.usfirst.frc.team4099.robot.subsystems.*
 import src.main.kotlin.org.usfirst.frc.team4099.robot.subsystems.Superstructure
-import java.util.concurrent.TimeUnit
 
 class Robot : TimedRobot() {
-//    private val vision = Vision.instance
+   private val vision = Vision.instance
 
     private var autoModeExecuter: AutoModeExecuter? = null
 
 
 //    private val test3 : DoubleSolenoid = DoubleSolenoid(1,6)
 
-//    private val climber = Climber.instance
     private val wrist = Wrist.instance
     private val intake = Intake.instance
-
+    private val climber  = Climber.instance
     private val drive = Drive.instance
     private val controlBoard = ControlBoard.instance
     private val disabledLooper = Looper("disabledLooper")
@@ -67,7 +63,7 @@ class Robot : TimedRobot() {
             enabledLooper.register(intake.loop)
 //            enabledLooper.register(superstructure.loop)
 
-//            enabledLooper.register(climber.loop)
+            enabledLooper.register(climber.loop)
 
             enabledLooper.register(drive.loop)
     //        enabledLooper.register(leds.loop)
@@ -78,6 +74,7 @@ class Robot : TimedRobot() {
             enabledLooper.register(BrownoutDefender.instance)
 
             disabledLooper.register(VoltageEstimator.instance)
+            enabledLooper.register(vision.loop)
 
 
         } catch (t: Throwable) {
@@ -103,6 +100,9 @@ class Robot : TimedRobot() {
 //            autoModeExecuter?.stop()
 //            autoModeExecuter = null
 //
+
+
+
 //            disabledLooper.stop() // end DisabledLooper
 //            enabledLooper.start() // start EnabledLooper
 //
@@ -175,7 +175,7 @@ class Robot : TimedRobot() {
             }
             else if (controlBoard.hatchPanelMode) {
                 intakeState = IntakeState.HATCHPANEL
-                intake.deployState = Intake.DeployState.OUT
+               // intake.deployState = Intake.DeployState.OUT
                 //elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
             }
 
@@ -198,17 +198,18 @@ class Robot : TimedRobot() {
                     intake.intakeState = Intake.IntakeState.OUT
                     //println("intake out")
                 }
-                else if (controlBoard.holdCargo) {
-                    intake.intakeState = Intake.IntakeState.HOLDING
-                    //println("intake set to holding")
-                }
+//                else if (controlBoard.holdCargo) {
+//                    intake.intakeState = Intake.IntakeState.HOLDING
+//                    //println("intake set to holding")
+
                 else {
-                    intake.intakeState = Intake.IntakeState.STOP
+                    intake.intakeState = Intake.IntakeState.HOLDING
                 }
 
             }
             else {
-                intake.deployState = Intake.DeployState.OUT
+                //intake.deployState = Intake.DeployState.OUT
+                intake.intakeState = Intake.IntakeState.STOP
                 wrist.wristState = Wrist.WristState.HORIZONTAL
                 if(controlBoard.openHatch){
                     intake.hatchState = Intake.HatchState.OPEN
@@ -264,32 +265,30 @@ class Robot : TimedRobot() {
                 drive.highGear = true
                 println("Shifting to high gear")
             }
-//            if (controlBoard.aimingOn) {
-//                println("Activating vision")
-//                println(vision.visionState)
-//                vision.setState(Vision.VisionState.AIMING)
-//                println(vision.visionState)
-//            }
-//            if (controlBoard.aimingOff) {
-//                println("Deactivating vision")
-//                println(vision.visionState)
-//                vision.setState(Vixsion.VisionState.INACTIVE)
-//                println(vision.visionState)
-//            }
+            if (controlBoard.aimingOn) {
+                println("Activating vision")
+                println(vision.visionState)
+                vision.setState(Vision.VisionState.AIMING)
+                println(vision.visionState)
+            }
+            else {
+                println("Deactivating vision")
+                println(vision.visionState)
+                vision.setState(Vision.VisionState.INACTIVE)
+                println(vision.visionState)
+            }
 
-//            if (vision.visionState != Vision.VisionState.AIMING) {
-//                drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
-//            } else if (vision.visionState == Vision.VisionState.SEEKING) {
-//                if (vision.onTarget) {
-//                    drive.setLeftRightPower(0.3, 0.3)
-//                } else if (vision.visionState != Vision.VisionState.INACTIVE) {
-//                    drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
-//                } else {
+            if (vision.visionState != Vision.VisionState.AIMING) {
+                drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
+            } else if (vision.visionState == Vision.VisionState.AIMING) {
+                if (vision.visionState != Vision.VisionState.INACTIVE) {
+                    drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
+                } else {
                     drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
-//                }
-//            } else {
+                }
+            } else {
 //                drive.setLeftRightPower(vision.steeringAdjust, - vision.steeringAdjust)
-//            }
+            }
 //            if(controlBoard.toggleWrist){
 //                if(wrist.wristState == Wrist.WristState.VERTICAL){
 //                    wrist.wristState = Wrist.WristState.HORIZONTAL
@@ -341,8 +340,53 @@ class Robot : TimedRobot() {
                 elevator.setElevatorVelocity(0.0)
             }
 
-            intake.outputToSmartDashboard()
-        } catch (t: Throwable) {
+            if (controlBoard.elevatorClimberLatch) {
+                elevator.elevatorState = Elevator.ElevatorState.CLIMBING
+            }
+
+            if (controlBoard.stowClimber){
+                println("stow climber")
+                climber.climberState = Climber.ClimberState.STOW
+            }
+            else if (controlBoard.climbToTwo) {
+                println("climb to two")
+                climber.climberState = Climber.ClimberState.LEVEL_TWO
+            }
+            else if (controlBoard.climbToTwoHalf){
+                println("climb to two half")
+                climber.climberState = Climber.ClimberState.LEVEL_TWO_HALF
+            }
+            else if (controlBoard.climbToThree){
+                println("climb to three")
+                climber.climberState = Climber.ClimberState.LEVEL_THREE
+            }
+            else if (controlBoard.climbVeloUp){
+                println("climb velocity up")
+                climber.climberState = Climber.ClimberState.VELOCITY_CONTROL
+                climber.setClimberVelocity(Constants.Climber.MAX_CLIMB_VEL)
+            }
+            else if (controlBoard.climbVeloDown){
+                println("climb velocity down")
+                climber.climberState = Climber.ClimberState.VELOCITY_CONTROL
+                climber.setClimberVelocity(-Constants.Climber.MAX_CLIMB_VEL)
+            }
+            else if (climber.climberState == Climber.ClimberState.VELOCITY_CONTROL){
+                climber.setClimberVelocity(0.0)
+            }
+            else{
+                climber.setOpenLoop(0.0)
+            }
+            if (climber.climberState != Climber.ClimberState.STOW){
+                if(controlBoard.climberDrive != 0.0){
+                    println("climber drive")
+                }
+                climber.setOpenDrive(Constants.Climber.MAX_DRIVE_VEL * controlBoard.climberDrive)
+            }
+            climber.setOpenDrive(controlBoard.throttle)
+        }
+
+
+        catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopPeriodic", t)
             throw t
         }

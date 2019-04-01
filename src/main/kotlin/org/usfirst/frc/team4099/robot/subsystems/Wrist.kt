@@ -23,8 +23,8 @@ import kotlin.math.*
 
 class Wrist private constructor(): Subsystem {
     private val talon = CANMotorControllerFactory.createDefaultTalon(Constants.Wrist.WRIST_TALON_ID)
-//    private val slave = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, talon)
-    private val slave = CANMotorControllerFactory.createPermanentSlaveTalon(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, Constants.Wrist.WRIST_TALON_ID)
+    private val slave = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, talon)
+//    private val slave = CANMotorControllerFactory.createPermanentSlaveTalon(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, Constants.Wrist.WRIST_TALON_ID)
     //^^^^ TALON FOR PRACTICE BOT CHANGE CHANGE CHANGE
 
     var wristState = WristState.OPEN_LOOP
@@ -51,7 +51,7 @@ class Wrist private constructor(): Subsystem {
         talon.inverted = true
         slave.inverted = false
         talon.setSensorPhase(true)
-        talon.configPeakCurrentLimit(20)
+        //talon.configPeakCurrentLimit(20)
         talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0)
         talon.configNominalOutputForward(0.0, 0)
         talon.configNominalOutputReverse(0.0, 0)
@@ -143,10 +143,10 @@ class Wrist private constructor(): Subsystem {
 //            println("wrist exiting at 0 power, $radiansPerSecond")
 //            return
 //        }
-        talon.configPeakOutputReverse(-0.45, 0)
-        talon.configPeakOutputForward(0.45, 0)
+        talon.configPeakOutputReverse(-0.42, 0)
+        talon.configPeakOutputForward(0.42, 0)
         if(radiansPerSecond == 0.0){
-            //talon.set(ControlMode.MotionMagic, WristConversion.radiansToPulses(lastVelControlPosition))   //use when pids are better
+            setWristPosition(lastVelControlPosition)   //use when pids are better
         }
         else{
             lastVelControlPosition = wristAngle
@@ -158,7 +158,7 @@ class Wrist private constructor(): Subsystem {
             }
             talon.set(ControlMode.Velocity, WristConversion.radiansToPulses(radiansPerSecond))
         }
-        talon.set(ControlMode.Velocity, WristConversion.radiansToPulses(radiansPerSecond))
+        //talon.set(ControlMode.Velocity, WristConversion.radiansToPulses(radiansPerSecond))
 
         //println("nativeVel: $radiansPerSecond, observedVel: ${talon.sensorCollection.quadratureVelocity}, error: ${talon.sensorCollection.quadratureVelocity - radiansPerSecond}")
 

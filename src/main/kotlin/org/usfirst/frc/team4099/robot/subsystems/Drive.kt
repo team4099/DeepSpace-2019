@@ -41,7 +41,7 @@ class Drive private constructor() : Subsystem {
 
 //    private val test1 : DoubleSolenoid = DoubleSolenoid(2,5)
 //    private val test2 : DoubleSolenoid = DoubleSolenoid(3,4)
-   // private val test3 : DoubleSolenoid = DoubleSolenoid(1,6)
+    // private val test3 : DoubleSolenoid = DoubleSolenoid(1,6)
 
     private val ahrs: AHRS
 
@@ -261,7 +261,7 @@ class Drive private constructor() : Subsystem {
         if (usesTalonVelocityControl(currentState)) {
             leftPIDController.setReference(leftInchesPerSec,ControlType.kVelocity)
             rightPIDController.setReference(rightInchesPerSec,ControlType.kVelocity)
-           // println("left err: ${leftMasterSRX.getClosedLoopError(0)} trg: $leftInchesPerSec actual: ${leftMasterSRX.getSelectedSensorVelocity(0)}")
+            // println("left err: ${leftMasterSRX.getClosedLoopError(0)} trg: $leftInchesPerSec actual: ${leftMasterSRX.getSelectedSensorVelocity(0)}")
             //println("right err: ${rightMasterSRX.getClosedLoopError(0)} trg: $rightInchesPerSec actual: ${rightMasterSRX.getSelectedSensorVelocity(0)}")
         }
         else {
@@ -371,8 +371,8 @@ class Drive private constructor() : Subsystem {
             val leftVelocityAdjustment = Constants.Gains.LEFT_LOW_KP * leftErrorDistance + Constants.Gains.LEFT_LOW_KD * ((leftErrorDistance - lastLeftError)/path.getDeltaTime())
             val rightVelocityAdjustment = Constants.Gains.RIGHT_LOW_KP * rightErrorDistance + Constants.Gains.RIGHT_LOW_KD * ((rightErrorDistance - lastRightError)/path.getDeltaTime())
 
-         //   leftTurn = leftTurn + leftVelocityAdjustment
-           // rightTurn = rightTurn + rightVelocityAdjustment
+            //   leftTurn = leftTurn + leftVelocityAdjustment
+            // rightTurn = rightTurn + rightVelocityAdjustment
 
             lastLeftError = leftErrorDistance
 

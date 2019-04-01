@@ -25,18 +25,22 @@ class Constants {
     }
 
     object Climber {
-        val SHIFTER_FORWARD_ID = 0
-        val SHIFTER_REVERSE_ID = 0
-        val CLIMBER_SPARK_ID = 0
-        val DRIVE_SPARK_ID = 0
+        val CLIMBER_SPARK_ID = 24
+        val DRIVE_TALON_ID = 14
         val CLIMBER_KP = 0.0
         val CLIMBER_KI = 0.0
         val CLIMBER_KD = 0.0
         val CLIMBER_KIz = 0.0
         val CLIMBER_KF = 0.0
         val MAX_OUTPUT = 1.0
-        val DOWN_POSITION = 0.0
-        val UP_POSITION = 0.0
+        val LEVEL_THREE_POSITION = 0.0
+        val STOW_POSITION = 0.0
+        val LEVEL_TWO_HALF = 0.0
+        val LEVEL_TWO = 0.0
+        val CLIMBER_SOFT_LIMIT = -10.0
+        val MAX_CLIMB_VEL = 60.0
+        val MAX_DRIVE_VEL = 400.0
+
     }
 
 
@@ -92,6 +96,8 @@ class Constants {
         val MAX_SPEED = 180 //CHANGE
         val MIN_TRIGGER = 0.1
         val BOTTOM_SOFT_LIMIT = 0.0 //set later - CHANGE
+        val LATCH_FORWARD_ID = 2
+        val LATCH_REVERSE_ID = 5
     }
 
 
@@ -150,7 +156,7 @@ class Constants {
         val SELECTED_AUTO_START_DELAY_KEY = "autonomous/selectedDelay"
 
         val CONNECTION_TIMEOUT_MILLIS = 1000
-        val NUMBER_OF_TRIES = 5
+        val NUMBER_OF_TRIES = 5 ;
     }
     object Joysticks {
         val DRIVER_PORT = 0
@@ -159,10 +165,10 @@ class Constants {
 
     object Intake {
         val INTAKE_TALON_ID = 12
-        val EXTENDER_FORWARD_ID = 6
-        val EXTENDER_REVERSE_ID = 1
-        val DEPLOYER_FORWARD_ID = 7
-        val DEPLOYER_REVERSE_ID = 0
+        val EXTENDER_FORWARD_ID = 5
+        val EXTENDER_REVERSE_ID = 2
+        val DEPLOYER_FORWARD_ID = 6
+        val DEPLOYER_REVERSE_ID = 1
     }
 
 
@@ -181,9 +187,9 @@ class Constants {
         val WRIST_DOWN_KD = 85.0
         val WRIST_DOWN_KF = 1.75
 
-        val WRiST_VELOCITY_KP = 0.4
-        val WRiST_VELOCITY_KI = 0.0
+        val WRiST_VELOCITY_KP = 0.5
+        val WRiST_VELOCITY_KI = 0.3
         val WRiST_VELOCITY_KD = 0.0
-        val WRiST_VELOCITY_KF = 7.35
+        val WRiST_VELOCITY_KF = 5.23
     }
 }

@@ -1,7 +1,9 @@
 package org.usfirst.frc.team4099.robot.subsystems
 
 import com.ctre.phoenix.motorcontrol.ControlMode
+import com.ctre.phoenix.motorcontrol.NeutralMode
 import com.ctre.phoenix.motorcontrol.can.TalonSRX
+import com.ctre.phoenix.motorcontrol.can.VictorSPX
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import org.usfirst.frc.team4099.robot.Constants
 import org.usfirst.frc.team4099.robot.loops.Loop
@@ -43,7 +45,7 @@ class Intake private constructor() : Subsystem {
 
     override fun outputToSmartDashboard() {
 //        SmartDashboard.putString("intake/hatchState", hatchState.toString())
-//        SmartDashboard.putString("intake/intakeState", intakeState.toString())
+        SmartDashboard.putString("intake/intakeState", intakeState.toString())
         //SmartDashboard.putNumber("intake/intakePower", intakePower)
         //SmartDashb
         // oard.putBoolean("intake/isUp", up)
@@ -52,7 +54,8 @@ class Intake private constructor() : Subsystem {
     }
 
     init{
-        talon.configPeakCurrentLimit(10)
+        talon.configPeakCurrentLimit(20)
+        talon.setNeutralMode(NeutralMode.Brake)
         talon.inverted = true
     }
 
@@ -80,6 +83,7 @@ class Intake private constructor() : Subsystem {
         override fun onStart() {
             hatchState = HatchState.CLOSED
             intakeState = IntakeState.STOP
+            deployState = DeployState.IN
         }
 
         /**
@@ -89,7 +93,7 @@ class Intake private constructor() : Subsystem {
             synchronized(this@Intake) {
                 when (intakeState) {
                     IntakeState.IN -> setIntakePower(-1.0)
-                    IntakeState.HOLDING -> setIntakePower(-0.2)
+                    IntakeState.HOLDING -> setIntakePower(-0.25)
                     IntakeState.STOP -> setIntakePower(0.0)
                     IntakeState.OUT -> setIntakePower(1.0)
                 }
