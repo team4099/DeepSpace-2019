@@ -7,12 +7,12 @@ class HatchPanelDeployAction: Action {
     private val mIntake = Intake.instance
     private var startTime: Double = 0.toDouble()
     override fun start() {
-        mIntake.hatchOut = true
+        //mIntake.hatchOut = true
         startTime = Timer.getFPGATimestamp()
     }
 
     override fun done() {
-        mIntake.hatchOut = false
+        //mIntake.hatchOut = false
     }
 
     override fun update() {

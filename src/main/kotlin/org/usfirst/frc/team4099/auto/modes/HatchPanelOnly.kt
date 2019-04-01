@@ -14,13 +14,13 @@ class HatchPanelOnly(private val startingPosition: DashboardConfigurator.Startin
         else if (startingPosition == DashboardConfigurator.StartingPosition.RIGHT){
             runAction(FollowPathAction(FieldPaths.RIGHTH2_TO_RIGHTROCKET3))
         }
-        runAction(WaitAction(1.0))
-        runAction(BackwardsDistanceAction(24.0))
-        if (startingPosition == DashboardConfigurator.StartingPosition.LEFT){
-            runAction(FollowPathAction(FieldPaths.LEFTROCKET3_TO_LOADSTATION))
-        }
-        else if (startingPosition == DashboardConfigurator.StartingPosition.RIGHT){
-            runAction(FollowPathAction(FieldPaths.RIGHTROCKET3_TO_LOADSTATION))
-        }
+//        runAction(WaitAction(1.0))
+//        runAction(BackwardsDistanceAction(24.0))
+//        if (startingPosition == DashboardConfigurator.StartingPosition.LEFT){
+//            runAction(FollowPathAction(FieldPaths.LEFTROCKET3_TO_LOADSTATION))
+//        }
+//        else if (startingPosition == DashboardConfigurator.StartingPosition.RIGHT){
+//            runAction(FollowPathAction(FieldPaths.RIGHTROCKET3_TO_LOADSTATION))
+//        }
     }
 }

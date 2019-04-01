@@ -13,6 +13,9 @@ class Constants {
 
         val HIGH_GEAR_MAX_SETPOINT = 17.0  //17 fps
 
+        val MAX_LEFT_OPENLOOP_VEL = 1.0
+        val MAX_RIGHT_OPENLOOP_VEL = 1.0
+
         val SHIFTER_FORWARD_ID = 2
         val SHIFTER_REVERSE_ID = 5
     }
@@ -22,6 +25,8 @@ class Constants {
     }
 
     object Climber {
+        val SHIFTER_FORWARD_ID = 0
+        val SHIFTER_REVERSE_ID = 0
         val CLIMBER_SPARK_ID = 0
         val DRIVE_SPARK_ID = 0
         val CLIMBER_KP = 0.0
@@ -58,15 +63,25 @@ class Constants {
         val RIGHT_HIGH_KD = 0.0000
         val RIGHT_HIGH_KF = 1023.0 / 4420.0
 
-        val ELEVATOR_UP_KP = 0.6
-        val ELEVATOR_UP_KI = 0.0008
-        val ELEVATOR_UP_KD = 55.000
-        val ELEVATOR_UP_KF = 0.5700
+        val ELEVATOR_UP_KP = 3.0
+        val ELEVATOR_UP_KI = 0.0005
+        val ELEVATOR_UP_KD = 150.0
+        val ELEVATOR_UP_KF = 2.0
 
-        val ELEVATOR_DOWN_KP = 1.00
-        val ELEVATOR_DOWN_KI = 0.002
-        val ELEVATOR_DOWN_KD = 60.0
-        val ELEVATOR_DOWN_KF = 0.78
+        val ELEVATOR_DOWN_KP = 2.0
+        val ELEVATOR_DOWN_KI = 0.0
+        val ELEVATOR_DOWN_KD = 150.0
+        val ELEVATOR_DOWN_KF = 1.0
+
+        val ELEVATOR_UP_KP_V = 0.4
+        val ELEVATOR_UP_KI_V = 0.0
+        val ELEVATOR_UP_KD_V = 5.0
+        val ELEVATOR_UP_KF_V = 0.9
+
+        val ELEVATOR_DOWN_KP_V = 0.3
+        val ELEVATOR_DOWN_KI_V = 0.00
+        val ELEVATOR_DOWN_KD_V = 0.0
+        val ELEVATOR_DOWN_KF_V = 0.1
 
     }
 
@@ -74,9 +89,9 @@ class Constants {
     object Elevator {
         val ELEVATOR_TALON_ID = 3   //CHANGE
         val SLAVE_VICTOR_ID = 13 //CHANGE
-        val MAX_SPEED = 2400 //CHANGE
+        val MAX_SPEED = 180 //CHANGE
         val MIN_TRIGGER = 0.1
-        val BOTTOM_SOFT_LIMIT = 10.0 //set later - CHANGE
+        val BOTTOM_SOFT_LIMIT = 0.0 //set later - CHANGE
     }
 
 
@@ -142,34 +157,33 @@ class Constants {
         val SHOTGUN_PORT = 1
     }
 
-
-
-
-
-
-
-
     object Intake {
         val INTAKE_TALON_ID = 12
-        val EXTENDER_FORWARD_ID = 0
-        val EXTENDER_REVERSE_ID = 7
-        val DEPLOYER_FORWARD_ID = 1
-        val DEPLOYER_REVERSE_ID = 6
+        val EXTENDER_FORWARD_ID = 6
+        val EXTENDER_REVERSE_ID = 1
+        val DEPLOYER_FORWARD_ID = 7
+        val DEPLOYER_REVERSE_ID = 0
     }
 
 
     object Wrist {
-        val WRIST_TALON_ID = 15
+        val WRIST_TALON_ID = 15 //MAY NOT MATCH FINAL BOT FIX LATER
         val WRIST_SLAVE_VICTOR_ID = 14
+        val MAX_SPEED = 999.9
 
-        val WRIST_UP_KP = 5.0
+        val WRIST_UP_KP = 0.7
         val WRIST_UP_KI = 0.0
-        val WRIST_UP_KD = 50.0
-        val WRIST_UP_KF = 1.0
+        val WRIST_UP_KD = 85.0
+        val WRIST_UP_KF = 1.75
 
-        val WRIST_DOWN_KP = 0.0
+        val WRIST_DOWN_KP = 0.7
         val WRIST_DOWN_KI = 0.0
-        val WRIST_DOWN_KD = 0.0
-        val WRIST_DOWN_KF = 0.0
+        val WRIST_DOWN_KD = 85.0
+        val WRIST_DOWN_KF = 1.75
+
+        val WRiST_VELOCITY_KP = 0.4
+        val WRiST_VELOCITY_KI = 0.0
+        val WRiST_VELOCITY_KD = 0.0
+        val WRiST_VELOCITY_KF = 7.35
     }
 }

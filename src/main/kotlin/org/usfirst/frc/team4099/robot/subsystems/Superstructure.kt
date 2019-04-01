@@ -68,7 +68,7 @@ class Superstructure : Subsystem {
 
                 when (systemState) {
                     SystemState.IDLE -> handleIdle()
-                    SystemState.ALIGNING_VISION -> handleVision()
+//                    SystemState.ALIGNING_VISION -> handleVision()
 //                SystemState.INTAKE_UP -> handleElevatorUp()
 //                SystemState.CLIMBING -> handleClimb()
 //                SystemState.INTAKE_CARGO -> handleCargoIntake()
