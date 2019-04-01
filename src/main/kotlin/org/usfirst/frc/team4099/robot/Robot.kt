@@ -13,7 +13,6 @@ import org.usfirst.frc.team4099.robot.drive.CheesyDriveHelper
 import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
 import org.usfirst.frc.team4099.robot.loops.Looper
 import org.usfirst.frc.team4099.robot.loops.VoltageEstimator
-
 import org.usfirst.frc.team4099.robot.subsystems.*
 import src.main.kotlin.org.usfirst.frc.team4099.robot.subsystems.Superstructure
 
@@ -125,7 +124,7 @@ class Robot : TimedRobot() {
 //            enabledLooper.register(vision.loop)
 //            enabledLooper.register(elevator.loop)
 //            enabledLooper.register(intake.loop)
-            if (SmartDashboard.getString("intakeStartingState", "") == "Cargo") {
+            if (DashboardConfigurator.getIntakeMode() == "Cargo") {
                 intakeState = IntakeState.CARGO
             }
             enabledLooper.start()
