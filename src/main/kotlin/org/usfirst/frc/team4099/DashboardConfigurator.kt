@@ -36,7 +36,9 @@ object DashboardConfigurator {
         RIGHT("RIGHT")
     }
 
-
+    fun getIntakeMode() : String{
+        return SmartDashboard.getString("intakeStartingState", "")
+    }
 
     fun initDashboard() {
 
