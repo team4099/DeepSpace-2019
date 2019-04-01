@@ -7,6 +7,7 @@ import org.usfirst.frc.team4099.lib.util.Utils
 import org.usfirst.frc.team4099.DashboardConfigurator
 import org.usfirst.frc.team4099.auto.AutoModeExecuter
 import edu.wpi.first.wpilibj.TimedRobot
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 //import org.usfirst.frc.team4099.auto.AutoModeExecuter
 import org.usfirst.frc.team4099.lib.util.CrashTracker
 import org.usfirst.frc.team4099.robot.drive.CheesyDriveHelper
