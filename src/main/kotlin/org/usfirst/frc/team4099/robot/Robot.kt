@@ -96,24 +96,31 @@ class Robot : TimedRobot() {
     }
 
     override fun autonomousInit() {
-//        try {
-//            autoModeExecuter?.stop()
-//            autoModeExecuter = null
-//
+        try {
+            autoModeExecuter?.stop()
+            autoModeExecuter = null
 
+            disabledLooper.stop() // end DisabledLooper
+            enabledLooper.start() // start EnabledLooper
 
+            autoModeExecuter = AutoModeExecuter()
+            autoModeExecuter?.setAutoMode(DashboardConfigurator.getAutonomousMode())
+            autoModeExecuter?.start()
 
-//            disabledLooper.stop() // end DisabledLooper
-//            enabledLooper.start() // start EnabledLooper
-//
-//            autoModeExecuter = AutoModeExecuter()
-//            autoModeExecuter?.setAutoMode(HatchPanelOnly(DashboardConfigurator.StartingPosition.LEFT, 0.0))
-//            autoModeExecuter?.start()
-//        } catch (t: Throwable) {
-//            CrashTracker.logThrowableCrash("autonomousInit", t)
-//            throw t
-//        }
-        teleopInit()
+            if (DashboardConfigurator.getAutonomousMode() == "hatch-rocket") {
+
+            }
+            else if (DashboardConfigurator.getAutonomousMode() == "hatch-cargo") {
+
+            }
+            else if (DashboardConfigurator.getAutonomousMode() == "driver") {
+                teleopInit()
+            }
+
+        } catch (t: Throwable) {
+            CrashTracker.logThrowableCrash("autonomousInit", t)
+            throw t
+        }
         intake.hatchState = Intake.HatchState.CLOSED
 
     }

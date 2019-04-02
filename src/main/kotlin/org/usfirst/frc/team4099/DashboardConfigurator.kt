@@ -20,6 +20,35 @@ import org.usfirst.frc.team4099.robot.Constants.Autonomous.SELECTED_AUTO_START_P
  */
 object DashboardConfigurator {
 
+    un getAutonomousMode(): String {
+        val selectedIntakeMode = SmartDashboard.getString('/SmartDashboard/autonomous/selectedAutoMode', "empty")
+        return selectedIntakeMode
+    }
+
+    fun getStartingPosition(): StartingPosition {
+        var selectedStartingPosition = SmartDashboard.getString('/SmartDashboard/autonomous/selectedPosition', "empty")
+        if (selectedStartingPosition == "left") {
+            selectedStartingPosition = StartingPosition.LEFT
+        }
+        else if (selectedStartingPosition == "center") {
+            selectedStartingPosition = StartingPosition.CENTER
+        }
+        else if (selectedStartingPosition == "right") {
+            selectedStartingPosition = StartingPosition.RIGHT
+        }
+        return selectedStartingPosition
+    }
+
+    fun getStartingHeight(): StartingHeight {
+        var selectedStartingHeight = SmartDashboard.getString('/SmartDashboard/autonomous/selectedHeight', "empty")
+        if (selectedStartingHeight == "one") {
+            selectedStartingHeight = StartingHeight.H1
+        }
+        else if (selectedStartingPosition == "two") {
+            selectedStartingHeight = StartingHeight.H2
+        }
+        return selectedStartingHeight
+    }
 
     enum class StartingPosition(val dashboardName: String)  { //TODO: Investigate starting locations
         LEFT("LEFT"),
