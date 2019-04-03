@@ -4,20 +4,20 @@ class Constants {
 
 
     object Drive {
-        val LEFT_MASTER_ID = 7
+        val LEFT_MASTER_ID = 5
         val LEFT_SLAVE_1_ID = 6
-        val LEFT_SLAVE_2_ID = 5
-        val RIGHT_MASTER_ID = 8
+//        val LEFT_SLAVE_2_ID = 5
+        val RIGHT_MASTER_ID = 10
         val RIGHT_SLAVE_1_ID = 9
-        val RIGHT_SLAVE_2_ID = 10
+//        val RIGHT_SLAVE_2_ID = 10
 
         val HIGH_GEAR_MAX_SETPOINT = 17.0  //17 fps
 
         val MAX_LEFT_OPENLOOP_VEL = 1.0
         val MAX_RIGHT_OPENLOOP_VEL = 1.0
 
-        val SHIFTER_FORWARD_ID = 2
-        val SHIFTER_REVERSE_ID = 5
+        val SHIFTER_FORWARD_ID = 0
+        val SHIFTER_REVERSE_ID = 7
     }
 
     object Wheels {
