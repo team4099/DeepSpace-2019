@@ -16,8 +16,8 @@ class Constants {
         val MAX_LEFT_OPENLOOP_VEL = 1.0
         val MAX_RIGHT_OPENLOOP_VEL = 1.0
 
-        val SHIFTER_FORWARD_ID = 0
-        val SHIFTER_REVERSE_ID = 7
+        val SHIFTER_FORWARD_ID = 5
+        val SHIFTER_REVERSE_ID = 2
     }
 
     object Wheels {
@@ -104,7 +104,7 @@ class Constants {
 
 
     object Vision {
-        val Kp = -0.02
+        val Kp = -0.04
         val minCommand = 0
         val HATCH_PANEL_HEIGHT = 20 // inches
         val CARGO_HEIGHT = 20 // inches
@@ -165,10 +165,10 @@ class Constants {
 
     object Intake {
         val INTAKE_TALON_ID = 12
-        val EXTENDER_FORWARD_ID = 5
-        val EXTENDER_REVERSE_ID = 2
-        val DEPLOYER_FORWARD_ID = 6
-        val DEPLOYER_REVERSE_ID = 1
+        val EXTENDER_FORWARD_ID = 1
+        val EXTENDER_REVERSE_ID = 6
+        val DEPLOYER_FORWARD_ID = 0
+        val DEPLOYER_REVERSE_ID = 7
     }
 
 

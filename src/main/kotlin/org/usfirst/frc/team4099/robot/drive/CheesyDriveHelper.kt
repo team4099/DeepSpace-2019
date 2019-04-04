@@ -113,9 +113,9 @@ class CheesyDriveHelper {
             angularPower = Math.abs(throttle) * wheel * kTurnSensitivity - quickStopAccumulator
 
             if (quickStopAccumulator > 1) {
-                quickStopAccumulator -= 0.5
+                quickStopAccumulator -= 0.1
             } else if (quickStopAccumulator < -1) {
-                quickStopAccumulator += 0.5
+                quickStopAccumulator += 0.1
             } else {
                 quickStopAccumulator = 0.0
             }
