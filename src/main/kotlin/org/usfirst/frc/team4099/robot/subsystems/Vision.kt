@@ -48,7 +48,9 @@ class Vision private constructor(): Subsystem {
 //    @Synchronized override fun stop() {
 //        visionState = VisionState.INACTIVE
 //    }
-
+    init {
+        led.setNumber(1)
+    }
     val loop: Loop = object : Loop {
         override fun onStart() {
             visionState = VisionState.INACTIVE
@@ -75,10 +77,10 @@ class Vision private constructor(): Subsystem {
                         if (tv == 0.0) {
 
                         } else {
-                            if (tx > (Constants.Vision.CAMERA_OFFSET + Constants.Vision.ERROR_MARGIN)) {
+                            if (tx > (Constants.Vision.CAMERA_OFFSET)) {
                                 // right
                                 steeringAdjust = Constants.Vision.Kp * tx - Constants.Vision.minCommand
-                            } else if (tx < (Constants.Vision.CAMERA_OFFSET - Constants.Vision.ERROR_MARGIN)) {
+                            } else if (tx < (Constants.Vision.CAMERA_OFFSET)) {
                                 // left
                                 steeringAdjust = Constants.Vision.Kp * tx + Constants.Vision.minCommand
                             }

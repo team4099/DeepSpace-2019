@@ -126,7 +126,7 @@ class Constants {
 
 
     object Vision {
-        val Kp = -0.04
+        val Kp = -0.019
         val minCommand = 0
         val HATCH_PANEL_HEIGHT = 20 // inches
         val CARGO_HEIGHT = 20 // inches

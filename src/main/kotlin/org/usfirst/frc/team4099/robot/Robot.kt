@@ -171,6 +171,7 @@ class Robot : TimedRobot() {
             println("Period")
 //            SmartDashboard.putNumber("Dashboard Test", dashBoardTest * 1.0)
             dashBoardTest++
+
             if (controlBoard.cargoMode){
                 intakeState = IntakeState.CARGO
                 intake.hatchState = Intake.HatchState.CLOSED

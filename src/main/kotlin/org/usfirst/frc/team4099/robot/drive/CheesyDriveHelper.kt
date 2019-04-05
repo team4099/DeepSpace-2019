@@ -30,7 +30,7 @@ class CheesyDriveHelper {
         wheel = -JoystickUtils.deadbandNoShape(wheel, kWheelDeadband)
 
         if (isQuickTurn) {
-            wheel /= 1.20
+            wheel /= 1.13
         }
         // TODO: test this, does it really make controls feel better?
         val wheelNonLinearity = 0.5
@@ -85,9 +85,9 @@ class CheesyDriveHelper {
             //TODO: find the optimal value for negativeInertia decrease per iteration
             //TODO: testing 0.1, 0.15, 0.2, 0.25, 0.3, 0.5, 1.0, etc.
             if (negativeInertia > 1) {
-                negativeInertia -= 0.4
+                negativeInertia -= 0.25
             } else if (negativeInertia < -1) {
-                negativeInertia += 0.4
+                negativeInertia += 0.25
             } else {
                 negativeInertia = 0.0
             }
@@ -100,7 +100,7 @@ class CheesyDriveHelper {
 
         if (isQuickTurn) {
 
-            wheel /= 1.5
+            wheel /= 1.3
             if (Math.abs(throttle) < 0.2) {
                 val alpha = 0.1
                 quickStopAccumulator = (1 - alpha) * quickStopAccumulator + // used for "negative inertia"
@@ -149,7 +149,7 @@ class CheesyDriveHelper {
 
         private val kThrottleDeadband = 0.02
         private val kWheelDeadband = 0.02
-        private val kTurnSensitivity = 0.75
-        private val kMaxThrottleDelta = 1.35 / 40.0
+        private val kTurnSensitivity = 0.65
+        private val kMaxThrottleDelta = 0.7/ 40.0
     }
 }
