@@ -132,6 +132,8 @@ class Constants {
         val CARGO_HEIGHT = 20 // inches
         val CAMERA_ANGLE = 0 // degrees, NOT SET
         val TARGET_HEIGHT_ADJUST = 10 //inches, NOT SET
+        val CAMERA_OFFSET = -1.75
+        val ERROR_MARGIN = 0.25 // degrees
     }
     object Velocity {
         val HIGH_GEAR_VELOCITY_CONTROL_SLOT = 0

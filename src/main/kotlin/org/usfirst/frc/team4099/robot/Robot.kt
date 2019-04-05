@@ -140,8 +140,8 @@ class Robot : TimedRobot() {
     override fun disabledPeriodic() {
         try {
             //SmartDashboard.putNumber("Dashboard Test", dashBoardTest * 1.0)
-            dashBoardTest++
-            led.setNumber(3)
+//            dashBoardTest++
+//            led.setNumber(3)
 
             outputAllToSmartDashboard()
 //            wrist.outputToSmartDashboard()

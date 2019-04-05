@@ -30,7 +30,7 @@ class Vision private constructor(): Subsystem {
     var ta = table.getEntry("ta").getDouble(0.0)
 
     var led = table.getEntry("ledMode")
-
+    var camMode = table.getEntry("camMode")
 
     var visionState = VisionState.INACTIVE
 
@@ -70,18 +70,21 @@ class Vision private constructor(): Subsystem {
                 ta = table.getEntry("ta").getDouble(0.0)
                 when (visionState) {
                     VisionState.AIMING -> {
+                        camMode.setNumber(0)
                         led.setNumber(3)
                         if (tv == 0.0) {
 
                         } else {
-                            if (tx > -1.75) {
+                            if (tx > (Constants.Vision.CAMERA_OFFSET + Constants.Vision.ERROR_MARGIN)) {
                                 // right
                                 steeringAdjust = Constants.Vision.Kp * tx - Constants.Vision.minCommand
-                            } else if (tx < -1.75) {
+                            } else if (tx < (Constants.Vision.CAMERA_OFFSET - Constants.Vision.ERROR_MARGIN)) {
                                 // left
-                                steeringAdjust = Constants.Vision.Kp * (tx) + Constants.Vision.minCommand
+                                steeringAdjust = Constants.Vision.Kp * tx + Constants.Vision.minCommand
                             }
-                            else {}
+                            else {
+                                onTarget = true
+                            }
                         }
                         steeringAdjust * 0.85
 
@@ -89,6 +92,7 @@ class Vision private constructor(): Subsystem {
 
                     }
                     VisionState.SEEKING -> {
+                        camMode.setNumber(0)
                         led.setNumber(3)
                         if (tv == 0.0) {
 
@@ -107,7 +111,8 @@ class Vision private constructor(): Subsystem {
 
                     VisionState.INACTIVE -> {
                         steeringAdjust = 0.0
-                        led.setNumber(3)
+                        camMode.setNumber(1)
+                        led.setNumber(1)
                     }
 
                 }

@@ -1,8 +1,10 @@
 package org.usfirst.frc.team4099.auto.actions
 
 import org.usfirst.frc.team4099.lib.drive.DriveSignal
+import org.usfirst.frc.team4099.lib.util.Utils
 import org.usfirst.frc.team4099.robot.subsystems.Drive
 import org.usfirst.frc.team4099.robot.subsystems.Vision
+import org.usfirst.frc.team4099.robot.drive.CheesyDriveHelper
 import src.main.kotlin.org.usfirst.frc.team4099.robot.subsystems.Superstructure
 
 /**
@@ -13,6 +15,8 @@ import src.main.kotlin.org.usfirst.frc.team4099.robot.subsystems.Superstructure
 class GoToTargetVisionAction: Action {
     val mVision = Vision.instance
     val mDrive = Drive.instance
+    val cheesyDriveHelper = CheesyDriveHelper()
+
     //val mStructure = Superstructure.instance
 
     override fun start(){
@@ -21,9 +25,9 @@ class GoToTargetVisionAction: Action {
     }
     override fun update() {
         if (mVision.onTarget) {
-            mDrive.setLeftRightPower(0.3, 0.3)
+            mDrive.setOpenLoop(cheesyDriveHelper.curvatureDrive(0.8, 0.0, true))
         } else if (mVision.visionState != Vision.VisionState.INACTIVE) {
-            mDrive.setLeftRightPower(mVision.steeringAdjust, -mVision.steeringAdjust)
+            mDrive.setOpenLoop(cheesyDriveHelper.curvatureDrive(2.5, mVision.steeringAdjust, true))
         }
         //mDrive.setLeftRightPower(0.3 + mVision.steeringAdjust, 0.3 - mVision.steeringAdjust) could add this line
 
