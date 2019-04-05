@@ -379,7 +379,7 @@ class Drive private constructor() : Subsystem {
             val gyroHeading: Float = ahrs.yaw
             val desiredHeading: Double = radiansToDegrees(path.getHeadingIndex(segment))
             val angleDifference: Double = boundHalfDegrees(desiredHeading - gyroHeading)
-            val turn: Double = 0.8 * 12 * (-1.0 / 80.0) * angleDifference
+            val turn: Double = 0.8  * (-1.0 / 80.0) * angleDifference
 
             val leftDistance: Double = getLeftDistanceInches()
             val rightDistance: Double = getRightDistanceInches()
@@ -393,7 +393,7 @@ class Drive private constructor() : Subsystem {
             //   leftTurn = leftTurn + leftVelocityAdjustment
             // rightTurn = rightTurn + rightVelocityAdjustment
 
-            lastLeftError = leftErrorDistance
+               lastLeftError = leftErrorDistance
 
 
 //            leftTurn +=  turn

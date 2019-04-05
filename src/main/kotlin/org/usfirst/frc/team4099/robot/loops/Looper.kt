@@ -86,7 +86,7 @@ class Looper(private val name: String) {
 
     companion object {
 
-        private val kPeriod = 0.05
+        private val kPeriod = 0.02
     }
 
 }
