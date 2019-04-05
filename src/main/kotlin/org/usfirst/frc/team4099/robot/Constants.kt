@@ -9,7 +9,7 @@ class Constants {
         // val LEFT_SLAVE_2_ID = 5
         val RIGHT_MASTER_ID = 10
         val RIGHT_SLAVE_1_ID = 9
-        // val RIGHT_SLAVE_2_ID = 10
+//        val RIGHT_SLAVE_2_ID = 10
 
         val HIGH_GEAR_MAX_SETPOINT = 17.0  //17 fps
 
@@ -126,7 +126,7 @@ class Constants {
 
 
     object Vision {
-        val Kp = -0.02
+        val Kp = -0.04
         val minCommand = 0
         val HATCH_PANEL_HEIGHT = 20 // inches
         val CARGO_HEIGHT = 20 // inches

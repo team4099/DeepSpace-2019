@@ -38,7 +38,7 @@ class Wrist private constructor(): Subsystem {
 //                talon.motorOutputPercent < 0 && talon.sensorCollection.quadraturePosition > 1600
 
     enum class WristState(val targetAngle: Double) {
-        HORIZONTAL(-25.74),
+        HORIZONTAL(-23.24),
         VERTICAL(-2.0),
         CARGO(-23.9),
         OPEN_LOOP(Double.NaN),
