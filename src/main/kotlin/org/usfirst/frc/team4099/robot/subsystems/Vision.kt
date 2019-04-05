@@ -74,18 +74,18 @@ class Vision private constructor(): Subsystem {
                         if (tv == 0.0) {
 
                         } else {
-                            if (tx > -1.75) {
+                            if (tx > 0.0) {
                                 // right
                                 steeringAdjust = Constants.Vision.Kp * tx - Constants.Vision.minCommand
-                            } else if (tx < -1.75) {
+                            } else if (tx < 0.0) {
                                 // left
-                                steeringAdjust = Constants.Vision.Kp * (tx) + Constants.Vision.minCommand
+                                steeringAdjust = Constants.Vision.Kp * tx + Constants.Vision.minCommand
                             }
                             else {}
                         }
-                        steeringAdjust * 0.85
+                        steeringAdjust * 0.8
 
-//                        steeringAdjust = -steeringAdjust
+                        steeringAdjust = -steeringAdjust
 
                     }
                     VisionState.SEEKING -> {
@@ -107,7 +107,7 @@ class Vision private constructor(): Subsystem {
 
                     VisionState.INACTIVE -> {
                         steeringAdjust = 0.0
-                        led.setNumber(3)
+                        led.setNumber(1)
                     }
 
                 }
