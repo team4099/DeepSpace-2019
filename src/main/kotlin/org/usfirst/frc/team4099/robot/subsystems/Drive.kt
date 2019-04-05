@@ -374,8 +374,8 @@ class Drive private constructor() : Subsystem {
     fun updatePathFollowing(){
         //note *12 is to convert ft to inches
         if (segment < trajLength) {
-            var leftTurn: Double = path.getLeftVelocityIndex(segment) * 12
-            var rightTurn: Double = path.getRightVelocityIndex(segment) * 12
+            var leftTurn: Double = path.getLeftVelocityIndex(segment)
+            var rightTurn: Double = path.getRightVelocityIndex(segment)
             val gyroHeading: Float = ahrs.yaw
             val desiredHeading: Double = radiansToDegrees(path.getHeadingIndex(segment))
             val angleDifference: Double = boundHalfDegrees(desiredHeading - gyroHeading)
@@ -396,16 +396,16 @@ class Drive private constructor() : Subsystem {
             lastLeftError = leftErrorDistance
 
 
-            //leftTurn = leftTurn + turn
-//            rightTurn = rightTurn - turn
+            leftTurn +=  turn
+            rightTurn -= turn
 
-            setVelocitySetpoint(leftTurn, rightTurn)
+            setVelocitySetpoint(leftTurn, rightTurn, path.getLeftAccelerationIndex(segment), path.getRightAccelerationIndex(segment))
             println(" " +segment  + " " +leftTurn+" " + rightTurn)
 
             segment++
         }
         else {
-            setVelocitySetpoint(0.0, 0.0)
+            setVelocitySetpoint(0.0, 0.0, 0.0, 0.0)
         }
     }
     fun isPathFinished(): Boolean {
@@ -417,7 +417,7 @@ class Drive private constructor() : Subsystem {
         synchronized(this) {
             setOpenLoop(DriveSignal.NEUTRAL)
             brakeMode = CANSparkMax.IdleMode.kCoast
-            setVelocitySetpoint(0.0, 0.0) //could update in future
+            setVelocitySetpoint(0.0, 0.0, 0.0, 0.0) //could update in future
         }
     }
 

@@ -2,6 +2,8 @@ package org.usfirst.frc.team4099.auto.paths
 import java.io.File
 
 class Path(path: FieldPaths) {
+    var leftAccelerations: ArrayList<Double> = ArrayList()
+    var rightAccelerations: ArrayList<Double> = ArrayList()
     var leftVelocities: ArrayList<Double> = ArrayList<Double>()
     var rightVelocities: ArrayList<Double> = ArrayList<Double>()
     var leftDistances: ArrayList<Double> = ArrayList<Double>()
@@ -26,11 +28,10 @@ class Path(path: FieldPaths) {
         leftFile = path.pathFileLeft
         rightFile = path.pathFileRight
         fillVelocities(leftFile, rightFile)
+        fillAccelerations(leftFile, rightFile)
         fillDistances(leftFile, rightFile)
         fillHeadings(leftFile)
         println("********"+ leftVelocities.size)
-
-
 
     }
     private fun fillVelocities(leftTraj: File, rightTraj: File){
@@ -79,6 +80,26 @@ class Path(path: FieldPaths) {
             robotHeadings.add(separated.get(7).toDouble())
         }
     }
+
+    fun fillAccelerations(leftTraj: File, rightTraj: File) {
+        var linesL:List<String> = leftTraj.readLines()
+        for(i in 1..linesL.lastIndex){
+            val separated:List<String> = linesL.get(i).split(",")
+//            println("Velocity: " + separated.get(4) + " Acceleration: " + separated.get(5))
+//            val velocity = separated.get(4)
+//            val accel = separated.get(5)
+            leftAccelerations.add(separated.get(5).toDouble())
+        }
+        var linesR:List<String> = rightTraj.readLines()
+        for(i in 1..linesR.lastIndex){
+            val separated:List<String> = linesR.get(i).split(",")
+//            println("Velocity: " + separated.get(4) + " Acceleration: " + separated.get(5))
+//            val velocity = separated.get(4)
+//            val accel = separated.get(5)
+            rightAccelerations.add(separated.get(5).toDouble())
+        }
+    }
+
     public fun getLeftVelocity(time: Double): Double {
         return leftVelocities.get((time/timeDelta).toInt())
     }
@@ -91,6 +112,15 @@ class Path(path: FieldPaths) {
     public fun getRightVelocityIndex(index: Int): Double {
         return rightVelocities.get(index)
     }
+
+    fun getLeftAccelerationIndex(index: Int): Double {
+        return leftAccelerations[index]
+    }
+
+    fun getRightAccelerationIndex(index: Int): Double {
+        return rightAccelerations[index]
+    }
+
     public fun getLeftDistanceIndex(index: Int): Double {
         return leftDistances.get(index)
     }

@@ -106,17 +106,6 @@ class Robot : TimedRobot() {
             autoModeExecuter = AutoModeExecuter()
             autoModeExecuter?.setAutoMode(DashboardConfigurator.getAutonomousMode())
             autoModeExecuter?.start()
-
-            if (DashboardConfigurator.getAutonomousMode() == "hatch-rocket") {
-
-            }
-            else if (DashboardConfigurator.getAutonomousMode() == "hatch-cargo") {
-
-            }
-            else if (DashboardConfigurator.getAutonomousMode() == "driver") {
-                teleopInit()
-            }
-
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("autonomousInit", t)
             throw t

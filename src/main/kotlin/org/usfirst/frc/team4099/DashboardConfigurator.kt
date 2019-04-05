@@ -20,33 +20,33 @@ import org.usfirst.frc.team4099.robot.Constants.Autonomous.SELECTED_AUTO_START_P
  */
 object DashboardConfigurator {
 
-    un getAutonomousMode(): String {
-        val selectedIntakeMode = SmartDashboard.getString('/SmartDashboard/autonomous/selectedAutoMode', "empty")
-        return selectedIntakeMode
+    fun getAutonomousMode(): AutoModeBase {
+        var selectedAutoMode = StandStillMode()
+        when (SmartDashboard.getString("/SmartDashboard/autonomous/selectedAutoMode", "empty")) {
+            "HatchPanelOnly" -> HatchPanelOnly(getStartingPosition(), 0.0)
+        }
+        return selectedAutoMode
     }
 
     fun getStartingPosition(): StartingPosition {
-        var selectedStartingPosition = SmartDashboard.getString('/SmartDashboard/autonomous/selectedPosition', "empty")
-        if (selectedStartingPosition == "left") {
-            selectedStartingPosition = StartingPosition.LEFT
-        }
-        else if (selectedStartingPosition == "center") {
-            selectedStartingPosition = StartingPosition.CENTER
-        }
-        else if (selectedStartingPosition == "right") {
-            selectedStartingPosition = StartingPosition.RIGHT
+        var selectedStartingPosition = StartingPosition.LEFT
+
+        when (SmartDashboard.getString("/SmartDashboard/autonomous/selectedPosition", "empty")) {
+            "LEFT" -> StartingPosition.LEFT
+            "RIGHT" -> StartingPosition.RIGHT
+            "CENTER" -> StartingPosition.CENTER
         }
         return selectedStartingPosition
     }
 
     fun getStartingHeight(): StartingHeight {
-        var selectedStartingHeight = SmartDashboard.getString('/SmartDashboard/autonomous/selectedHeight', "empty")
-        if (selectedStartingHeight == "one") {
-            selectedStartingHeight = StartingHeight.H1
+        var selectedStartingHeight = StartingHeight.H2
+
+        when (SmartDashboard.getString("/SmartDashboard/autonomous/selectedHeight", "empty")) {
+            "H1" -> StartingHeight.H1
+            "H2" -> StartingHeight.H2
         }
-        else if (selectedStartingPosition == "two") {
-            selectedStartingHeight = StartingHeight.H2
-        }
+
         return selectedStartingHeight
     }
 
