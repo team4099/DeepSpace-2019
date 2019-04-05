@@ -147,14 +147,14 @@ class Robot : TimedRobot() {
     }
 
     override fun autonomousPeriodic() {
-//        try {
-//            outputAllToSmartDashboard()
-//            updateDashboardFeedback()
-//        } catch (t: Throwable) {
-//            CrashTracker.logThrowableCrash("autonomousPeriodic", t)
-//            throw t
-//        }
-        teleopPeriodic()
+        try {
+            outputAllToSmartDashboard()
+            updateDashboardFeedback()
+        } catch (t: Throwable) {
+            CrashTracker.logThrowableCrash("autonomousPeriodic", t)
+            throw t
+        }
+//        teleopPeriodic()
 
     }
 

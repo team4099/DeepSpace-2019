@@ -396,8 +396,8 @@ class Drive private constructor() : Subsystem {
             lastLeftError = leftErrorDistance
 
 
-            leftTurn +=  turn
-            rightTurn -= turn
+//            leftTurn +=  turn
+//            rightTurn -= turn
 
             setVelocitySetpoint(leftTurn, rightTurn, path.getLeftAccelerationIndex(segment), path.getRightAccelerationIndex(segment))
             println("$segment $leftTurn $rightTurn")

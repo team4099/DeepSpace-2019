@@ -4,38 +4,38 @@ class Constants {
 
 
     object Drive {
-        val LEFT_MASTER_ID = 7
+        val LEFT_MASTER_ID = 5
         val LEFT_SLAVE_1_ID = 6
-        val LEFT_SLAVE_2_ID = 5
-        val RIGHT_MASTER_ID = 8
+        // val LEFT_SLAVE_2_ID = 5
+        val RIGHT_MASTER_ID = 10
         val RIGHT_SLAVE_1_ID = 9
-        val RIGHT_SLAVE_2_ID = 10
+        // val RIGHT_SLAVE_2_ID = 10
 
         val HIGH_GEAR_MAX_SETPOINT = 17.0  //17 fps
 
         val MAX_LEFT_OPENLOOP_VEL = 1.0
         val MAX_RIGHT_OPENLOOP_VEL = 1.0
 
-        val SHIFTER_FORWARD_ID = 2
-        val SHIFTER_REVERSE_ID = 5
+        val SHIFTER_FORWARD_ID = 5
+        val SHIFTER_REVERSE_ID = 2
 
-        val LEFT_KV_FORWARD_HIGH = 0
-        val RIGHT_KV_FORWARD_HIGH = 0
+        val LEFT_KV_FORWARD_HIGH = 0.4993
+        val RIGHT_KV_FORWARD_HIGH = 0.5412
 
-        val LEFT_KA_FORWARD_HIGH = 0
-        val RIGHT_KA_FORWARD_HIGH = 0
+        val LEFT_KA_FORWARD_HIGH = 0.0468
+        val RIGHT_KA_FORWARD_HIGH = 0.0601
 
-        val LEFT_V_INTERCEPT_FORWARD_HIGH = 0
-        val RIGHT_V_INTERCEPT_FORWARD_HIGH = 0
+        val LEFT_V_INTERCEPT_FORWARD_HIGH = 0.1879
+        val RIGHT_V_INTERCEPT_FORWARD_HIGH = 0.1364
 
-        val LEFT_KV_REVERSE_HIGH = 0
-        val RIGHT_KV_REVERSE_HIGH = 0
+        val LEFT_KV_REVERSE_HIGH = 0.4987
+        val RIGHT_KV_REVERSE_HIGH = 0.5194
 
-        val LEFT_KA_REVERSE_HIGH = 0
-        val RIGHT_KA_REVERSE_HIGH = 0
+        val LEFT_KA_REVERSE_HIGH = 0.0372
+        val RIGHT_KA_REVERSE_HIGH = 0.0644
 
-        val LEFT_V_INTERCEPT_REVERSE_HIGH = 0
-        val RIGHT_V_INTERCEPT_REVERSE_HIGH = 0
+        val LEFT_V_INTERCEPT_REVERSE_HIGH = -0.1856
+        val RIGHT_V_INTERCEPT_REVERSE_HIGH = -0.2003
 
         val FEET_PER_SEC_TO_RPM = 0.0
 
@@ -187,10 +187,10 @@ class Constants {
 
     object Intake {
         val INTAKE_TALON_ID = 12
-        val EXTENDER_FORWARD_ID = 5
-        val EXTENDER_REVERSE_ID = 2
-        val DEPLOYER_FORWARD_ID = 6
-        val DEPLOYER_REVERSE_ID = 1
+        val EXTENDER_FORWARD_ID = 1
+        val EXTENDER_REVERSE_ID = 6
+        val DEPLOYER_FORWARD_ID = 0
+        val DEPLOYER_REVERSE_ID = 7
     }
 
 
