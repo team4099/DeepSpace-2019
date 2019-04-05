@@ -21,9 +21,10 @@ import org.usfirst.frc.team4099.robot.Constants.Autonomous.SELECTED_AUTO_START_P
 object DashboardConfigurator {
 
     fun getAutonomousMode(): AutoModeBase {
-        var selectedAutoMode = StandStillMode()
+        var selectedAutoMode: AutoModeBase
         when (SmartDashboard.getString("/SmartDashboard/autonomous/selectedAutoMode", "empty")) {
-            "HatchPanelOnly" -> HatchPanelOnly(getStartingPosition(), 0.0)
+            "HatchPanelOnly" -> selectedAutoMode = HatchPanelOnly(getStartingPosition(), 0.0)
+            else -> selectedAutoMode = HatchPanelOnly(getStartingPosition(), 0.0)
         }
         return selectedAutoMode
     }
@@ -32,9 +33,9 @@ object DashboardConfigurator {
         var selectedStartingPosition = StartingPosition.LEFT
 
         when (SmartDashboard.getString("/SmartDashboard/autonomous/selectedPosition", "empty")) {
-            "LEFT" -> StartingPosition.LEFT
-            "RIGHT" -> StartingPosition.RIGHT
-            "CENTER" -> StartingPosition.CENTER
+            "LEFT" -> selectedStartingPosition = StartingPosition.LEFT
+            "RIGHT" -> selectedStartingPosition = StartingPosition.RIGHT
+            "CENTER" -> selectedStartingPosition = StartingPosition.CENTER
         }
         return selectedStartingPosition
     }
@@ -43,8 +44,8 @@ object DashboardConfigurator {
         var selectedStartingHeight = StartingHeight.H2
 
         when (SmartDashboard.getString("/SmartDashboard/autonomous/selectedHeight", "empty")) {
-            "H1" -> StartingHeight.H1
-            "H2" -> StartingHeight.H2
+            "H1" -> selectedStartingHeight = StartingHeight.H1
+            "H2" -> selectedStartingHeight = StartingHeight.H2
         }
 
         return selectedStartingHeight

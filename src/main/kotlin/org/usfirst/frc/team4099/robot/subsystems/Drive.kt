@@ -401,7 +401,6 @@ class Drive private constructor() : Subsystem {
 
             setVelocitySetpoint(leftTurn, rightTurn, path.getLeftAccelerationIndex(segment), path.getRightAccelerationIndex(segment))
             println("$segment $leftTurn $rightTurn")
-
             segment++
         }
         else {
