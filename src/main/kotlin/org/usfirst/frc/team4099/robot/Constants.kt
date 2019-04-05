@@ -19,15 +19,25 @@ class Constants {
         val SHIFTER_FORWARD_ID = 2
         val SHIFTER_REVERSE_ID = 5
 
-        val LEFT_KV_HIGH = 0
-        val RIGHT_KV_HIGH = 0
+        val LEFT_KV_FORWARD_HIGH = 0
+        val RIGHT_KV_FORWARD_HIGH = 0
 
-        val LEFT_KA_HIGH = 0
-        val RIGHT_KA_HIGH = 0
+        val LEFT_KA_FORWARD_HIGH = 0
+        val RIGHT_KA_FORWARD_HIGH = 0
 
-        val LEFT_KV_INTERCEPT_HIGH = 0
-        val RIGHT_KV_INTERCEPT_HIGH = 0
+        val LEFT_V_INTERCEPT_FORWARD_HIGH = 0
+        val RIGHT_V_INTERCEPT_FORWARD_HIGH = 0
 
+        val LEFT_KV_REVERSE_HIGH = 0
+        val RIGHT_KV_REVERSE_HIGH = 0
+
+        val LEFT_KA_REVERSE_HIGH = 0
+        val RIGHT_KA_REVERSE_HIGH = 0
+
+        val LEFT_V_INTERCEPT_REVERSE_HIGH = 0
+        val RIGHT_V_INTERCEPT_REVERSE_HIGH = 0
+
+        val FEET_PER_SEC_TO_RPM = 0.0
 
 
     }
