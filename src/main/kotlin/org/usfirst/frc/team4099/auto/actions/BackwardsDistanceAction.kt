@@ -31,7 +31,7 @@ class BackwardsDistanceAction(initInchesToMove: Double) : Action {
     }
 
     override fun isFinished(): Boolean {
-        return Math.abs(mDrive.getLeftDistanceInches()) - startDist <= -inchesToMove || Math.abs(mDrive.getRightDistanceInches()) - otherStart <= -inchesToMove || done || Timer.getFPGATimestamp() - startTime > 3
+        return Math.abs(mDrive.getLeftDistanceInches() - startDist) <= inchesToMove || Math.abs(mDrive.getRightDistanceInches() - otherStart) <= inchesToMove || done || Timer.getFPGATimestamp() - startTime > 3
     }
 
     override fun update() {
@@ -43,7 +43,7 @@ class BackwardsDistanceAction(initInchesToMove: Double) : Action {
             done = true
             return
         }
-        mDrive.arcadeDrive(power * direction, correctionAngle * 0.01 * direction.toDouble())
+        mDrive.arcadeDrive(power * direction, -correctionAngle * 0.01 * direction.toDouble())
         //        System.out.println("yaw: " + yaw);
         println("correctionAngle: " + correctionAngle)
         SmartDashboard.putNumber("distanceInAction", Math.abs(mDrive.getRightDistanceInches()) - otherStart)
@@ -61,7 +61,7 @@ class BackwardsDistanceAction(initInchesToMove: Double) : Action {
             while (!Utils.around(mDrive.getAHRS()!!.yaw.toDouble(), 0.0, 1.0)) {
                 mDrive.getAHRS()!!.zeroYaw()
             }
-            Timer.delay(1.0)
+            Timer.delay(0.3)
         }
         startTime = Timer.getFPGATimestamp()
         startAngle = mDrive.getAHRS()!!.yaw.toDouble()

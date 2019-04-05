@@ -393,7 +393,7 @@ class Drive private constructor() : Subsystem {
             //   leftTurn = leftTurn + leftVelocityAdjustment
             // rightTurn = rightTurn + rightVelocityAdjustment
 
-            lastLeftError = leftErrorDistance
+               lastLeftError = leftErrorDistance
 
 
 //            leftTurn +=  turn
