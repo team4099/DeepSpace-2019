@@ -25,9 +25,9 @@ class GoToTargetVisionAction: Action {
     }
     override fun update() {
         if (mVision.onTarget) {
-            mDrive.setOpenLoop(cheesyDriveHelper.curvatureDrive(0.8, 0.0, true))
+            mDrive.setOpenLoop(cheesyDriveHelper.curvatureDrive(0.3, 0.0, false))
         } else if (mVision.visionState != Vision.VisionState.INACTIVE) {
-            mDrive.setOpenLoop(cheesyDriveHelper.curvatureDrive(2.5, mVision.steeringAdjust, true))
+            mDrive.setOpenLoop(cheesyDriveHelper.curvatureDrive(0.3, mVision.steeringAdjust, false))
         }
         //mDrive.setLeftRightPower(0.3 + mVision.steeringAdjust, 0.3 - mVision.steeringAdjust) could add this line
 

@@ -37,7 +37,7 @@ class Constants {
         val LEFT_V_INTERCEPT_REVERSE_HIGH = -0.1856
         val RIGHT_V_INTERCEPT_REVERSE_HIGH = -0.2003
 
-        val FEET_PER_SEC_TO_RPM = 0.0
+        val FEET_PER_SEC_TO_RPM = 6.8 * 60.0 //10.4
 
 
     }

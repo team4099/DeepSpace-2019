@@ -100,6 +100,7 @@ class Robot : TimedRobot() {
     }
 
     override fun autonomousInit() {
+        intake.hatchState = Intake.HatchState.OPEN
         try {
             autoModeExecuter?.stop()
             autoModeExecuter = null
@@ -114,7 +115,6 @@ class Robot : TimedRobot() {
             CrashTracker.logThrowableCrash("autonomousInit", t)
             throw t
         }
-        intake.hatchState = Intake.HatchState.CLOSED
 
     }
 
@@ -273,7 +273,7 @@ class Robot : TimedRobot() {
 
             drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
 
-            //outputAllToSmartDashboard()
+            outputAllToSmartDashboard()
             if (drive.highGear && controlBoard.switchToLowGear) {
                 drive.highGear = false
                 println("Shifting to low gear")
@@ -502,6 +502,7 @@ class Robot : TimedRobot() {
         wrist.outputToSmartDashboard()
         intake.outputToSmartDashboard()
         elevator.outputToSmartDashboard()
+        drive.outputToSmartDashboard()
     }
 
     private fun startLiveWindowMode() {

@@ -191,8 +191,8 @@ class Drive private constructor() : Subsystem {
         }
         SmartDashboard.putNumber("leftSpark", leftMasterSpark.busVoltage)
         SmartDashboard.putNumber("rightSpark", rightMasterSpark.busVoltage)
-        SmartDashboard.putNumber("leftEncoderInches", getLeftDistanceInches())
-        SmartDashboard.putNumber("rightEncoderInches", getRightDistanceInches())
+        SmartDashboard.putNumber("leftEncoderInches", leftEncoder.position)
+        SmartDashboard.putNumber("rightEncoderInches", rightEncoder.position)
     }
 
     fun startLiveWindowMode() {
@@ -373,7 +373,8 @@ class Drive private constructor() : Subsystem {
     }
     fun updatePathFollowing(){
         //note *12 is to convert ft to inches
-        if (segment < trajLength) {
+        if (segment < trajLength - 132) {
+
             var leftTurn: Double = path.getLeftVelocityIndex(segment)
             var rightTurn: Double = path.getRightVelocityIndex(segment)
             val gyroHeading: Float = ahrs.yaw
@@ -404,11 +405,11 @@ class Drive private constructor() : Subsystem {
             segment++
         }
         else {
-            setVelocitySetpoint(0.0, 0.0, 0.0, 0.0)
+            setLeftRightPower(0.0, -0.5)
         }
     }
     fun isPathFinished(): Boolean {
-        return segment >= trajLength
+        return segment >= trajLength - 132
     }
 
 
@@ -437,13 +438,16 @@ class Drive private constructor() : Subsystem {
                 println("Right: " + rightEncoder.position)
                 when (currentState) {
                     DriveControlState.OPEN_LOOP -> {
+                        brakeMode = CANSparkMax.IdleMode.kCoast
                         return
                     }
                     DriveControlState.VELOCITY_SETPOINT -> {
+                        brakeMode = CANSparkMax.IdleMode.kCoast
                         return
                     }
                     DriveControlState.PATH_FOLLOWING ->{
                         updatePathFollowing()
+                        brakeMode = CANSparkMax.IdleMode.kCoast
                     }
                     DriveControlState.TURN_TO_HEADING -> {
                         //updateTurnToHeading(timestamp);
@@ -458,6 +462,7 @@ class Drive private constructor() : Subsystem {
 
         override fun onStop() {
             setOpenLoop(DriveSignal.NEUTRAL)
+            brakeMode = CANSparkMax.IdleMode.kCoast
         }
     }
 
