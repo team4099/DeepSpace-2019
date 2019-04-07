@@ -19,6 +19,7 @@ class Climber private constructor() : Subsystem {
     private val driveMotor: TalonSRX = CANMotorControllerFactory.createDefaultTalon(Constants.Climber.DRIVE_TALON_ID) //final
     private val climbEncoder: CANEncoder = climbMotor.encoder
     private val climbPIDController: CANPIDController = climbMotor.pidController
+//    private val neighbor: DoubleSolenoid = DoubleSolenoid(Constants.Climber.FEET_SOLENOID_FORWARD,Constants.Climber.FEET_SOLENOID_REVERSE)
     private var tare: Double = 0.0
     var movementState = MovementState.STILL
         private set
@@ -28,6 +29,13 @@ class Climber private constructor() : Subsystem {
     private set
 
     var climberState = ClimberState.OPEN_LOOP
+    var feetState = false
+        set(wantsFeet) {
+            //neighbor.set(if (wantsFeet) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
+            field = wantsFeet
+        }
+
+
 
     private fun setClimberPosition(position: ClimberState) {
         var target = position.targetPos + tare
@@ -101,6 +109,7 @@ class Climber private constructor() : Subsystem {
     val loop: Loop = object : Loop {
         override fun onStart() {
             climberState = ClimberState.OPEN_LOOP
+            feetState = false
             zeroSensors()
         }
         override fun onLoop() {

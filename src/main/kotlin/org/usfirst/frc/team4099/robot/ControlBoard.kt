@@ -42,8 +42,11 @@ class ControlBoard private constructor() {
         get() = if(driver.rightShoulderButton) 1.0 else 0.0 - if(driver.leftShoulderButton) 1.0 else 0.0
 
     val elevatorClimberLatch : Boolean
+        get() = false
+    val feetExtend: Boolean
         get() = driver.dPadLeft
-
+    val feetRetract: Boolean
+        get() = driver.dPadRight
     val hatchPExtend : Boolean
         get() = operator.rightYAxis < -0.2 //change back to operator
 

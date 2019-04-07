@@ -167,7 +167,7 @@ class Robot : TimedRobot() {
             dashBoardTest++
             if (controlBoard.cargoMode){
                 intakeState = IntakeState.CARGO
-                intake.hatchState = Intake.HatchState.CLOSED
+                intake.hatchState = Intake.HatchState.OPEN
                 intake.deployState = Intake.DeployState.IN
             }
             else if (controlBoard.hatchPanelMode) {
@@ -225,10 +225,10 @@ class Robot : TimedRobot() {
                 }
             }
 //            if (controlBoard.climberUp){
-//                climber.climberState = Climber.ClimberState.UP
+//                climber.movementState = Climber.MovementState.UP
 //            }
 //            else if (controlBoard.climberDown){
-//                climber.climberState = Climber.ClimberState.DOWN
+//                climber.climberState = Climber.MovementState.DOWN
 //            }
 //            else if (controlBoard.climberDrive){
 //                climber.climberState = Climber.ClimberState.FORWARD
@@ -372,6 +372,12 @@ class Robot : TimedRobot() {
             }
             else{
                 climber.setOpenLoop(0.0)
+            }
+
+            if(climber.feetState && controlBoard.feetRetract) {
+                climber.feetState = false
+            } else if (!climber.feetState && controlBoard.feetExtend) {
+                climber.feetState = true
             }
             if (climber.climberState != Climber.ClimberState.STOW){
                 if(controlBoard.climberDrive != 0.0){
