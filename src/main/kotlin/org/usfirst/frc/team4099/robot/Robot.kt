@@ -8,8 +8,10 @@ import org.usfirst.frc.team4099.lib.util.Utils
 
 import org.usfirst.frc.team4099.DashboardConfigurator
 import org.usfirst.frc.team4099.auto.AutoModeExecuter
+
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
+import org.usfirst.frc.team4099.auto.modes.HatchPanelOnly
 //import org.usfirst.frc.team4099.auto.AutoModeExecuter
 import org.usfirst.frc.team4099.lib.util.CrashTracker
 import org.usfirst.frc.team4099.robot.drive.CheesyDriveHelper
@@ -109,7 +111,7 @@ class Robot : TimedRobot() {
             enabledLooper.start() // start EnabledLooper
 
             autoModeExecuter = AutoModeExecuter()
-            autoModeExecuter?.setAutoMode(DashboardConfigurator.getAutonomousMode())
+            autoModeExecuter?.setAutoMode(HatchPanelOnly(DashboardConfigurator.getStartingPosition(), 0.0, vision))
             autoModeExecuter?.start()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("autonomousInit", t)

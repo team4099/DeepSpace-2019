@@ -22,11 +22,11 @@ object DashboardConfigurator {
 
     fun getAutonomousMode(): AutoModeBase {
         var selectedAutoMode: AutoModeBase
-        when (SmartDashboard.getString("/SmartDashboard/autonomous/selectedAutoMode", "empty")) {
-            "HatchPanelOnly" -> selectedAutoMode = HatchPanelOnly(getStartingPosition(), 0.0)
-            else -> selectedAutoMode = HatchPanelOnly(getStartingPosition(), 0.0)
-        }
-        return selectedAutoMode
+//        when (SmartDashboard.getString("/SmartDashboard/autonomous/selectedAutoMode", "empty")) {
+//            "HatchPanelOnly" -> selectedAutoMode = HatchPanelOnly(getStartingPosition(), 0.0, )
+//            else -> selectedAutoMode = HatchPanelOnly(getStartingPosition(), 0.0)
+//        }
+        return AutoModeBase
     }
 
     fun getStartingPosition(): StartingPosition {

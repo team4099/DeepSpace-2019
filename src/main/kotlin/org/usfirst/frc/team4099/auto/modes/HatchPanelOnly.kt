@@ -3,8 +3,9 @@ package org.usfirst.frc.team4099.auto.modes
 import org.usfirst.frc.team4099.DashboardConfigurator
 import org.usfirst.frc.team4099.auto.actions.*
 import org.usfirst.frc.team4099.auto.paths.FieldPaths
+import org.usfirst.frc.team4099.robot.subsystems.Vision
 
-class HatchPanelOnly(private val startingPosition: DashboardConfigurator.StartingPosition, private val delay: Double) : AutoModeBase() {
+class HatchPanelOnly(private val startingPosition: DashboardConfigurator.StartingPosition, private val delay: Double, private val inst : Vision) : AutoModeBase() {
     override fun routine(){
 //        if (startingPosition == DashboardConfigurator.StartingPosition.LEFT){
 //            runAction(FollowPathAction(FieldPaths.RIGHTH1_TO_RIGHTROCKET1))
@@ -12,7 +13,7 @@ class HatchPanelOnly(private val startingPosition: DashboardConfigurator.Startin
 //        else if (startingPosition == DashboardConfigurator.StartingPosition.RIGHT){
             runAction(MoveWristAction())
             runAction(FollowPathAction(FieldPaths.RIGHTH1_TO_RIGHTROCKET1))
-            runAction(GoToTargetVisionAction())
+            runAction(GoToTargetVisionAction(inst))
 //        }
 //        runAction(WaitAction(1.0))
 //        runAction(BackwardsDistanceAction(24.0))

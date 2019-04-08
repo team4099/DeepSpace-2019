@@ -12,7 +12,7 @@ import src.main.kotlin.org.usfirst.frc.team4099.robot.subsystems.Superstructure
  * Assumes that vision target in already in sight
  */
 
-class GoToTargetVisionAction: Action {
+class GoToTargetVisionAction (inst : Vision) : Action {
     val mVision = Vision.instance
     val mDrive = Drive.instance
     val cheesyDriveHelper = CheesyDriveHelper()
@@ -25,9 +25,9 @@ class GoToTargetVisionAction: Action {
     }
     override fun update() {
         if (mVision.onTarget) {
-            mDrive.setOpenLoop(cheesyDriveHelper.curvatureDrive(0.3, 0.0, false))
+            mDrive.setOpenLoop(cheesyDriveHelper.curvatureDrive(0.05, 0.0, false))
         } else if (mVision.visionState != Vision.VisionState.INACTIVE) {
-            mDrive.setOpenLoop(cheesyDriveHelper.curvatureDrive(0.3, mVision.steeringAdjust, false))
+            mDrive.setOpenLoop(cheesyDriveHelper.curvatureDrive(0.05, mVision.steeringAdjust, false))
         }
         //mDrive.setLeftRightPower(0.3 + mVision.steeringAdjust, 0.3 - mVision.steeringAdjust) could add this line
 
