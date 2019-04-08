@@ -17,10 +17,12 @@ class Superstructure : Subsystem {
   //  val mInstance = Superstructure()
 
     // Put Subsystem instantiation here:
-    //private val intake = Intake.instance
+    private val intake = Intake.instance
     private val drive = Drive.instance
     private val elevator = Elevator.instance
     private val vision = Vision.instance
+    private val climber = Climber.instance
+    private val wrist = Wrist.instance
 //    private val led = LED.instance
 //    private val grabber = Grabber.instance
 
@@ -68,6 +70,7 @@ class Superstructure : Subsystem {
 
                 when (systemState) {
                     SystemState.IDLE -> handleIdle()
+                    SystemState.CLIMBING -> climb()
 //                    SystemState.ALIGNING_VISION -> handleVision()
 //                SystemState.INTAKE_UP -> handleElevatorUp()
 //                SystemState.CLIMBING -> handleClimb()
@@ -127,6 +130,15 @@ class Superstructure : Subsystem {
     fun setState (state: SystemState) {
         systemState = state
     }
+
+    private fun climb() {
+        elevator.elevatorState = Elevator.ElevatorState.CLIMBING
+        wrist.setWristPosition(-25.74*1.3)//1.3 is subject to change, -25.74 is horizontal encoder val
+        elevator.elevatorState = Elevator.ElevatorState.GROUND
+        climber.climberState = Climber.ClimberState.LEVEL_THREE
+
+    }
+
 
     override fun outputToSmartDashboard() { }
 
