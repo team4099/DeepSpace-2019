@@ -38,7 +38,7 @@ class GoToTargetVisionAction: Action {
 
     }
     override fun isFinished(): Boolean {
-        return mVision.getDistance() < 5.0
+        return mVision.distance < 5.0
 
     }
 
