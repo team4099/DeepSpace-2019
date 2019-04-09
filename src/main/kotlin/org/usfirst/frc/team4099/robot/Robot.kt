@@ -361,19 +361,19 @@ class Robot : TimedRobot() {
             }
             else if (controlBoard.climbVeloUp){
                 println("climb velocity up")
-                //climber.climberState = Climber.ClimberState.VELOCITY_CONTROL
+                climber.climberState = Climber.ClimberState.VELOCITY_CONTROL
                 climber.setClimberVelocity(Constants.Climber.MAX_CLIMB_VEL)
             }
             else if (controlBoard.climbVeloDown){
                 println("climb velocity down")
-                //climber.climberState = Climber.ClimberState.VELOCITY_CONTROL
+                climber.climberState = Climber.ClimberState.VELOCITY_CONTROL
                 climber.setClimberVelocity(-Constants.Climber.MAX_CLIMB_VEL)
             }
             else if (climber.climberState == Climber.ClimberState.VELOCITY_CONTROL){
                 climber.setClimberVelocity(0.0)
             }
             else{
-                climber.setOpenLoop(0.0)
+//                climber.setOpenLoop(0.0)
             }
             if (climber.climberState != Climber.ClimberState.STOW){
                 if(controlBoard.climberDrive != 0.0){
@@ -477,6 +477,7 @@ class Robot : TimedRobot() {
         drive.highGear = true
         Thread.sleep(3000)
        // outputAllToSmartDashboard()
+        climber.outputToSmartDashboard()
     }
     /**
      * Log information from all subsystems onto the SmartDashboard
@@ -486,6 +487,7 @@ class Robot : TimedRobot() {
         intake.outputToSmartDashboard()
         elevator.outputToSmartDashboard()
         drive.outputToSmartDashboard()
+        climber.outputToSmartDashboard()
     }
 
     private fun startLiveWindowMode() {

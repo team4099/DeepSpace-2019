@@ -86,7 +86,7 @@ class Climber private constructor() : Subsystem {
         climbPIDController.setIZone(Constants.Climber.CLIMBER_KIz)
         climbPIDController.setFF(Constants.Climber.CLIMBER_KF)
         climbPIDController.setOutputRange(-Constants.Climber.MAX_OUTPUT, Constants.Climber.MAX_OUTPUT)
-        brakeMode = CANSparkMax.IdleMode.kBrake
+        brakeMode = CANSparkMax.IdleMode.kCoast
     }
 
     enum class ClimberState (val targetPos: Double){
@@ -105,6 +105,7 @@ class Climber private constructor() : Subsystem {
 
     override fun outputToSmartDashboard() {
         SmartDashboard.putString("climber/climberState", climberState.toString())
+        SmartDashboard.putNumber("climber/encoderValue", climbEncoder.position)
     }
 
     override fun stop() {
