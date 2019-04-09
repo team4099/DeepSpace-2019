@@ -106,6 +106,7 @@ class Climber private constructor() : Subsystem {
     override fun outputToSmartDashboard() {
         SmartDashboard.putString("climber/climberState", climberState.toString())
         SmartDashboard.putNumber("climber/encoderValue", climbEncoder.position)
+        SmartDashboard.putNumber("climber/encoderVelocity", climbEncoder.velocity)
     }
 
     override fun stop() {

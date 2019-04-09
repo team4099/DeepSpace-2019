@@ -363,6 +363,7 @@ class Robot : TimedRobot() {
                 println("climb velocity up")
                 climber.climberState = Climber.ClimberState.VELOCITY_CONTROL
                 climber.setClimberVelocity(Constants.Climber.MAX_CLIMB_VEL)
+//                climber.setOpenLoop(0.5)
             }
             else if (controlBoard.climbVeloDown){
                 println("climb velocity down")
