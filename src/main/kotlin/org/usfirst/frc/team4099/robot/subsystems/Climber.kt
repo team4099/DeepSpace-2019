@@ -29,6 +29,8 @@ class Climber private constructor() : Subsystem {
 
     var climberState = ClimberState.OPEN_LOOP
 
+    var lastClimbPosition = 0.0
+
     private fun setClimberPosition(position: ClimberState) {
         var target = position.targetPos + tare
     }
@@ -57,8 +59,14 @@ class Climber private constructor() : Subsystem {
     }
 
     fun setClimberVelocity(inchesPerSecond: Double) {
-        climbMotor.set(inchesPerSecond) //remove, just for testing
-        //climbPIDController.setReference(inchesPerSecond, ControlType.kVelocity)
+        //remove, just for testing
+        if (inchesPerSecond == 0.0){
+            setClimberPosition(lastClimbPosition)
+        }
+        else {
+            lastClimbPosition = observedElevatorPosition
+            climbMotor.set(inchesPerSecond)
+        }
     }
 
     fun setOpenDrive(power: Double){

@@ -53,7 +53,7 @@ class Constants {
         val CLIMBER_KI = 0.0
         val CLIMBER_KD = 0.0
         val CLIMBER_KIz = 0.0
-        val CLIMBER_KF = 0.0
+        val CLIMBER_KF = 9.3
         val MAX_OUTPUT = 1.0
         val LEVEL_THREE_POSITION = 0.0
         val STOW_POSITION = 0.0

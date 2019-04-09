@@ -361,12 +361,12 @@ class Robot : TimedRobot() {
             }
             else if (controlBoard.climbVeloUp){
                 println("climb velocity up")
-                climber.climberState = Climber.ClimberState.VELOCITY_CONTROL
+                //climber.climberState = Climber.ClimberState.VELOCITY_CONTROL
                 climber.setClimberVelocity(Constants.Climber.MAX_CLIMB_VEL)
             }
             else if (controlBoard.climbVeloDown){
                 println("climb velocity down")
-                climber.climberState = Climber.ClimberState.VELOCITY_CONTROL
+                //climber.climberState = Climber.ClimberState.VELOCITY_CONTROL
                 climber.setClimberVelocity(-Constants.Climber.MAX_CLIMB_VEL)
             }
             else if (climber.climberState == Climber.ClimberState.VELOCITY_CONTROL){
