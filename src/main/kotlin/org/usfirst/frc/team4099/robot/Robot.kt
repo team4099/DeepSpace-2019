@@ -229,33 +229,6 @@ class Robot : TimedRobot() {
 
                 }
             }
-//            if (controlBoard.climberUp){
-//                climber.movementState = Climber.MovementState.UP
-//            }
-//            else if (controlBoard.climberDown){
-//                climber.climberState = Climber.MovementState.DOWN
-//            }
-//            else if (controlBoard.climberDrive){
-//                climber.climberState = Climber.ClimberState.FORWARD
-//            }
-//            else if (Math.abs(controlBoard.climberPower) > 0.2){
-//                climber.setOpenLoop(controlBoard.climberPower)
-//            }
-//            else{
-//                climber.climberState = Climber.ClimberState.STILL
-//            }
-//            elevator.elevatorState = when{
-//                controlBoard.elevatorHigh -> if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHHIGH else Elevator.ElevatorState.PORTHIGH;
-//                controlBoard.elevatorMid -> if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHMID else Elevator.ElevatorState.PORTMID;
-//                controlBoard.elevatorLow -> if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHLOW else Elevator.ElevatorState.PORTLOW;
-//                else -> elevator.elevatorState
-//            }
-
-//            when {
-//                controlBoard.elevatorHigh -> elevator.elevatorState = if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHHIGH else Elevator.ElevatorState.PORTHIGH;
-//                controlBoard.elevatorMid -> elevator.elevatorState = if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHMID else Elevator.ElevatorState.PORTMID;
-//                controlBoard.elevatorLow -> elevator.elevatorState = if (elevator.isHatchPanel) Elevator.ElevatorState.HATCHLOW else Elevator.ElevatorState.PORTLOW;
-//            }
 
             drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
 
@@ -291,23 +264,7 @@ class Robot : TimedRobot() {
             } else {
 //                drive.setLeftRightPower(vision.steeringAdjust, - vision.steeringAdjust)
             }
-//            if(controlBoard.toggleWrist){
-//                if(wrist.wristState == Wrist.WristState.VERTICAL){
-//                    wrist.wristState = Wrist.WristState.HORIZONTAL
-//                }
-//                else /*if (wrist.wristState == Wrist.WristState.HORIZONTAL)*/{
-//                    wrist.wristState = Wrist.WristState.VERTICAL
-//                }
-//            }
-//
-//            if (Math.abs(controlBoard.wristPower)> 0.2) {
-//                wrist.setWristVelocity(-controlBoard.wristPower * Constants.Wrist.MAX_SPEED)
-//                //wrist.setOpenLoop(-controlBoard.wristPower)
-//            }
-//            else {
-//                wrist.setWristVelocity(0.0)
-//                //wrist.setOpenLoop(0.0)
-//            }
+
             if (controlBoard.elevatorLow){
                 println("elevator low")
                 if(intakeState == IntakeState.HATCHPANEL) {
