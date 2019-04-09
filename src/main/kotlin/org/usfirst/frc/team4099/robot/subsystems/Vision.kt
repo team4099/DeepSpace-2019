@@ -70,7 +70,7 @@ class Vision private constructor(): Subsystem {
 
                 // distance: d = (h2-h1) / tan(a1+a2)
                 distance = (Constants.Vision.TARGET_HEIGHT - Constants.Vision.CAMERA_HEIGHT) / tan(Constants.Vision.CAMERA_ANGLE + ty)
-                SmartDashboard.putNumber("/SmartDashboard/vision/distance", distance)
+                SmartDashboard.putNumber("vision/distance", distance)
                 tx = table.getEntry("tx").getDouble(0.0)
                 tv = table.getEntry("tv").getDouble(0.0)
                 ty = table.getEntry("ty").getDouble(0.0)
