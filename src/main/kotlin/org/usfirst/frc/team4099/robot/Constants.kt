@@ -141,7 +141,7 @@ class Constants {
         val TARGET_HEIGHT = 28.58722 // inches
 
         val TARGET_HEIGHT_ADJUST = 10 //inches, NOT SET
-        val CAMERA_OFFSET = -1.75
+        val CAMERA_OFFSET = -0.71
         val ERROR_MARGIN = 0.25 // degrees
     }
     object Velocity {
