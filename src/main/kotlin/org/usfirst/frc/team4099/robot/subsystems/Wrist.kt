@@ -42,7 +42,7 @@ class Wrist private constructor(): Subsystem {
         VERTICAL(-2.0),
         CARGO(-23.9),
         OPEN_LOOP(Double.NaN),
-         VELOCITY_CONTROL(Double.NaN)
+        VELOCITY_CONTROL(Double.NaN)
         //TODO Calibrate values
     }
 

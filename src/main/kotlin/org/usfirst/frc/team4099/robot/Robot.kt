@@ -178,14 +178,17 @@ class Robot : TimedRobot() {
 
             if (intakeState == IntakeState.CARGO){
                 intake.deployState = Intake.DeployState.IN
-                if (Math.abs(controlBoard.wristPower)> 0.2) {
+                if (Math.abs(controlBoard.wristPower)> 0.1) {
                     wrist.setWristVelocity(-controlBoard.wristPower * Constants.Wrist.MAX_SPEED)
                     //println("Set wrist velocity")
                     //wrist.setOpenLoop(-controlBoard.wristPower)
                 }
-                else {
+                else if (wrist.wristState == Wrist.WristState.VELOCITY_CONTROL) {
                     wrist.setWristVelocity(0.0)
                     //wrist.setOpenLoop(0.0)
+                }
+                if(controlBoard.wristCargoIntake){
+                    wrist.wristState = Wrist.WristState.CARGO
                 }
                 if (controlBoard.runCargoIntake){
                     intake.intakeState = Intake.IntakeState.IN
