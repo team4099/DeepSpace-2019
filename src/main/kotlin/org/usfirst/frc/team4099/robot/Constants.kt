@@ -60,9 +60,10 @@ class Constants {
         val LEVEL_TWO_HALF = 64.0
         val LEVEL_TWO = 0.0
         val CLIMBER_SOFT_LIMIT = -10.0
-        val MAX_CLIMB_VEL = 30.0
+        val MAX_CLIMB_VEL = 0.4
         val MAX_DRIVE_VEL = 400.0
-
+        val FEET_SOLENOID_FORWARD = 0
+        val FEET_SOLENOID_REVERSE = 1
     }
 
 

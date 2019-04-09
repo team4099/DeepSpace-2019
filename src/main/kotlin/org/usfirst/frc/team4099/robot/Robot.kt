@@ -169,7 +169,7 @@ class Robot : TimedRobot() {
 
             if (controlBoard.cargoMode){
                 intakeState = IntakeState.CARGO
-                intake.hatchState = Intake.HatchState.CLOSED
+                intake.hatchState = Intake.HatchState.OPEN
                 intake.deployState = Intake.DeployState.IN
             }
             else if (controlBoard.hatchPanelMode) {
@@ -180,14 +180,17 @@ class Robot : TimedRobot() {
 
             if (intakeState == IntakeState.CARGO){
                 intake.deployState = Intake.DeployState.IN
-                if (Math.abs(controlBoard.wristPower)> 0.2) {
+                if (Math.abs(controlBoard.wristPower)> 0.1) {
                     wrist.setWristVelocity(-controlBoard.wristPower * Constants.Wrist.MAX_SPEED)
                     //println("Set wrist velocity")
                     //wrist.setOpenLoop(-controlBoard.wristPower)
                 }
-                else {
+                else if (wrist.wristState == Wrist.WristState.VELOCITY_CONTROL) {
                     wrist.setWristVelocity(0.0)
                     //wrist.setOpenLoop(0.0)
+                }
+                if(controlBoard.wristCargoIntake){
+                    wrist.wristState = Wrist.WristState.CARGO
                 }
                 if (controlBoard.runCargoIntake){
                     intake.intakeState = Intake.IntakeState.IN
@@ -227,10 +230,10 @@ class Robot : TimedRobot() {
                 }
             }
 //            if (controlBoard.climberUp){
-//                climber.climberState = Climber.ClimberState.UP
+//                climber.movementState = Climber.MovementState.UP
 //            }
 //            else if (controlBoard.climberDown){
-//                climber.climberState = Climber.ClimberState.DOWN
+//                climber.climberState = Climber.MovementState.DOWN
 //            }
 //            else if (controlBoard.climberDrive){
 //                climber.climberState = Climber.ClimberState.FORWARD
@@ -375,6 +378,12 @@ class Robot : TimedRobot() {
             }
             else{
 //                climber.setOpenLoop(0.0)
+            }
+
+            if(climber.feetState && controlBoard.feetRetract) {
+                climber.feetState = false
+            } else if (!climber.feetState && controlBoard.feetExtend) {
+                climber.feetState = true
             }
             if (climber.climberState != Climber.ClimberState.STOW){
                 if(controlBoard.climberDrive != 0.0){

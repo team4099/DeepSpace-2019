@@ -42,7 +42,7 @@ class Wrist private constructor(): Subsystem {
         VERTICAL(-2.0),
         CARGO(-23.9),
         OPEN_LOOP(Double.NaN),
-         VELOCITY_CONTROL(Double.NaN)
+        VELOCITY_CONTROL(Double.NaN)
         //TODO Calibrate values
     }
 
@@ -174,15 +174,14 @@ class Wrist private constructor(): Subsystem {
 
         override fun onLoop() {
             synchronized(this@Wrist) {
-                //println("hi")
                 wristAngle = WristConversion.pulsesToRadians(talon.sensorCollection.quadraturePosition.toDouble())
                 observedVelocity = WristConversion.pulsesToRadians(talon.sensorCollection.quadratureVelocity.toDouble())
                 if(Math.abs(observedVelocity) > Math.abs(maxVel)){
                     maxVel = observedVelocity
                 }
-                println("Max WristV = " + maxVel)
+                //println("Max WristV = " + maxVel)
                 //println("IAccumulator: " + talon.integralAccumulator)
-                //println("Wrist: " + wristAngle)
+                println("Wrist Angle: " + wristAngle)
                 if (wristState == WristState.OPEN_LOOP || wristState == WristState.VELOCITY_CONTROL) {
                     //println("Wrist: " + wristAngle)
 //                    println("Target: " + wristState.targetAngle)
