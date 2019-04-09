@@ -1,6 +1,5 @@
 package src.main.kotlin.org.usfirst.frc.team4099.robot.subsystems
 
-import org.usfirst.frc.team4099.lib.drive.DriveSignal
 import org.usfirst.frc.team4099.robot.loops.Loop
 import org.usfirst.frc.team4099.robot.subsystems.*
 
@@ -70,7 +69,7 @@ class Superstructure : Subsystem {
 
                 when (systemState) {
                     SystemState.IDLE -> handleIdle()
-                    SystemState.CLIMBING -> climb()
+                    SystemState.CLIMBING -> climbUp()
 //                    SystemState.ALIGNING_VISION -> handleVision()
 //                SystemState.INTAKE_UP -> handleElevatorUp()
 //                SystemState.CLIMBING -> handleClimb()
@@ -131,14 +130,21 @@ class Superstructure : Subsystem {
         systemState = state
     }
 
-    private fun climb() {
+    private fun climbUp() {
         elevator.elevatorState = Elevator.ElevatorState.CLIMBING
         wrist.setWristPosition(-25.74*1.3)//1.3 is subject to change, -25.74 is horizontal encoder val
-        elevator.elevatorState = Elevator.ElevatorState.GROUND
         climber.climberState = Climber.ClimberState.LEVEL_THREE
-
     }
 
+    private fun climbOn() {
+        drive.setLeftRightPower(0.1,0.1)
+        climber.setOpenDrive(0.1)
+    }
+
+    private fun stowClimber() {
+        climber.climberState = Climber.ClimberState.STOW
+        drive.setLeftRightPower(0.1,0.1)
+    }
 
     override fun outputToSmartDashboard() { }
 

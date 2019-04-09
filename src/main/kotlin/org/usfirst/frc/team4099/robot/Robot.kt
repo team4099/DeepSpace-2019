@@ -342,10 +342,6 @@ class Robot : TimedRobot() {
                 elevator.setElevatorVelocity(0.0)
             }
 
-            if (controlBoard.elevatorClimberLatch) {
-                elevator.elevatorState = Elevator.ElevatorState.CLIMBING
-            }
-
             if (controlBoard.stowClimber){
                 println("stow climber")
                 climber.climberState = Climber.ClimberState.STOW

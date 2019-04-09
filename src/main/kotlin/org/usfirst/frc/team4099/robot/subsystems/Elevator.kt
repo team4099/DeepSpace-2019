@@ -34,7 +34,8 @@ class Elevator private constructor(): Subsystem {
         GROUND(0.0),
         HATCHLOW(10.0), HATCHMID(133.0), HATCHHIGH(235.0),  //not set
         PORTLOW(28.0), PORTMID(160.0), PORTHIGH(253.0),     //low, mid set
-        CLIMBING(0.0),
+        HAB_THREE(Constants.Elevator.HAB_THREE), HAB_TWO(Constants.Elevator.HAB_TWO),
+        HAB_TWO_HALF(Constants.Elevator.HAB_TWO_HALF), CLIMBING(0.0),
         VELOCITY_CONTROL(Double.NaN), OPEN_LOOP(Double.NaN)
     }
 
@@ -239,23 +240,8 @@ class Elevator private constructor(): Subsystem {
                     ElevatorState.VELOCITY_CONTROL -> {
                         return
                     }
-                    ElevatorState.HATCHHIGH -> {
-                        setElevatorPosition(ElevatorState.HATCHHIGH.targetPos)
-                    }
-                    ElevatorState.HATCHMID -> {
-                        setElevatorPosition(ElevatorState.HATCHMID.targetPos)
-                    }
-                    ElevatorState.HATCHLOW -> {
-                        setElevatorPosition(ElevatorState.HATCHLOW.targetPos)
-                    }
-                    ElevatorState.PORTHIGH -> {
-                        setElevatorPosition(ElevatorState.PORTHIGH.targetPos)
-                    }
-                    ElevatorState.PORTMID -> {
-                        setElevatorPosition(ElevatorState.PORTMID.targetPos)
-                    }
-                    ElevatorState.PORTLOW -> {
-                        setElevatorPosition(ElevatorState.PORTLOW.targetPos)
+                    else -> {
+                        setElevatorPosition(elevatorState.targetPos)
                     }
                 }
                // climberLatch.set(if (elevatorState == ElevatorState.CLIMBING) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
@@ -268,9 +254,7 @@ class Elevator private constructor(): Subsystem {
             }
         }
 
-        override fun onStop() {
-            setElevatorVelocity(0.0)
-        }
+        override fun onStop() = stop()
     }
 
     override fun stop() {

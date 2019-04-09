@@ -44,6 +44,7 @@ class Climber private constructor() : Subsystem {
             if (brakeMode != type) {
                 climbMotor.idleMode = type
             }
+            field = type
         }
 
     private fun setClimberPosition(position: ClimberState) {
@@ -65,7 +66,7 @@ class Climber private constructor() : Subsystem {
     fun setOpenLoop(power: Double) {
         climberState = ClimberState.OPEN_LOOP
 //        println("Elevator: " + observedElevatorPosition)
-        if(observedElevatorPosition > Constants.Climber.CLIMBER_SOFT_LIMIT  && power < 0.0){ //CHANGE SOFT LIMIT
+        if(observedElevatorPosition > Constants.Climber.CLIMBER_SOFT_LIMIT + tare && power < 0.0){ //CHANGE SOFT LIMIT
             climbPIDController.setReference(power, ControlType.kVoltage)
         }
         else {
@@ -142,24 +143,14 @@ class Climber private constructor() : Subsystem {
             observedClimberVelocity = climbEncoder.velocity
             synchronized(this@Climber) {
                 when(climberState) {
-                    ClimberState.LEVEL_THREE -> {
-                        setClimberPosition(ClimberState.LEVEL_THREE.targetPos)
-                    }
-                    ClimberState.LEVEL_TWO -> {
-                        setClimberPosition(ClimberState.LEVEL_TWO.targetPos)
-                    }
-                    ClimberState.LEVEL_TWO_HALF -> {
-                        setClimberPosition(ClimberState.LEVEL_TWO_HALF.targetPos)
-                    }
-                    ClimberState.STOW -> {
-                        setClimberPosition(ClimberState.STOW.targetPos)
-                    }
                     ClimberState.VELOCITY_CONTROL -> {
                         return
                     }
                     ClimberState.OPEN_LOOP -> {
                         return
-
+                    }
+                    else -> {
+                        setClimberPosition(climberState.targetPos)
                     }
                 }
                 when {

@@ -121,6 +121,9 @@ class Constants {
         val BOTTOM_SOFT_LIMIT = 0.0 //set later - CHANGE
         val LATCH_FORWARD_ID = 2
         val LATCH_REVERSE_ID = 5
+        val HAB_THREE = 0.0
+        val HAB_TWO = 0.0
+        val HAB_TWO_HALF = 0.0
     }
 
 
