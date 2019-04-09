@@ -1,8 +1,6 @@
 package org.usfirst.frc.team4099.robot
 
 import edu.wpi.first.cameraserver.CameraServer
-import edu.wpi.first.networktables.NetworkTable
-import edu.wpi.first.networktables.NetworkTableInstance
 import org.usfirst.frc.team4099.lib.util.Utils
 
 
@@ -26,8 +24,7 @@ class Robot : TimedRobot() {
 
 
 //    private val test3 : DoubleSolenoid = DoubleSolenoid(1,6)
-    private val table: NetworkTable = NetworkTableInstance.getDefault().getTable("limelight")
-    var led = table.getEntry("ledMode")
+
     private val wrist = Wrist.instance
     private val intake = Intake.instance
     private val climber  = Climber.instance
@@ -42,7 +39,6 @@ class Robot : TimedRobot() {
 
     private var intakeState = IntakeState.HATCHPANEL
     var dashBoardTest = 0
-    var isShoot = false
 
   
     enum class IntakeState {
@@ -133,7 +129,6 @@ class Robot : TimedRobot() {
             CrashTracker.logThrowableCrash("teleopInit", t)
             throw t
         }
-        intake.hatchState = Intake.HatchState.OPEN
 
     }
 
@@ -220,28 +215,16 @@ class Robot : TimedRobot() {
                     //println("open hatch")
                 }
                 if(controlBoard.closeHatch){
-                    //intake.hatchState = Intake.HatchState.CLOSED
-                    isShoot = true
-                    intake.deployState = Intake.DeployState.OUT
+                    intake.hatchState = Intake.HatchState.CLOSED
                     //println("close hatch")
                 }
-//                if (controlBoard.openDeployer){
-//                    intake.deployState = Intake.DeployState.OUT
-//                }
-//                if (controlBoard.closeDeployer){
-//                    intake.deployState = Intake.DeployState.IN
-//
-//                }
-                else{
-                    if(isShoot) {
-                        intake.hatchState = Intake.HatchState.CLOSED
-                        intake.deployState = Intake.DeployState.IN
-                    }
-                    isShoot = false
+                if (controlBoard.openDeployer){
+                    intake.deployState = Intake.DeployState.OUT
                 }
+                if (controlBoard.closeDeployer){
+                    intake.deployState = Intake.DeployState.IN
 
-
-
+                }
             }
 //            if (controlBoard.climberUp){
 //                climber.climberState = Climber.ClimberState.UP
@@ -298,7 +281,7 @@ class Robot : TimedRobot() {
                 drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
             } else if (vision.visionState == Vision.VisionState.AIMING) {
                 if (vision.visionState != Vision.VisionState.INACTIVE) {
-                    drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, vision.steeringAdjust, Utils.around(controlBoard.throttle, 0.0, 0.1)))
+                    drive.setLeftRightPower(vision.steeringAdjust, -vision.steeringAdjust)
                 } else {
                     drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
                 }

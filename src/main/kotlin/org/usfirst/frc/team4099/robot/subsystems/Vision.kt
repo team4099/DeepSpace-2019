@@ -94,9 +94,9 @@ class Vision private constructor(): Subsystem {
                                 onTarget = true
                             }
                         }
-                        steeringAdjust * 0.85
+                        steeringAdjust * 0.8
 
-//                        steeringAdjust = -steeringAdjust
+                        steeringAdjust = -steeringAdjust
 
                     }
                     VisionState.SEEKING -> {
