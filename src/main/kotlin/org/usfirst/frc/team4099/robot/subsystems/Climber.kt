@@ -31,6 +31,13 @@ class Climber private constructor() : Subsystem {
 
     var lastClimbPosition = 0.0
 
+    var brakeMode: CANSparkMax.IdleMode = CANSparkMax.IdleMode.kCoast //sets whether the brake mode should be coast (no resistance) or by force
+        set(type) {
+            if (brakeMode != type) {
+                climbMotor.idleMode = type
+            }
+        }
+
     private fun setClimberPosition(position: ClimberState) {
         var target = position.targetPos + tare
     }
@@ -79,6 +86,7 @@ class Climber private constructor() : Subsystem {
         climbPIDController.setIZone(Constants.Climber.CLIMBER_KIz)
         climbPIDController.setFF(Constants.Climber.CLIMBER_KF)
         climbPIDController.setOutputRange(-Constants.Climber.MAX_OUTPUT, Constants.Climber.MAX_OUTPUT)
+        brakeMode = CANSparkMax.IdleMode.kBrake
     }
 
     enum class ClimberState (val targetPos: Double){
