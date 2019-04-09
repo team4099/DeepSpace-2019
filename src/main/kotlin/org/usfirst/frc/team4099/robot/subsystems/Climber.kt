@@ -49,7 +49,7 @@ class Climber private constructor() : Subsystem {
         } else {
             //observedElevatorPosition = target
         }
-        climbPIDController.setReference(target + tare, ControlType.kPosition)
+        climbPIDController.setReference(target + tare, ControlType.kSmartMotion)
 
 
     }
@@ -86,6 +86,12 @@ class Climber private constructor() : Subsystem {
         climbPIDController.setIZone(Constants.Climber.CLIMBER_KIz)
         climbPIDController.setFF(Constants.Climber.CLIMBER_KF)
         climbPIDController.setOutputRange(-Constants.Climber.MAX_OUTPUT, Constants.Climber.MAX_OUTPUT)
+
+        climbPIDController.setSmartMotionMaxVelocity(30.0, 0)
+        climbPIDController.setSmartMotionMinOutputVelocity(0.0, 0)
+        climbPIDController.setSmartMotionMaxAccel(100.0, 0)
+        climbPIDController.setSmartMotionAllowedClosedLoopError(2.5, 0)
+
         brakeMode = CANSparkMax.IdleMode.kCoast
     }
 
