@@ -1,155 +1,146 @@
 package org.usfirst.frc.team4099.robot.drive
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import org.usfirst.frc.team4099.lib.drive.DriveSignal
-import org.usfirst.frc.team4099.lib.joystick.JoystickUtils
 import org.usfirst.frc.team4099.lib.util.Utils
-
-/**
- * Curvature Drive -
- * The left joystick controls speed (throttle)
- * The right joystick controls the curvature of the path.
- *
- * Credits: Team 254
- */
 
 class CheesyDriveHelper {
 
-    private var quickStopAccumulator: Double = 0.toDouble()
-    private var negativeInertia: Double = 0.toDouble()
-
-    private var lastThrottle: Double = 0.toDouble()
-
-    private val signal = DriveSignal(0.0, 0.0)
+    private var mOldWheel = 0.0
+    private var mQuickStopAccumlator = 0.0
+    private var mNegInertiaAccumlator = 0.0
 
     fun curvatureDrive(throttle: Double, wheel: Double, isQuickTurn: Boolean): DriveSignal {
         var throttle = throttle
         var wheel = wheel
-        throttle = JoystickUtils.deadband(throttle, kThrottleDeadband)
-        // TODO: see if moving wheel in the beginning makes a difference in throttle stop (because it used to come after the negativeInertia code)
-        wheel = -JoystickUtils.deadbandNoShape(wheel, kWheelDeadband)
 
-        if (isQuickTurn) {
-            wheel /= 1.20
-        }
-        // TODO: test this, does it really make controls feel better?
-        val wheelNonLinearity = 0.5
-        wheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * wheel) / Math.sin(Math.PI / 2.0 * wheelNonLinearity)
-        wheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * wheel) / Math.sin(Math.PI / 2.0 * wheelNonLinearity)
-        wheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * wheel) / Math.sin(Math.PI / 2.0 * wheelNonLinearity)
+        wheel = handleDeadband(wheel, kWheelDeadband)
+        throttle = handleDeadband(throttle, kThrottleDeadband)
 
-        /* ramps up the joystick throttle when magnitude increases
-         * if magnitude decreases (1.0 to 0.0, or -1.0 to 0.0), allow anything
-         * kMaxThrottleDelta is the maximum allowed change in throttle
-         *   per iteration (~50 Hz)
-         * attempt to limit the current draw when accelerating
-         *
-         * The acceleration time is quite apparent, but not unresponsive.
-         */
+        val negInertia = wheel - mOldWheel
+        mOldWheel = wheel
 
-        if (!Utils.sameSign(throttle, lastThrottle)) {
-            throttle = 0.0
+        val wheelNonLinearity: Double
+        if (false) {
+            wheelNonLinearity = kHighWheelNonLinearity
+            val denominator = Math.sin(Math.PI / 2.0 * wheelNonLinearity)
+            // Apply a sin function that's scaled to make it feel better.
+            wheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * wheel) / denominator
+            wheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * wheel) / denominator
         } else {
-            val throttleMagnitude = Math.abs(throttle)
-            val lastThrottleMagnitude = Math.abs(lastThrottle)
-
-            // only if an increase in magnitude
-            if (throttleMagnitude > lastThrottleMagnitude) {
-                // for + to more + increases
-                if (throttle > lastThrottle + kMaxThrottleDelta)
-                    throttle = lastThrottle + kMaxThrottleDelta
-                else if (throttle < lastThrottle - kMaxThrottleDelta)
-                    throttle = lastThrottle - kMaxThrottleDelta // for - to more - decreases
-            }
-        }
-        SmartDashboard.putNumber("joystickThrottle", throttle)
-        lastThrottle = throttle
-
-        //        if (Utils.around(wheel, 0.0, 0.15)) { // if moving straight
-        //            double beta = 0.1;
-        //
-        //            negativeInertia = (1 - beta) * negativeInertia +
-        //                    beta * Utils.limit(throttle, 1.0) * 2;
-        //        }
-
-        val beta = 0.1
-
-        negativeInertia = (1 - beta) * negativeInertia + beta * Utils.limit(throttle, 1.0) * 2.0
-
-        if (Utils.around(throttle, 0.0, 0.075)) { // if wanting to brake (low throttle)
-            if (!Utils.around(negativeInertia, 0.0, 0.0001))
-                println("negativeInertia: " + negativeInertia)
-
-            throttle -= negativeInertia
-
-            //TODO: find the optimal value for negativeInertia decrease per iteration
-            //TODO: testing 0.1, 0.15, 0.2, 0.25, 0.3, 0.5, 1.0, etc.
-            if (negativeInertia > 1) {
-                negativeInertia -= 0.4
-            } else if (negativeInertia < -1) {
-                negativeInertia += 0.4
-            } else {
-                negativeInertia = 0.0
-            }
+            wheelNonLinearity = kLowWheelNonLinearity
+            val denominator = Math.sin(Math.PI / 2.0 * wheelNonLinearity)
+            // Apply a sin function that's scaled to make it feel better.
+            wheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * wheel) / denominator
+            wheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * wheel) / denominator
+            wheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * wheel) / denominator
         }
 
-        // wheel deadband used to be here
-
+        var leftPwm: Double
+        var rightPwm: Double
         val overPower: Double
+        val sensitivity: Double
+
         val angularPower: Double
+        val linearPower: Double
 
-        if (isQuickTurn) {
-
-            wheel /= 1.5
-            if (Math.abs(throttle) < 0.2) {
-                val alpha = 0.1
-                quickStopAccumulator = (1 - alpha) * quickStopAccumulator + // used for "negative inertia"
-                        alpha * Utils.limit(wheel, 1.0) * 2.0
+        // Negative inertia!
+        val negInertiaScalar: Double
+        if (false) {
+            negInertiaScalar = kHighNegInertiaScalar
+            sensitivity = kHighSensitivity
+        } else {
+            if (wheel * negInertia > 0) {
+                // If we are moving away from 0.0, aka, trying to get more wheel.
+                negInertiaScalar = kLowNegInertiaTurnScalar
+            } else {
+                // Otherwise, we are attempting to go back to 0.0.
+                if (Math.abs(wheel) > kLowNegInertiaThreshold) {
+                    negInertiaScalar = kLowNegInertiaFarScalar
+                } else {
+                    negInertiaScalar = kLowNegInertiaCloseScalar
+                }
             }
-            overPower = 0.5
+            sensitivity = kLowSensitiity
+        }
+        val negInertiaPower = negInertia * negInertiaScalar
+        mNegInertiaAccumlator += negInertiaPower
+
+        wheel = wheel + mNegInertiaAccumlator
+        if (mNegInertiaAccumlator > 1) {
+            mNegInertiaAccumlator -= 1.0
+        } else if (mNegInertiaAccumlator < -1) {
+            mNegInertiaAccumlator += 1.0
+        } else {
+            mNegInertiaAccumlator = 0.0
+        }
+        linearPower = throttle
+
+        // Quickturn!
+        if (isQuickTurn) {
+            if (Math.abs(linearPower) < kQuickStopDeadband) {
+                val alpha = kQuickStopWeight
+                mQuickStopAccumlator = (1 - alpha) * mQuickStopAccumlator + alpha * Utils.limit(wheel, 1.0) * kQuickStopScalar
+            }
+            overPower = 1.0
             angularPower = wheel
         } else {
             overPower = 0.0
-            angularPower = Math.abs(throttle) * wheel * kTurnSensitivity - quickStopAccumulator
-
-            if (quickStopAccumulator > 1) {
-                quickStopAccumulator -= 0.5
-            } else if (quickStopAccumulator < -1) {
-                quickStopAccumulator += 0.5
+            angularPower = Math.abs(throttle) * wheel * sensitivity - mQuickStopAccumlator
+            if (mQuickStopAccumlator > 1) {
+                mQuickStopAccumlator -= 1.0
+            } else if (mQuickStopAccumlator < -1) {
+                mQuickStopAccumlator += 1.0
             } else {
-                quickStopAccumulator = 0.0
+                mQuickStopAccumlator = 0.0
             }
         }
 
-        var rightPower = throttle - angularPower
-        var leftPower = throttle + angularPower
-        if (leftPower > 1.0) {
-            rightPower -= overPower * (leftPower - 1.0)
-            leftPower = 1.0
-        } else if (rightPower > 1.0) {
-            leftPower -= overPower * (rightPower - 1.0)
-            rightPower = 1.0
-        } else if (leftPower < -1.0) {
-            rightPower += overPower * (-1.0 - leftPower)
-            leftPower = -1.0
-        } else if (rightPower < -1.0) {
-            leftPower += overPower * (-1.0 - rightPower)
-            rightPower = -1.0
+        leftPwm = linearPower
+        rightPwm = leftPwm
+        leftPwm += angularPower
+        rightPwm -= angularPower
+
+        if (leftPwm > 1.0) {
+            rightPwm -= overPower * (leftPwm - 1.0)
+            leftPwm = 1.0
+        } else if (rightPwm > 1.0) {
+            leftPwm -= overPower * (rightPwm - 1.0)
+            rightPwm = 1.0
+        } else if (leftPwm < -1.0) {
+            rightPwm += overPower * (-1.0 - leftPwm)
+            leftPwm = -1.0
+        } else if (rightPwm < -1.0) {
+            leftPwm += overPower * (-1.0 - rightPwm)
+            rightPwm = -1.0
         }
+        return DriveSignal(leftPwm, rightPwm)
+    }
 
-        signal.rightMotor = rightPower
-        signal.leftMotor = leftPower
-
-        return signal
+    fun handleDeadband(`val`: Double, deadband: Double): Double {
+        return if (Math.abs(`val`) > Math.abs(deadband)) `val` else 0.0
     }
 
     companion object {
-
         val instance = CheesyDriveHelper()
 
         private val kThrottleDeadband = 0.02
         private val kWheelDeadband = 0.02
-        private val kTurnSensitivity = 0.75
-        private val kMaxThrottleDelta = 1.35 / 40.0
+
+        // These factor determine how fast the wheel traverses the "non linear" sine curve.
+        private val kHighWheelNonLinearity = 0.65
+        private val kLowWheelNonLinearity = 0.5
+
+        private val kHighNegInertiaScalar = 4.0
+
+        private val kLowNegInertiaThreshold = 0.65
+        private val kLowNegInertiaTurnScalar = 3.5
+        private val kLowNegInertiaCloseScalar = 6.0
+        private val kLowNegInertiaFarScalar = 6.0
+
+        private val kHighSensitivity = 0.3
+        private val kLowSensitiity = 0.3
+
+        private val kQuickStopDeadband = 0.5
+        private val kQuickStopWeight = 0.1
+        private val kQuickStopScalar = 5.0
     }
 }

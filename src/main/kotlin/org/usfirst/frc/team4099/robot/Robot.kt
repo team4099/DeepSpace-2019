@@ -7,13 +7,13 @@ import org.usfirst.frc.team4099.lib.util.Utils
 import org.usfirst.frc.team4099.DashboardConfigurator
 import org.usfirst.frc.team4099.auto.AutoModeExecuter
 import edu.wpi.first.wpilibj.TimedRobot
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 //import org.usfirst.frc.team4099.auto.AutoModeExecuter
 import org.usfirst.frc.team4099.lib.util.CrashTracker
 import org.usfirst.frc.team4099.robot.drive.CheesyDriveHelper
 import org.usfirst.frc.team4099.robot.loops.BrownoutDefender
 import org.usfirst.frc.team4099.robot.loops.Looper
 import org.usfirst.frc.team4099.robot.loops.VoltageEstimator
-
 import org.usfirst.frc.team4099.robot.subsystems.*
 import src.main.kotlin.org.usfirst.frc.team4099.robot.subsystems.Superstructure
 
@@ -41,7 +41,7 @@ class Robot : TimedRobot() {
     var dashBoardTest = 0
 
   
-    public enum class IntakeState {
+    enum class IntakeState {
         CARGO, HATCHPANEL
     }
    // private val intake = Intake.instance
@@ -55,7 +55,7 @@ class Robot : TimedRobot() {
 
     override fun robotInit() {
         try {
-            CameraServer.getInstance().startAutomaticCapture();
+            CameraServer.getInstance().startAutomaticCapture()
 
             DashboardConfigurator.initDashboard()
 //            enabledLooper.register(drive.loop)
@@ -96,25 +96,21 @@ class Robot : TimedRobot() {
     }
 
     override fun autonomousInit() {
-//        try {
-//            autoModeExecuter?.stop()
-//            autoModeExecuter = null
-//
+        intake.hatchState = Intake.HatchState.OPEN
+        try {
+            autoModeExecuter?.stop()
+            autoModeExecuter = null
 
+            disabledLooper.stop() // end DisabledLooper
+            enabledLooper.start() // start EnabledLooper
 
-
-//            disabledLooper.stop() // end DisabledLooper
-//            enabledLooper.start() // start EnabledLooper
-//
-//            autoModeExecuter = AutoModeExecuter()
-//            autoModeExecuter?.setAutoMode(HatchPanelOnly(DashboardConfigurator.StartingPosition.LEFT, 0.0))
-//            autoModeExecuter?.start()
-//        } catch (t: Throwable) {
-//            CrashTracker.logThrowableCrash("autonomousInit", t)
-//            throw t
-//        }
-        teleopInit()
-        intake.hatchState = Intake.HatchState.CLOSED
+            autoModeExecuter = AutoModeExecuter()
+            autoModeExecuter?.setAutoMode(DashboardConfigurator.getAutonomousMode())
+            autoModeExecuter?.start()
+        } catch (t: Throwable) {
+            CrashTracker.logThrowableCrash("autonomousInit", t)
+            throw t
+        }
 
     }
 
@@ -125,6 +121,9 @@ class Robot : TimedRobot() {
 //            enabledLooper.register(vision.loop)
 //            enabledLooper.register(elevator.loop)
 //            enabledLooper.register(intake.loop)
+            if (DashboardConfigurator.getIntakeMode() == "Cargo") {
+                intakeState = IntakeState.CARGO
+            }
             enabledLooper.start()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("teleopInit", t)
@@ -136,7 +135,9 @@ class Robot : TimedRobot() {
     override fun disabledPeriodic() {
         try {
             //SmartDashboard.putNumber("Dashboard Test", dashBoardTest * 1.0)
-            dashBoardTest++
+//            dashBoardTest++
+//            led.setNumber(3)
+
             outputAllToSmartDashboard()
 //            wrist.outputToSmartDashboard()
 
@@ -148,14 +149,14 @@ class Robot : TimedRobot() {
     }
 
     override fun autonomousPeriodic() {
-//        try {
-//            outputAllToSmartDashboard()
-//            updateDashboardFeedback()
-//        } catch (t: Throwable) {
-//            CrashTracker.logThrowableCrash("autonomousPeriodic", t)
-//            throw t
-//        }
-        teleopPeriodic()
+        try {
+            outputAllToSmartDashboard()
+            updateDashboardFeedback()
+        } catch (t: Throwable) {
+            CrashTracker.logThrowableCrash("autonomousPeriodic", t)
+            throw t
+        }
+//        teleopPeriodic()
 
     }
 
@@ -165,6 +166,7 @@ class Robot : TimedRobot() {
             println("Period")
 //            SmartDashboard.putNumber("Dashboard Test", dashBoardTest * 1.0)
             dashBoardTest++
+
             if (controlBoard.cargoMode){
                 intakeState = IntakeState.CARGO
                 intake.hatchState = Intake.HatchState.OPEN
@@ -257,7 +259,7 @@ class Robot : TimedRobot() {
 
             drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
 
-            //outputAllToSmartDashboard()
+            outputAllToSmartDashboard()
             if (drive.highGear && controlBoard.switchToLowGear) {
                 drive.highGear = false
                 println("Shifting to low gear")
@@ -364,6 +366,7 @@ class Robot : TimedRobot() {
                 println("climb velocity up")
                 climber.climberState = Climber.ClimberState.VELOCITY_CONTROL
                 climber.setClimberVelocity(Constants.Climber.MAX_CLIMB_VEL)
+//                climber.setOpenLoop(0.5)
             }
             else if (controlBoard.climbVeloDown){
                 println("climb velocity down")
@@ -374,7 +377,7 @@ class Robot : TimedRobot() {
                 climber.setClimberVelocity(0.0)
             }
             else{
-                climber.setOpenLoop(0.0)
+//                climber.setOpenLoop(0.0)
             }
 
             if(climber.feetState && controlBoard.feetRetract) {
@@ -484,6 +487,7 @@ class Robot : TimedRobot() {
         drive.highGear = true
         Thread.sleep(3000)
        // outputAllToSmartDashboard()
+        climber.outputToSmartDashboard()
     }
     /**
      * Log information from all subsystems onto the SmartDashboard
@@ -492,6 +496,8 @@ class Robot : TimedRobot() {
         wrist.outputToSmartDashboard()
         intake.outputToSmartDashboard()
         elevator.outputToSmartDashboard()
+        drive.outputToSmartDashboard()
+        climber.outputToSmartDashboard()
     }
 
     private fun startLiveWindowMode() {

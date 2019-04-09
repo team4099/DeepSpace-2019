@@ -6,7 +6,7 @@ class Constants {
     object Drive {
         val LEFT_MASTER_ID = 5
         val LEFT_SLAVE_1_ID = 6
-//        val LEFT_SLAVE_2_ID = 5
+        // val LEFT_SLAVE_2_ID = 5
         val RIGHT_MASTER_ID = 10
         val RIGHT_SLAVE_1_ID = 9
         // val RIGHT_SLAVE_2_ID = 10
@@ -18,6 +18,28 @@ class Constants {
 
         val SHIFTER_FORWARD_ID = 5
         val SHIFTER_REVERSE_ID = 2
+
+        val LEFT_KV_FORWARD_HIGH = 0.4993
+        val RIGHT_KV_FORWARD_HIGH = 0.5412
+
+        val LEFT_KA_FORWARD_HIGH = 0.0468
+        val RIGHT_KA_FORWARD_HIGH = 0.0601
+
+        val LEFT_V_INTERCEPT_FORWARD_HIGH = 0.1879
+        val RIGHT_V_INTERCEPT_FORWARD_HIGH = 0.1364
+
+        val LEFT_KV_REVERSE_HIGH = 0.4987
+        val RIGHT_KV_REVERSE_HIGH = 0.5194
+
+        val LEFT_KA_REVERSE_HIGH = 0.0372
+        val RIGHT_KA_REVERSE_HIGH = 0.0644
+
+        val LEFT_V_INTERCEPT_REVERSE_HIGH = -0.1856
+        val RIGHT_V_INTERCEPT_REVERSE_HIGH = -0.2003
+
+        val FEET_PER_SEC_TO_RPM = 6.8 * 60.0 //10.4
+
+
     }
 
     object Wheels {
@@ -27,15 +49,15 @@ class Constants {
     object Climber {
         val CLIMBER_SPARK_ID = 15
         val DRIVE_TALON_ID = 14
-        val CLIMBER_KP = 0.0
+        val CLIMBER_KP = 0.3
         val CLIMBER_KI = 0.0
         val CLIMBER_KD = 0.0
         val CLIMBER_KIz = 0.0
-        val CLIMBER_KF = 0.0
+        val CLIMBER_KF = 0.11
         val MAX_OUTPUT = 1.0
         val LEVEL_THREE_POSITION = 0.0
         val STOW_POSITION = 0.0
-        val LEVEL_TWO_HALF = 0.0
+        val LEVEL_TWO_HALF = 64.0
         val LEVEL_TWO = 0.0
         val CLIMBER_SOFT_LIMIT = -10.0
         val MAX_CLIMB_VEL = 0.4
@@ -46,27 +68,27 @@ class Constants {
 
 
     object Gains {
-        val LEFT_LOW_KP = .1 * 1500 / 70
+        val LEFT_LOW_KP = 0.0000//.1 * 1500 / 70
         val LEFT_LOW_KI = 0.0000
         val LEFT_LOW_KD = 0.0000
-        val LEFT_LOW_KF = 1023.0 / 2220.0
+        val LEFT_LOW_KF = 0.0000//1023.0 / 2220.0
 
         //subject to change
-        val LEFT_HIGH_KP = .1 * 1023 / 70
+        val LEFT_HIGH_KP = 0.0000//.1 * 1023 / 70
         val LEFT_HIGH_KI = 0.0000
         val LEFT_HIGH_KD = 0.0000
-        val LEFT_HIGH_KF = 1023.0 / 4420.0
+        val LEFT_HIGH_KF = 0.0000//1023.0 / 4420.0
 
-        val RIGHT_LOW_KP = .1 * 1500 / 70
+        val RIGHT_LOW_KP = 0.0000//.1 * 1500 / 70
         val RIGHT_LOW_KI = 0.0000
         val RIGHT_LOW_KD = 0.0000
-        val RIGHT_LOW_KF = 1023.0 / 2220.0
+        val RIGHT_LOW_KF = 0.0000//1023.0 / 2220.0
 
         //subject to change
-        val RIGHT_HIGH_KP = .1 * 1023 / 70
+        val RIGHT_HIGH_KP = 0.0000//.1 * 1023 / 70
         val RIGHT_HIGH_KI = 0.0000
         val RIGHT_HIGH_KD = 0.0000
-        val RIGHT_HIGH_KF = 1023.0 / 4420.0
+        val RIGHT_HIGH_KF = 0.0000//1023.0 / 4420.0
 
         val ELEVATOR_UP_KP = 3.0
         val ELEVATOR_UP_KI = 0.0005
@@ -105,12 +127,19 @@ class Constants {
 
 
     object Vision {
-        val Kp = -0.02
+        val Kp = -0.019
         val minCommand = 0
+
         val HATCH_PANEL_HEIGHT = 20 // inches
         val CARGO_HEIGHT = 20 // inches
-        val CAMERA_ANGLE = 0 // degrees, NOT SET
+
+        val CAMERA_HEIGHT = 38.0085 // inches
+        val CAMERA_ANGLE = -22.409 // degrees
+        val TARGET_HEIGHT = 28.58722 // inches
+
         val TARGET_HEIGHT_ADJUST = 10 //inches, NOT SET
+        val CAMERA_OFFSET = -1.75
+        val ERROR_MARGIN = 0.25 // degrees
     }
     object Velocity {
         val HIGH_GEAR_VELOCITY_CONTROL_SLOT = 0

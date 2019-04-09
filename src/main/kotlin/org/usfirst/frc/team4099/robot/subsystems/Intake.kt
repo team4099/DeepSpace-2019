@@ -27,7 +27,7 @@ class Intake private constructor() : Subsystem {
             Constants.Intake.DEPLOYER_REVERSE_ID)
 
     var intakeState = IntakeState.IN
-    var hatchState = HatchState.CLOSED
+    var hatchState = HatchState.OPEN
     var deployState = DeployState.IN
     private var intakePower = 0.0
     public var isHatchOpen = false

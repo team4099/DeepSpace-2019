@@ -7,6 +7,8 @@ import org.usfirst.frc.team4099.robot.loops.Loop
 import org.usfirst.frc.team4099.robot.Constants
 import org.usfirst.frc.team4099.robot.subsystems.Elevator
 
+import kotlin.math.*
+
 
 
 /*
@@ -19,7 +21,7 @@ class Vision private constructor(): Subsystem {
     val elevator = Elevator.instance
     var onTarget = false
     var steeringAdjust = 0.0
-    private var distance = 0.0
+    var distance = 0.0
     var dHeight = 0.0
 
 
@@ -30,7 +32,7 @@ class Vision private constructor(): Subsystem {
     var ta = table.getEntry("ta").getDouble(0.0)
 
     var led = table.getEntry("ledMode")
-
+    var pipeline = table.getEntry("pipeline")
 
     var visionState = VisionState.INACTIVE
 
@@ -48,7 +50,9 @@ class Vision private constructor(): Subsystem {
 //    @Synchronized override fun stop() {
 //        visionState = VisionState.INACTIVE
 //    }
-
+    init {
+        led.setNumber(1)
+    }
     val loop: Loop = object : Loop {
         override fun onStart() {
             visionState = VisionState.INACTIVE
@@ -63,25 +67,32 @@ class Vision private constructor(): Subsystem {
                 else{
                     dHeight = Constants.Vision.CARGO_HEIGHT - Constants.Vision.TARGET_HEIGHT_ADJUST - elevator.observedElevatorPosition
                 }
-                distance = (dHeight / Math.tan(ty + Constants.Vision.CAMERA_ANGLE))
+
+                // distance: d = (h2-h1) / tan(a1+a2)
+                distance = (Constants.Vision.TARGET_HEIGHT - Constants.Vision.CAMERA_HEIGHT) / tan(Constants.Vision.CAMERA_ANGLE + ty)
+                SmartDashboard.putNumber("vision/distance", distance)
                 tx = table.getEntry("tx").getDouble(0.0)
                 tv = table.getEntry("tv").getDouble(0.0)
                 ty = table.getEntry("ty").getDouble(0.0)
                 ta = table.getEntry("ta").getDouble(0.0)
+
                 when (visionState) {
                     VisionState.AIMING -> {
+                        pipeline.setNumber(0)
                         led.setNumber(3)
                         if (tv == 0.0) {
 
                         } else {
-                            if (tx > 0.0) {
+                            if (tx > (Constants.Vision.CAMERA_OFFSET)) {
                                 // right
                                 steeringAdjust = Constants.Vision.Kp * tx - Constants.Vision.minCommand
-                            } else if (tx < 0.0) {
+                            } else if (tx < (Constants.Vision.CAMERA_OFFSET)) {
                                 // left
                                 steeringAdjust = Constants.Vision.Kp * tx + Constants.Vision.minCommand
                             }
-                            else {}
+                            else {
+                                onTarget = true
+                            }
                         }
                         steeringAdjust * 0.8
 
@@ -89,6 +100,7 @@ class Vision private constructor(): Subsystem {
 
                     }
                     VisionState.SEEKING -> {
+                        pipeline.setNumber(0)
                         led.setNumber(3)
                         if (tv == 0.0) {
 
@@ -107,6 +119,7 @@ class Vision private constructor(): Subsystem {
 
                     VisionState.INACTIVE -> {
                         steeringAdjust = 0.0
+                        pipeline.setNumber(1)
                         led.setNumber(1)
                     }
 
@@ -120,9 +133,9 @@ class Vision private constructor(): Subsystem {
     fun setState (state: VisionState) {
         visionState = state
     }
-    fun getDistance(): Double {
-        return distance
-    }
+//    fun getDistance(): Double {
+//        return distance
+//    }
 
     companion object {
         val instance = Vision()

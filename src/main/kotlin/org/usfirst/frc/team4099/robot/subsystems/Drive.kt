@@ -1,10 +1,5 @@
 package org.usfirst.frc.team4099.robot.subsystems
 
-import java.util.*
-
-import com.ctre.phoenix.motorcontrol.*
-import com.ctre.phoenix.motorcontrol.can.TalonSRX
-import com.ctre.phoenix.motorcontrol.can.VictorSPX
 import com.kauailabs.navx.frc.AHRS
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.SPI
@@ -13,7 +8,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import org.usfirst.frc.team4099.auto.paths.FieldPaths
 import org.usfirst.frc.team4099.auto.paths.Path
 import org.usfirst.frc.team4099.lib.drive.DriveSignal
-import org.usfirst.frc.team4099.lib.util.CANMotorControllerFactory
 import org.usfirst.frc.team4099.robot.Constants
 import org.usfirst.frc.team4099.robot.loops.Loop
 import com.revrobotics.CANEncoder
@@ -56,10 +50,10 @@ class Drive private constructor() : Subsystem {
     var brakeMode: CANSparkMax.IdleMode = CANSparkMax.IdleMode.kCoast //sets whether the brake mode should be coast (no resistance) or by force
         set(type) {
             if (brakeMode != type) {
-                leftMasterSpark.setIdleMode(type)
-                leftSlave1Spark.setIdleMode(type)
-                rightMasterSpark.setIdleMode(type)
-                rightSlave1Spark.setIdleMode(type)
+                leftMasterSpark.idleMode = type
+                leftSlave1Spark.idleMode = type
+                rightMasterSpark.idleMode = type
+                rightSlave1Spark.idleMode = type
             }
         }
 
@@ -84,6 +78,11 @@ class Drive private constructor() : Subsystem {
     private var currentState = DriveControlState.OPEN_LOOP
 
     init {
+        leftMasterSpark.restoreFactoryDefaults()
+        rightMasterSpark.restoreFactoryDefaults()
+        leftSlave1Spark.restoreFactoryDefaults()
+        rightSlave1Spark.restoreFactoryDefaults()
+
         leftSlave1Spark.follow(leftMasterSpark)
         rightSlave1Spark.follow(rightMasterSpark)
 
@@ -158,7 +157,7 @@ class Drive private constructor() : Subsystem {
      * @param right
      */
     @Synchronized
-    public fun setLeftRightPower(left: Double, right: Double) {
+    fun setLeftRightPower(left: Double, right: Double) {
 //                println("power: $left, $right")
         leftMasterSpark.set(left * Constants.Drive.MAX_LEFT_OPENLOOP_VEL)
         rightMasterSpark.set(right * Constants.Drive.MAX_RIGHT_OPENLOOP_VEL)
@@ -192,12 +191,12 @@ class Drive private constructor() : Subsystem {
         }
         SmartDashboard.putNumber("leftSpark", leftMasterSpark.busVoltage)
         SmartDashboard.putNumber("rightSpark", rightMasterSpark.busVoltage)
-        SmartDashboard.putNumber("leftEncoderInches", getLeftDistanceInches())
-        SmartDashboard.putNumber("rightEncoderInches", getRightDistanceInches())
+        SmartDashboard.putNumber("leftEncoderInches", leftEncoder.position)
+        SmartDashboard.putNumber("rightEncoderInches", rightEncoder.position)
     }
 
     fun startLiveWindowMode() {
-        LiveWindow.addSensor("Drive", "Gyro", ahrs);
+        LiveWindow.addSensor("Drive", "Gyro", ahrs)
     }
 
     fun stopLiveWindowMode() {
@@ -257,17 +256,37 @@ class Drive private constructor() : Subsystem {
     }
 
     @Synchronized
-    fun setVelocitySetpoint(leftInchesPerSec: Double, rightInchesPerSec: Double) {
+    fun setVelocitySetpoint(leftFeetPerSec: Double, rightFeetPerSec: Double, leftFeetPerSecSq: Double, rightFeetPerSecSq: Double) {
         if (usesTalonVelocityControl(currentState)) {
-            leftPIDController.setReference(leftInchesPerSec,ControlType.kVelocity)
-            rightPIDController.setReference(rightInchesPerSec,ControlType.kVelocity)
-            // println("left err: ${leftMasterSRX.getClosedLoopError(0)} trg: $leftInchesPerSec actual: ${leftMasterSRX.getSelectedSensorVelocity(0)}")
-            //println("right err: ${rightMasterSRX.getClosedLoopError(0)} trg: $rightInchesPerSec actual: ${rightMasterSRX.getSelectedSensorVelocity(0)}")
+            // below line is temporary since we only wanna run auto in high gear for now
+            highGear = true
+            val leftRPM = leftFeetPerSec * Constants.Drive.FEET_PER_SEC_TO_RPM
+            val rightRPM = rightFeetPerSec * Constants.Drive.FEET_PER_SEC_TO_RPM
+
+            val leftFeedForward: Double
+            val rightFeedForward: Double
+
+            if (leftFeetPerSec > 0) {
+                leftFeedForward = Constants.Drive.LEFT_KV_FORWARD_HIGH * leftFeetPerSec + Constants.Drive.LEFT_KA_FORWARD_HIGH * leftFeetPerSecSq + Constants.Drive.LEFT_V_INTERCEPT_FORWARD_HIGH
+            } else {
+                leftFeedForward = Constants.Drive.LEFT_KV_REVERSE_HIGH * leftFeetPerSec + Constants.Drive.LEFT_KA_REVERSE_HIGH * leftFeetPerSecSq + Constants.Drive.LEFT_V_INTERCEPT_REVERSE_HIGH
+            }
+
+            if (rightFeetPerSec > 0) {
+                rightFeedForward = Constants.Drive.RIGHT_KV_FORWARD_HIGH * rightFeetPerSec + Constants.Drive.RIGHT_KA_FORWARD_HIGH * rightFeetPerSecSq + Constants.Drive.RIGHT_V_INTERCEPT_FORWARD_HIGH
+            } else {
+                rightFeedForward = Constants.Drive.RIGHT_KV_REVERSE_HIGH * rightFeetPerSec + Constants.Drive.RIGHT_KA_REVERSE_HIGH * rightFeetPerSecSq + Constants.Drive.RIGHT_V_INTERCEPT_REVERSE_HIGH
+            }
+
+            leftPIDController.setReference(leftRPM, ControlType.kVelocity, 1, leftFeedForward)
+            rightPIDController.setReference(rightRPM, ControlType.kVelocity, 1, rightFeedForward)
+            // println("left err: ${leftMasterSRX.getClosedLoopError(0)} trg: $leftFeetPerSec actual: ${leftMasterSRX.getSelectedSensorVelocity(0)}")
+            //println("right err: ${rightMasterSRX.getClosedLoopError(0)} trg: $rightFeetPerSec actual: ${rightMasterSRX.getSelectedSensorVelocity(0)}")
         }
         else {
             configureTalonsForVelocityControl()
             currentState = DriveControlState.VELOCITY_SETPOINT
-            setVelocitySetpoint(leftInchesPerSec, rightInchesPerSec)
+            setVelocitySetpoint(leftFeetPerSec, rightFeetPerSec, leftFeetPerSecSq, rightFeetPerSecSq)
 
         }
     }
@@ -354,19 +373,20 @@ class Drive private constructor() : Subsystem {
     }
     fun updatePathFollowing(){
         //note *12 is to convert ft to inches
-        if (segment < trajLength) {
-            var leftTurn: Double = path.getLeftVelocityIndex(segment) * 12
-            var rightTurn: Double = path.getRightVelocityIndex(segment) * 12
+        if (segment < trajLength - 132) {
+
+            var leftTurn: Double = path.getLeftVelocityIndex(segment)
+            var rightTurn: Double = path.getRightVelocityIndex(segment)
             val gyroHeading: Float = ahrs.yaw
             val desiredHeading: Double = radiansToDegrees(path.getHeadingIndex(segment))
             val angleDifference: Double = boundHalfDegrees(desiredHeading - gyroHeading)
-            val turn: Double = 0.8 * 12 * (-1.0 / 80.0) * angleDifference
+            val turn: Double = 0.8  * (-1.0 / 80.0) * angleDifference
 
             val leftDistance: Double = getLeftDistanceInches()
             val rightDistance: Double = getRightDistanceInches()
 
-            val leftErrorDistance: Double = path.getLeftDistanceIndex(segment)*12 - leftDistance
-            val rightErrorDistance: Double = path.getRightDistanceIndex(segment)*12 - rightDistance
+            val leftErrorDistance: Double = path.getLeftDistanceIndex(segment) - leftDistance
+            val rightErrorDistance: Double = path.getRightDistanceIndex(segment) - rightDistance
 
             val leftVelocityAdjustment = Constants.Gains.LEFT_LOW_KP * leftErrorDistance + Constants.Gains.LEFT_LOW_KD * ((leftErrorDistance - lastLeftError)/path.getDeltaTime())
             val rightVelocityAdjustment = Constants.Gains.RIGHT_LOW_KP * rightErrorDistance + Constants.Gains.RIGHT_LOW_KD * ((rightErrorDistance - lastRightError)/path.getDeltaTime())
@@ -374,23 +394,22 @@ class Drive private constructor() : Subsystem {
             //   leftTurn = leftTurn + leftVelocityAdjustment
             // rightTurn = rightTurn + rightVelocityAdjustment
 
-            lastLeftError = leftErrorDistance
+               lastLeftError = leftErrorDistance
 
 
-            //leftTurn = leftTurn + turn
-//            rightTurn = rightTurn - turn
+//            leftTurn +=  turn
+//            rightTurn -= turn
 
-            setVelocitySetpoint(leftTurn, rightTurn)
-            println(" " +segment  + " " +leftTurn+" " + rightTurn)
-
+            setVelocitySetpoint(leftTurn, rightTurn, path.getLeftAccelerationIndex(segment), path.getRightAccelerationIndex(segment))
+            println("$segment $leftTurn $rightTurn")
             segment++
         }
         else {
-            setVelocitySetpoint(0.0, 0.0)
+            setLeftRightPower(0.0, -0.5)
         }
     }
     fun isPathFinished(): Boolean {
-        return segment >= trajLength
+        return segment >= trajLength - 132
     }
 
 
@@ -398,7 +417,7 @@ class Drive private constructor() : Subsystem {
         synchronized(this) {
             setOpenLoop(DriveSignal.NEUTRAL)
             brakeMode = CANSparkMax.IdleMode.kCoast
-            setVelocitySetpoint(0.0, 0.0) //could update in future
+            setVelocitySetpoint(0.0, 0.0, 0.0, 0.0) //could update in future
         }
     }
 
@@ -419,13 +438,16 @@ class Drive private constructor() : Subsystem {
                 println("Right: " + rightEncoder.position)
                 when (currentState) {
                     DriveControlState.OPEN_LOOP -> {
+                        brakeMode = CANSparkMax.IdleMode.kCoast
                         return
                     }
                     DriveControlState.VELOCITY_SETPOINT -> {
+                        brakeMode = CANSparkMax.IdleMode.kCoast
                         return
                     }
                     DriveControlState.PATH_FOLLOWING ->{
                         updatePathFollowing()
+                        brakeMode = CANSparkMax.IdleMode.kCoast
                     }
                     DriveControlState.TURN_TO_HEADING -> {
                         //updateTurnToHeading(timestamp);
@@ -440,6 +462,7 @@ class Drive private constructor() : Subsystem {
 
         override fun onStop() {
             setOpenLoop(DriveSignal.NEUTRAL)
+            brakeMode = CANSparkMax.IdleMode.kCoast
         }
     }
 

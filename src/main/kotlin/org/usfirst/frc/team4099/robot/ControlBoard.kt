@@ -38,6 +38,9 @@ class ControlBoard private constructor() {
     val climbVeloDown: Boolean
         get() = driver.dPadDown
 
+    val climbAuto: Boolean
+        get() = driver.leftJoystickButton && driver.rightJoystickButton && driver.leftShoulderButton && driver.rightShoulderButton
+
     val climberDrive : Double
         get() = if(driver.rightShoulderButton) 1.0 else 0.0 - if(driver.leftShoulderButton) 1.0 else 0.0
 
