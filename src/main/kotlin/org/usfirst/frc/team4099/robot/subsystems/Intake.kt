@@ -93,7 +93,7 @@ class Intake private constructor() : Subsystem {
             synchronized(this@Intake) {
                 when (intakeState) {
                     IntakeState.IN -> setIntakePower(-1.0)
-                    IntakeState.HOLDING -> setIntakePower(-0.25)
+                    IntakeState.HOLDING -> setIntakePower(-0.15)
                     IntakeState.STOP -> setIntakePower(0.0)
                     IntakeState.OUT -> setIntakePower(1.0)
                 }
