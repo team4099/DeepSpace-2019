@@ -118,7 +118,7 @@ class ControlBoard private constructor() {
         get() = operator.leftYAxis
 
     val wristCargoIntake: Boolean
-        get() = operator.leftJoystickButton
+        get() = operator.xButton
 
     val climberPower : Double //openloop testing
         get() = operator.rightYAxis
