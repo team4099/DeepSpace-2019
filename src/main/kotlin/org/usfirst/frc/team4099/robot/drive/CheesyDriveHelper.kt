@@ -132,7 +132,7 @@ class CheesyDriveHelper {
         private val kHighNegInertiaScalar = 4.0
 
         private val kLowNegInertiaThreshold = 0.65
-        private val kLowNegInertiaTurnScalar = 3.5
+        private val kLowNegInertiaTurnScalar = 2.1
         private val kLowNegInertiaCloseScalar = 6.0
         private val kLowNegInertiaFarScalar = 6.0
 
