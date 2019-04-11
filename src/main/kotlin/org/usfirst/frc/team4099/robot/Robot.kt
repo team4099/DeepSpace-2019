@@ -96,21 +96,22 @@ class Robot : TimedRobot() {
     }
 
     override fun autonomousInit() {
-        intake.hatchState = Intake.HatchState.OPEN
-        try {
-            autoModeExecuter?.stop()
-            autoModeExecuter = null
-
-            disabledLooper.stop() // end DisabledLooper
-            enabledLooper.start() // start EnabledLooper
-
-            autoModeExecuter = AutoModeExecuter()
-            autoModeExecuter?.setAutoMode(DashboardConfigurator.getAutonomousMode())
-            autoModeExecuter?.start()
-        } catch (t: Throwable) {
-            CrashTracker.logThrowableCrash("autonomousInit", t)
-            throw t
-        }
+//        intake.hatchState = Intake.HatchState.OPEN
+//        try {
+//            autoModeExecuter?.stop()
+//            autoModeExecuter = null
+//
+//            disabledLooper.stop() // end DisabledLooper
+//            enabledLooper.start() // start EnabledLooper
+//
+//            autoModeExecuter = AutoModeExecuter()
+//            autoModeExecuter?.setAutoMode(DashboardConfigurator.getAutonomousMode())
+//            autoModeExecuter?.start()
+//        } catch (t: Throwable) {
+//            CrashTracker.logThrowableCrash("autonomousInit", t)
+//            throw t
+//        }
+        teleopInit()
 
     }
 
@@ -150,13 +151,13 @@ class Robot : TimedRobot() {
 
     override fun autonomousPeriodic() {
         try {
-            outputAllToSmartDashboard()
+            //outputAllToSmartDashboard()
             updateDashboardFeedback()
         } catch (t: Throwable) {
             CrashTracker.logThrowableCrash("autonomousPeriodic", t)
             throw t
         }
-//        teleopPeriodic()
+       teleopPeriodic()
 
     }
 
@@ -232,7 +233,7 @@ class Robot : TimedRobot() {
 
             drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
 
-            outputAllToSmartDashboard()
+            //outputAllToSmartDashboard()
             if (drive.highGear && controlBoard.switchToLowGear) {
                 drive.highGear = false
                 println("Shifting to low gear")
@@ -333,10 +334,10 @@ class Robot : TimedRobot() {
 //                climber.setOpenLoop(0.0)
             }
 
-            if(climber.feetState && controlBoard.feetRetract) {
-                climber.feetState = false
-            } else if (!climber.feetState && controlBoard.feetExtend) {
-                climber.feetState = true
+            if(controlBoard.feetRetract) {
+                climber.feet = Climber.FeetState.RETRACT
+            } else if (controlBoard.feetExtend) {
+                climber.feet = Climber.FeetState.EXTEND
             }
             if (climber.climberState != Climber.ClimberState.STOW){
                 if(controlBoard.climberDrive != 0.0){

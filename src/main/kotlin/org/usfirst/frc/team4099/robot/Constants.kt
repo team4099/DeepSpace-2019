@@ -62,8 +62,8 @@ class Constants {
         val CLIMBER_SOFT_LIMIT = -10.0
         val MAX_CLIMB_VEL = 0.4
         val MAX_DRIVE_VEL = 400.0
-        val FEET_SOLENOID_FORWARD = 0
-        val FEET_SOLENOID_REVERSE = 1
+        val FEET_SOLENOID_FORWARD = 3
+        val FEET_SOLENOID_REVERSE = 4
     }
 
 

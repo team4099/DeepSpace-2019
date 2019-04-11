@@ -100,8 +100,7 @@ class Wrist private constructor(): Subsystem {
         SmartDashboard.putBoolean("wrist/wristUp", wristAngle > PI / 4)
         SmartDashboard.putNumber("wrist/wristSpeed", talon.sensorCollection.quadratureVelocity.toDouble())
     }
-
-    @Synchronized override fun stop() {
+       @Synchronized override fun stop() {
         talon.set(ControlMode.Velocity,0.0)
         talon.setNeutralMode(NeutralMode.Coast)
     }

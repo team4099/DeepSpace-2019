@@ -19,7 +19,7 @@ class Climber private constructor() : Subsystem {
     private val driveMotor: TalonSRX = CANMotorControllerFactory.createDefaultTalon(Constants.Climber.DRIVE_TALON_ID) //final
     private val climbEncoder: CANEncoder = climbMotor.encoder
     private val climbPIDController: CANPIDController = climbMotor.pidController
-//    private val neighbor: DoubleSolenoid = DoubleSolenoid(Constants.Climber.FEET_SOLENOID_FORWARD,Constants.Climber.FEET_SOLENOID_REVERSE)
+    private val neighbor: DoubleSolenoid = DoubleSolenoid(Constants.Climber.FEET_SOLENOID_FORWARD,Constants.Climber.FEET_SOLENOID_REVERSE)
     private var tare: Double = 0.0
     var movementState = MovementState.STILL
         private set
@@ -34,6 +34,12 @@ class Climber private constructor() : Subsystem {
             //neighbor.set(if (wantsFeet) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
             field = wantsFeet
         }
+
+    enum class FeetState {
+        EXTEND, RETRACT
+    }
+
+    var feet = FeetState.RETRACT
 
 
 
@@ -157,6 +163,14 @@ class Climber private constructor() : Subsystem {
                     observedClimberVelocity in -1 .. 1 -> movementState = MovementState.STILL
                     observedClimberVelocity > 1 -> movementState = MovementState.UP
                     observedClimberVelocity < 1 -> movementState = MovementState.DOWN
+                }
+                when(feet){
+                    FeetState.RETRACT -> {
+                        neighbor.set(DoubleSolenoid.Value.kForward)
+                    }
+                    FeetState.EXTEND -> {
+                        neighbor.set(DoubleSolenoid.Value.kReverse)
+                    }
                 }
             }
 
