@@ -2,7 +2,6 @@ package org.usfirst.frc.team4099.robot.subsystems
 
 import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.motorcontrol.can.TalonSRX
-import com.ctre.phoenix.motorcontrol.can.VictorSPX
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import com.revrobotics.CANEncoder
 import com.revrobotics.CANPIDController
@@ -19,7 +18,7 @@ class Climber private constructor() : Subsystem {
     private val driveMotor: TalonSRX = CANMotorControllerFactory.createDefaultTalon(Constants.Climber.DRIVE_TALON_ID) //final
     private val climbEncoder: CANEncoder = climbMotor.encoder
     private val climbPIDController: CANPIDController = climbMotor.pidController
-    private val neighbor: DoubleSolenoid = DoubleSolenoid(Constants.Climber.FEET_SOLENOID_FORWARD,Constants.Climber.FEET_SOLENOID_REVERSE)
+    private val feetSolenoid: DoubleSolenoid = DoubleSolenoid(Constants.Climber.FEET_SOLENOID_FORWARD,Constants.Climber.FEET_SOLENOID_REVERSE)
     private var tare: Double = 0.0
     var movementState = MovementState.STILL
         private set
@@ -31,7 +30,7 @@ class Climber private constructor() : Subsystem {
     var climberState = ClimberState.OPEN_LOOP
     var feetState = false
         set(wantsFeet) {
-            //neighbor.set(if (wantsFeet) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
+            feetSolenoid.set(if (wantsFeet) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
             field = wantsFeet
         }
 
@@ -64,7 +63,7 @@ class Climber private constructor() : Subsystem {
         } else {
             //observedElevatorPosition = target
         }
-        climbPIDController.setReference(target + tare, ControlType.kSmartMotion)
+        climbPIDController.setReference(target + tare, ControlType.kPosition)
 
 
     }
@@ -107,7 +106,7 @@ class Climber private constructor() : Subsystem {
         climbPIDController.setSmartMotionMaxAccel(100.0, 0)
         climbPIDController.setSmartMotionAllowedClosedLoopError(2.5, 0)
 
-        brakeMode = CANSparkMax.IdleMode.kCoast
+        brakeMode = CANSparkMax.IdleMode.kBrake
     }
 
     enum class ClimberState (val targetPos: Double){
@@ -166,10 +165,10 @@ class Climber private constructor() : Subsystem {
                 }
                 when(feet){
                     FeetState.RETRACT -> {
-                        neighbor.set(DoubleSolenoid.Value.kForward)
+                        feetSolenoid.set(DoubleSolenoid.Value.kForward)
                     }
                     FeetState.EXTEND -> {
-                        neighbor.set(DoubleSolenoid.Value.kReverse)
+                        feetSolenoid.set(DoubleSolenoid.Value.kReverse)
                     }
                 }
             }

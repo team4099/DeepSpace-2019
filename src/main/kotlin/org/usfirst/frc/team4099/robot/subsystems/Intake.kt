@@ -56,7 +56,7 @@ class Intake private constructor() : Subsystem {
     init{
         talon.configPeakCurrentLimit(20)
         talon.setNeutralMode(NeutralMode.Brake)
-        talon.inverted = true
+        talon.inverted = false
     }
 
     /**

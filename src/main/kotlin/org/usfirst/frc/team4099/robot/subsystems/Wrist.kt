@@ -38,9 +38,9 @@ class Wrist private constructor(): Subsystem {
 //                talon.motorOutputPercent < 0 && talon.sensorCollection.quadraturePosition > 1600
 
     enum class WristState(val targetAngle: Double) {
-        HORIZONTAL(-25.74),
+        HORIZONTAL(-24.1),
         VERTICAL(-2.0),
-        CARGO(-33.9),
+        CARGO(-29.7),
         OPEN_LOOP(Double.NaN),
         VELOCITY_CONTROL(Double.NaN)
         //TODO Calibrate values
@@ -142,8 +142,8 @@ class Wrist private constructor(): Subsystem {
 //            println("wrist exiting at 0 power, $radiansPerSecond")
 //            return
 //        }
-        talon.configPeakOutputReverse(-0.42, 0)
-        talon.configPeakOutputForward(0.42, 0)
+        talon.configPeakOutputReverse(-0.36, 0)
+        talon.configPeakOutputForward(0.36, 0)
         if(radiansPerSecond == 0.0){
             setWristPosition(lastVelControlPosition)   //use when pids are better
         }

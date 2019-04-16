@@ -118,10 +118,15 @@ class Drive private constructor() : Subsystem {
 //        rightMasterSRX.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_10Ms, 0)
 //        rightMasterSRX.configVelocityMeasurementWindow(32, 0)
 
-        leftMasterSpark.inverted = true
-        leftSlave1Spark.inverted = true
-        rightMasterSpark.inverted = false
-        rightSlave1Spark.inverted = false
+        leftMasterSpark.inverted = false
+        leftSlave1Spark.inverted = false
+        rightMasterSpark.inverted = true
+        rightSlave1Spark.inverted = true
+
+        leftMasterSpark.setSmartCurrentLimit(40)
+        leftMasterSpark.setSecondaryCurrentLimit(80.0)
+        rightMasterSpark.setSmartCurrentLimit(40)
+        rightMasterSpark.setSecondaryCurrentLimit(80.0)
 
         highGear = false
 
@@ -191,6 +196,8 @@ class Drive private constructor() : Subsystem {
         }
         SmartDashboard.putNumber("leftSpark", leftMasterSpark.busVoltage)
         SmartDashboard.putNumber("rightSpark", rightMasterSpark.busVoltage)
+        SmartDashboard.putNumber("leftSparkCurrent", leftMasterSpark.outputCurrent)
+        SmartDashboard.putNumber("rightSparkCurrent", rightMasterSpark.outputCurrent)
         SmartDashboard.putNumber("leftEncoderInches", leftEncoder.position)
         SmartDashboard.putNumber("rightEncoderInches", rightEncoder.position)
     }

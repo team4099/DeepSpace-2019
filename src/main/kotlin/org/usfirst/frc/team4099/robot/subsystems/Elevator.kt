@@ -50,7 +50,9 @@ class Elevator private constructor(): Subsystem {
         //slave.setNeutralMode(NeutralMode.Brake)
         talon.clearStickyFaults(0)
         talon.setSensorPhase(false)
-        talon.configPeakCurrentLimit(30)
+        talon.configContinuousCurrentLimit(25)
+        talon.configPeakCurrentLimit(40)
+
         //talon.set(ControlMode.MotionMagic, 0.0)
         talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0)
         talon.configNominalOutputForward(0.0, 0)
@@ -78,7 +80,7 @@ class Elevator private constructor(): Subsystem {
         talon.config_kF(3, Constants.Gains.ELEVATOR_DOWN_KF_V, 0)
 
         talon.configMotionCruiseVelocity(1600, 0)
-        talon.configMotionAcceleration(1700, 0)
+        talon.configMotionAcceleration(925, 0)
 
         zeroSensors()
 

@@ -39,6 +39,7 @@ class Robot : TimedRobot() {
 
     private var intakeState = IntakeState.HATCHPANEL
     var dashBoardTest = 0
+    var isDeploy = false
 
   
     enum class IntakeState {
@@ -112,6 +113,7 @@ class Robot : TimedRobot() {
 //            throw t
 //        }
         teleopInit()
+        wrist.wristState = Wrist.WristState.HORIZONTAL
 
     }
 
@@ -130,6 +132,7 @@ class Robot : TimedRobot() {
             CrashTracker.logThrowableCrash("teleopInit", t)
             throw t
         }
+        wrist.wristState = Wrist.WristState.HORIZONTAL
 
     }
 
@@ -139,7 +142,7 @@ class Robot : TimedRobot() {
 //            dashBoardTest++
 //            led.setNumber(3)
 
-            outputAllToSmartDashboard()
+            //outputAllToSmartDashboard()
 //            wrist.outputToSmartDashboard()
 
         } catch (t: Throwable) {
@@ -170,11 +173,12 @@ class Robot : TimedRobot() {
 
             if (controlBoard.cargoMode){
                 intakeState = IntakeState.CARGO
-                intake.hatchState = Intake.HatchState.OPEN
+                intake.hatchState = Intake.HatchState.CLOSED
                 intake.deployState = Intake.DeployState.IN
             }
             else if (controlBoard.hatchPanelMode) {
                 intakeState = IntakeState.HATCHPANEL
+                wrist.wristState = Wrist.WristState.HORIZONTAL
                // intake.deployState = Intake.DeployState.OUT
                 //elevator.elevatorState = Elevator.ElevatorState.HATCHLOW
             }
@@ -182,6 +186,7 @@ class Robot : TimedRobot() {
             if (intakeState == IntakeState.CARGO){
                 intake.deployState = Intake.DeployState.IN
                 if (Math.abs(controlBoard.wristPower)> 0.1) {
+                    wrist.setWristVelocity(-controlBoard.wristPower * Constants.Wrist.MAX_SPEED)
                     wrist.setWristVelocity(-controlBoard.wristPower * Constants.Wrist.MAX_SPEED)
                     //println("Set wrist velocity")
                     //wrist.setOpenLoop(-controlBoard.wristPower)
@@ -213,25 +218,43 @@ class Robot : TimedRobot() {
             else {
                 //intake.deployState = Intake.DeployState.OUT
                 intake.intakeState = Intake.IntakeState.STOP
-                wrist.wristState = Wrist.WristState.HORIZONTAL
+                //wrist.wristState = Wrist.WristState.HORIZONTAL
+                if (Math.abs(controlBoard.wristPower)> 0.07) {
+                    wrist.setWristVelocity(-controlBoard.wristPower * Constants.Wrist.MAX_SPEED/3)
+                    //println("Set wrist velocity")
+                    //wrist.setOpenLoop(-controlBoard.wristPower)
+                }
+                else if (wrist.wristState == Wrist.WristState.VELOCITY_CONTROL) {
+                    wrist.setWristVelocity(0.0)
+                    //wrist.setOpenLoop(0.0)
+                }
+                if(controlBoard.wristCargoIntake){
+                    wrist.wristState = Wrist.WristState.HORIZONTAL
+                }
                 if(controlBoard.openHatch){
-                    intake.hatchState = Intake.HatchState.OPEN
+                    isDeploy = true
+                    intake.deployState = Intake.DeployState.OUT
+
+                    //intake.hatchState = Intake.HatchState.OPEN
                     //println("open hatch")
+                }
+                else {
+                    if (isDeploy) {
+                        intake.hatchState = Intake.HatchState.OPEN
+                        intake.deployState = Intake.DeployState.IN
+                    }
+                    isDeploy = false
                 }
                 if(controlBoard.closeHatch){
                     intake.hatchState = Intake.HatchState.CLOSED
                     //println("close hatch")
                 }
-                if (controlBoard.openDeployer){
-                    intake.deployState = Intake.DeployState.OUT
-                }
-                if (controlBoard.closeDeployer){
-                    intake.deployState = Intake.DeployState.IN
 
-                }
             }
 
-            drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
+            //drive.setOpenLoop(cheesyDriveHelper.curvatureDrive(0.5 * controlBoard.throttle, 0.7* controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1)))
+            val driveSig = cheesyDriveHelper.curvatureDrive(controlBoard.throttle, controlBoard.turn, Utils.around(controlBoard.throttle, 0.0, 0.1))
+            drive.setVelocitySetpoint(6.0 * controlBoard.throttle + controlBoard.turn, 6.0 * controlBoard.throttle - controlBoard.turn, 0.0, 0.0)
 
             //outputAllToSmartDashboard()
             if (drive.highGear && controlBoard.switchToLowGear) {
@@ -331,14 +354,15 @@ class Robot : TimedRobot() {
                 climber.setClimberVelocity(0.0)
             }
             else{
-//                climber.setOpenLoop(0.0)
+                climber.setOpenLoop(0.0)
             }
 
             if(controlBoard.feetRetract) {
                 climber.feet = Climber.FeetState.RETRACT
-            } else if (controlBoard.feetExtend) {
-                climber.feet = Climber.FeetState.EXTEND
             }
+//            else if (controlBoard.feetExtend) {
+//                climber.feet = Climber.FeetState.EXTEND
+//            }
             if (climber.climberState != Climber.ClimberState.STOW){
                 if(controlBoard.climberDrive != 0.0){
                     println("climber drive")

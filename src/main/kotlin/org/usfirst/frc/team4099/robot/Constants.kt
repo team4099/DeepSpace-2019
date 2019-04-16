@@ -4,11 +4,11 @@ class Constants {
 
 
     object Drive {
-        val LEFT_MASTER_ID = 5
-        val LEFT_SLAVE_1_ID = 6
+        val LEFT_MASTER_ID = 10
+        val LEFT_SLAVE_1_ID = 9
         // val LEFT_SLAVE_2_ID = 5
-        val RIGHT_MASTER_ID = 10
-        val RIGHT_SLAVE_1_ID = 9
+        val RIGHT_MASTER_ID = 5
+        val RIGHT_SLAVE_1_ID = 6
         // val RIGHT_SLAVE_2_ID = 10
 
         val HIGH_GEAR_MAX_SETPOINT = 17.0  //17 fps
@@ -16,8 +16,8 @@ class Constants {
         val MAX_LEFT_OPENLOOP_VEL = 1.0
         val MAX_RIGHT_OPENLOOP_VEL = 1.0
 
-        val SHIFTER_FORWARD_ID = 5
-        val SHIFTER_REVERSE_ID = 2
+        val SHIFTER_FORWARD_ID = 7
+        val SHIFTER_REVERSE_ID = 0
 
         val LEFT_KV_FORWARD_HIGH = 0.4993
         val RIGHT_KV_FORWARD_HIGH = 0.5412
@@ -48,7 +48,7 @@ class Constants {
 
     object Climber {
         val CLIMBER_SPARK_ID = 15
-        val DRIVE_TALON_ID = 14
+        val DRIVE_TALON_ID = 2
         val CLIMBER_KP = 0.3
         val CLIMBER_KI = 0.0
         val CLIMBER_KD = 0.0
@@ -198,10 +198,10 @@ class Constants {
 
     object Intake {
         val INTAKE_TALON_ID = 12
-        val EXTENDER_FORWARD_ID = 1
-        val EXTENDER_REVERSE_ID = 6
-        val DEPLOYER_FORWARD_ID = 0
-        val DEPLOYER_REVERSE_ID = 7
+        val EXTENDER_FORWARD_ID = 5
+        val EXTENDER_REVERSE_ID = 2
+        val DEPLOYER_FORWARD_ID = 1
+        val DEPLOYER_REVERSE_ID = 6
     }
 
 
@@ -210,15 +210,15 @@ class Constants {
         val WRIST_SLAVE_VICTOR_ID = 14
         val MAX_SPEED = 999.9
 
-        val WRIST_UP_KP = 0.7
-        val WRIST_UP_KI = 0.0
-        val WRIST_UP_KD = 85.0
-        val WRIST_UP_KF = 1.75
+        val WRIST_UP_KP = 0.74
+        val WRIST_UP_KI = 0.005
+        val WRIST_UP_KD = 87.0
+        val WRIST_UP_KF = 1.70
 
-        val WRIST_DOWN_KP = 0.7
-        val WRIST_DOWN_KI = 0.0
-        val WRIST_DOWN_KD = 85.0
-        val WRIST_DOWN_KF = 1.75
+        val WRIST_DOWN_KP = 0.4
+        val WRIST_DOWN_KI = 0.005
+        val WRIST_DOWN_KD = 87.0
+        val WRIST_DOWN_KF = 1.70
 
         val WRiST_VELOCITY_KP = 0.5
         val WRiST_VELOCITY_KI = 0.3

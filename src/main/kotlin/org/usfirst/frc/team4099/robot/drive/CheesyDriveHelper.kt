@@ -126,21 +126,21 @@ class CheesyDriveHelper {
         private val kWheelDeadband = 0.02
 
         // These factor determine how fast the wheel traverses the "non linear" sine curve.
-        private val kHighWheelNonLinearity = 0.65
-        private val kLowWheelNonLinearity = 0.5
+        private val kHighWheelNonLinearity = 0.1
+        private val kLowWheelNonLinearity = 0.01
 
         private val kHighNegInertiaScalar = 4.0
 
-        private val kLowNegInertiaThreshold = 0.65
-        private val kLowNegInertiaTurnScalar = 2.1
-        private val kLowNegInertiaCloseScalar = 6.0
-        private val kLowNegInertiaFarScalar = 6.0
+        private val kLowNegInertiaThreshold = 0.0//0.3
+        private val kLowNegInertiaTurnScalar = 0.0//1.1
+        private val kLowNegInertiaCloseScalar = 0.0//0.3//0.8
+        private val kLowNegInertiaFarScalar = 0.0//0.4//1.0
 
-        private val kHighSensitivity = 0.3
-        private val kLowSensitiity = 0.3
+        private val kHighSensitivity = 0.5//0.11
+        private val kLowSensitiity = 0.5//0.11
 
-        private val kQuickStopDeadband = 0.5
-        private val kQuickStopWeight = 0.1
-        private val kQuickStopScalar = 5.0
+        private val kQuickStopDeadband = 0.0//0.38
+        private val kQuickStopWeight = 0.0//0.05
+        private val kQuickStopScalar = 0.0//0.65
     }
 }
