@@ -130,7 +130,7 @@ class Elevator private constructor(): Subsystem {
             talon.set(ControlMode.Velocity, inchesPerSecond)
             stopPosition = observedElevatorPosition
         }
-//        println("nativeVel: $inchesPerSecond, observedVel: ${talon.sensorCollection.quadratureVelocity}")
+        println("nativeVel: $inchesPerSecond, observedVel: ${talon.sensorCollection.quadratureVelocity}")
     }
 
 

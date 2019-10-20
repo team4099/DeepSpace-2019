@@ -316,6 +316,7 @@ class Robot : TimedRobot() {
                     elevator.elevatorState = Elevator.ElevatorState.PORTHIGH
                 }
             }
+            println("requested elevator power: ${controlBoard.elevatorPower}")
             if (Math.abs(controlBoard.elevatorPower) > Constants.Elevator.MIN_TRIGGER) {
                 elevator.setElevatorVelocity(500.0 * controlBoard.elevatorPower)
             }
