@@ -7,10 +7,6 @@ class LazyTalonSRX(deviceNumber: Int) : TalonSRX(deviceNumber)  {
     protected var mLastSet = java.lang.Double.NaN
     protected var mLastControlMode: ControlMode = ControlMode.PercentOutput
 
-    init {
-        this.configFactoryDefault()
-    }
-
     override fun set(controlMode: ControlMode, value: Double) {
         if (value != mLastSet || getControlMode() !== mLastControlMode) {
             mLastSet = value

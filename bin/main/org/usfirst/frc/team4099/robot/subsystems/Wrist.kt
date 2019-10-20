@@ -23,8 +23,8 @@ import kotlin.math.*
 
 class Wrist private constructor(): Subsystem {
     private val talon = CANMotorControllerFactory.createDefaultTalon(Constants.Wrist.WRIST_TALON_ID)
-    private val slave = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, talon)
-//    private val slave = CANMotorControllerFactory.createPermanentSlaveTalon(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, Constants.Wrist.WRIST_TALON_ID)
+//    private val slave = CANMotorControllerFactory.createPermanentSlaveVictor(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, talon)
+    private val slave = CANMotorControllerFactory.createPermanentSlaveTalon(Constants.Wrist.WRIST_SLAVE_VICTOR_ID, Constants.Wrist.WRIST_TALON_ID)
     //^^^^ TALON FOR PRACTICE BOT CHANGE CHANGE CHANGE
 
     var wristState = WristState.OPEN_LOOP
@@ -38,22 +38,20 @@ class Wrist private constructor(): Subsystem {
 //                talon.motorOutputPercent < 0 && talon.sensorCollection.quadraturePosition > 1600
 
     enum class WristState(val targetAngle: Double) {
-        HORIZONTAL(-24.1),
+        HORIZONTAL(-25.74),
         VERTICAL(-2.0),
-        CARGO(-29.7),
+        CARGO(-23.9),
         OPEN_LOOP(Double.NaN),
-        VELOCITY_CONTROL(Double.NaN)
+         VELOCITY_CONTROL(Double.NaN)
         //TODO Calibrate values
     }
 
     init {
-//        talon.configFactoryDefault()
-//        slave.configFactoryDefault()
         talon.set(ControlMode.PercentOutput, 0.0)
         talon.inverted = true
-        slave.inverted = true
-        talon.setSensorPhase(false)
-        //talon.configPeakCurrentLimit(20)
+        slave.inverted = false
+        talon.setSensorPhase(true)
+        talon.configPeakCurrentLimit(20)
         talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0)
         talon.configNominalOutputForward(0.0, 0)
         talon.configNominalOutputReverse(0.0, 0)
@@ -102,7 +100,8 @@ class Wrist private constructor(): Subsystem {
         SmartDashboard.putBoolean("wrist/wristUp", wristAngle > PI / 4)
         SmartDashboard.putNumber("wrist/wristSpeed", talon.sensorCollection.quadratureVelocity.toDouble())
     }
-       @Synchronized override fun stop() {
+
+    @Synchronized override fun stop() {
         talon.set(ControlMode.Velocity,0.0)
         talon.setNeutralMode(NeutralMode.Coast)
     }
@@ -136,7 +135,6 @@ class Wrist private constructor(): Subsystem {
             talon.selectProfileSlot(1, 0)
         }
         talon.set(ControlMode.MotionMagic, WristConversion.radiansToPulses(radians))
-
     }
 
     fun setWristVelocity(radiansPerSecond: Double) {
@@ -145,10 +143,10 @@ class Wrist private constructor(): Subsystem {
 //            println("wrist exiting at 0 power, $radiansPerSecond")
 //            return
 //        }
-        talon.configPeakOutputReverse(-0.36, 0)
-        talon.configPeakOutputForward(0.36, 0)
+        talon.configPeakOutputReverse(-0.45, 0)
+        talon.configPeakOutputForward(0.45, 0)
         if(radiansPerSecond == 0.0){
-            setWristPosition(lastVelControlPosition)   //use when pids are better
+            //talon.set(ControlMode.MotionMagic, WristConversion.radiansToPulses(lastVelControlPosition))   //use when pids are better
         }
         else{
             lastVelControlPosition = wristAngle
@@ -160,7 +158,7 @@ class Wrist private constructor(): Subsystem {
             }
             talon.set(ControlMode.Velocity, WristConversion.radiansToPulses(radiansPerSecond))
         }
-        //talon.set(ControlMode.Velocity, WristConversion.radiansToPulses(radiansPerSecond))
+        talon.set(ControlMode.Velocity, WristConversion.radiansToPulses(radiansPerSecond))
 
         //println("nativeVel: $radiansPerSecond, observedVel: ${talon.sensorCollection.quadratureVelocity}, error: ${talon.sensorCollection.quadratureVelocity - radiansPerSecond}")
 
@@ -176,14 +174,15 @@ class Wrist private constructor(): Subsystem {
 
         override fun onLoop() {
             synchronized(this@Wrist) {
+                //println("hi")
                 wristAngle = WristConversion.pulsesToRadians(talon.sensorCollection.quadraturePosition.toDouble())
                 observedVelocity = WristConversion.pulsesToRadians(talon.sensorCollection.quadratureVelocity.toDouble())
                 if(Math.abs(observedVelocity) > Math.abs(maxVel)){
                     maxVel = observedVelocity
                 }
-                //println("Max WristV = " + maxVel)
+                println("Max WristV = " + maxVel)
                 //println("IAccumulator: " + talon.integralAccumulator)
-                println("Wrist Angle: " + wristAngle)
+                //println("Wrist: " + wristAngle)
                 if (wristState == WristState.OPEN_LOOP || wristState == WristState.VELOCITY_CONTROL) {
                     //println("Wrist: " + wristAngle)
 //                    println("Target: " + wristState.targetAngle)
@@ -211,9 +210,9 @@ class Wrist private constructor(): Subsystem {
     }
 
     override fun zeroSensors() {
-        talon.inverted = false
+        talon.inverted = true
         slave.inverted = false
-        talon.setSensorPhase(false)
+        talon.setSensorPhase(true)
         talon.configPeakCurrentLimit(20)
 
         talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0)

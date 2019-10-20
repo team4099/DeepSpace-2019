@@ -3,7 +3,6 @@ package org.usfirst.frc.team4099.robot.subsystems
 import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.motorcontrol.FeedbackDevice
 import com.ctre.phoenix.motorcontrol.NeutralMode
-import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import org.usfirst.frc.team4099.lib.util.CANMotorControllerFactory
 import org.usfirst.frc.team4099.lib.util.Utils
@@ -26,7 +25,6 @@ class Elevator private constructor(): Subsystem {
     var observedElevatorVelocity = 0.0
         private set
     var isHatchPanel = true
-   // private val climberLatch: DoubleSolenoid = DoubleSolenoid(Constants.Elevator.LATCH_FORWARD_ID, Constants.Elevator.LATCH_REVERSE_ID)
 
     var stopPosition = 0.0
 
@@ -34,8 +32,6 @@ class Elevator private constructor(): Subsystem {
         GROUND(0.0),
         HATCHLOW(10.0), HATCHMID(133.0), HATCHHIGH(235.0),  //not set
         PORTLOW(28.0), PORTMID(160.0), PORTHIGH(253.0),     //low, mid set
-        HAB_THREE(Constants.Elevator.HAB_THREE), HAB_TWO(Constants.Elevator.HAB_TWO),
-        HAB_TWO_HALF(Constants.Elevator.HAB_TWO_HALF), CLIMBING(0.0),
         VELOCITY_CONTROL(Double.NaN), OPEN_LOOP(Double.NaN)
     }
 
@@ -44,15 +40,13 @@ class Elevator private constructor(): Subsystem {
     }
 
     init {
-        talon.inverted = true
-        slave.inverted = true
+        talon.inverted = false
+        slave.inverted = false
         //talon.setNeutralMode(NeutralMode.Brake)
         //slave.setNeutralMode(NeutralMode.Brake)
         talon.clearStickyFaults(0)
-        talon.setSensorPhase(true)
-        talon.configContinuousCurrentLimit(25)
-        talon.configPeakCurrentLimit(40)
-
+        talon.setSensorPhase(false)
+        //talon.configPeakCurrentLimit(30)
         //talon.set(ControlMode.MotionMagic, 0.0)
         talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0)
         talon.configNominalOutputForward(0.0, 0)
@@ -80,7 +74,7 @@ class Elevator private constructor(): Subsystem {
         talon.config_kF(3, Constants.Gains.ELEVATOR_DOWN_KF_V, 0)
 
         talon.configMotionCruiseVelocity(1600, 0)
-        talon.configMotionAcceleration(925, 0)
+        talon.configMotionAcceleration(1700, 0)
 
         zeroSensors()
 
@@ -120,7 +114,7 @@ class Elevator private constructor(): Subsystem {
 //        }
         elevatorState = ElevatorState.VELOCITY_CONTROL
         if(inchesPerSecond == 0.0){
-            setElevatorPosition(stopPosition)
+            talon.set(ControlMode.MotionMagic, stopPosition)
         } else {
             if (inchesPerSecond > 0) {
                 talon.selectProfileSlot(2, 0)
@@ -128,7 +122,7 @@ class Elevator private constructor(): Subsystem {
                 talon.selectProfileSlot(3, 0)
             }
             talon.set(ControlMode.Velocity, inchesPerSecond)
-            stopPosition = observedElevatorPosition
+            stopPosition = ElevatorConversion.inchesToPulses(observedElevatorPosition).toDouble()
         }
 //        println("nativeVel: $inchesPerSecond, observedVel: ${talon.sensorCollection.quadratureVelocity}")
     }
@@ -204,8 +198,8 @@ class Elevator private constructor(): Subsystem {
         }
     }
 
-    fun setElevatorPosition(position: Double) {
-        var target = position
+    private fun setElevatorPosition(position: ElevatorState) {
+        var target = position.targetPos
         if (target == Double.NaN) {
             target = observedElevatorPosition
         } else {
@@ -242,11 +236,25 @@ class Elevator private constructor(): Subsystem {
                     ElevatorState.VELOCITY_CONTROL -> {
                         return
                     }
-                    else -> {
-                        setElevatorPosition(elevatorState.targetPos)
+                    ElevatorState.HATCHHIGH -> {
+                        setElevatorPosition(ElevatorState.HATCHHIGH)
+                    }
+                    ElevatorState.HATCHMID -> {
+                        setElevatorPosition(ElevatorState.HATCHMID)
+                    }
+                    ElevatorState.HATCHLOW -> {
+                        setElevatorPosition(ElevatorState.HATCHLOW)
+                    }
+                    ElevatorState.PORTHIGH -> {
+                        setElevatorPosition(ElevatorState.PORTHIGH)
+                    }
+                    ElevatorState.PORTMID -> {
+                        setElevatorPosition(ElevatorState.PORTMID)
+                    }
+                    ElevatorState.PORTLOW -> {
+                        setElevatorPosition(ElevatorState.PORTLOW)
                     }
                 }
-               // climberLatch.set(if (elevatorState == ElevatorState.CLIMBING) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
                 when {
                     observedElevatorVelocity in -1 .. 1 -> movementState = MovementState.STILL
                     observedElevatorVelocity > 1 -> movementState = MovementState.UP
@@ -256,7 +264,9 @@ class Elevator private constructor(): Subsystem {
             }
         }
 
-        override fun onStop() = stop()
+        override fun onStop() {
+            setElevatorVelocity(0.0)
+        }
     }
 
     override fun stop() {
