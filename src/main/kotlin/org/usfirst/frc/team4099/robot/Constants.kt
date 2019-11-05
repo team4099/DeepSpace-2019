@@ -46,25 +46,6 @@ class Constants {
         val DRIVE_WHEEL_DIAMETER_INCHES = 6
     }
 
-    object Climber {
-        val CLIMBER_SPARK_ID = 15
-        val DRIVE_TALON_ID = 2
-        val CLIMBER_KP = 0.3
-        val CLIMBER_KI = 0.0
-        val CLIMBER_KD = 0.0
-        val CLIMBER_KIz = 0.0
-        val CLIMBER_KF = 0.11
-        val MAX_OUTPUT = 1.0
-        val LEVEL_THREE_POSITION = 0.0
-        val STOW_POSITION = 0.0
-        val LEVEL_TWO_HALF = 64.0
-        val LEVEL_TWO = 0.0
-        val CLIMBER_SOFT_LIMIT = -10.0
-        val MAX_CLIMB_VEL = 0.4
-        val MAX_DRIVE_VEL = 400.0
-        val FEET_SOLENOID_FORWARD = 3
-        val FEET_SOLENOID_REVERSE = 4
-    }
 
 
     object Gains {
@@ -90,86 +71,11 @@ class Constants {
         val RIGHT_HIGH_KD = 0.0000
         val RIGHT_HIGH_KF = 0.0000//1023.0 / 4420.0
 
-        val ELEVATOR_UP_KP = 3.0
-        val ELEVATOR_UP_KI = 0.0005
-        val ELEVATOR_UP_KD = 150.0
-        val ELEVATOR_UP_KF = 2.0
-
-        val ELEVATOR_DOWN_KP = 2.0
-        val ELEVATOR_DOWN_KI = 0.0
-        val ELEVATOR_DOWN_KD = 150.0
-        val ELEVATOR_DOWN_KF = 1.0
-
-        val ELEVATOR_UP_KP_V = 0.4
-        val ELEVATOR_UP_KI_V = 0.0
-        val ELEVATOR_UP_KD_V = 5.0
-        val ELEVATOR_UP_KF_V = 0.9
-
-        val ELEVATOR_DOWN_KP_V = 0.3
-        val ELEVATOR_DOWN_KI_V = 0.00
-        val ELEVATOR_DOWN_KD_V = 0.0
-        val ELEVATOR_DOWN_KF_V = 0.1
 
     }
 
 
-    object Elevator {
-        val ELEVATOR_TALON_ID = 3   //CHANGE
-        val SLAVE_VICTOR_ID = 13 //CHANGE
-        val MAX_SPEED = 180 //CHANGE
-        val MIN_TRIGGER = 0.1
-        val BOTTOM_SOFT_LIMIT = 0.0 //set later - CHANGE
-        val LATCH_FORWARD_ID = 2
-        val LATCH_REVERSE_ID = 5
-        val HAB_THREE = 0.0
-        val HAB_TWO = 0.0
-        val HAB_TWO_HALF = 0.0
-    }
 
-
-
-
-    object Vision {
-        val Kp = -0.019
-        val minCommand = 0
-
-        val HATCH_PANEL_HEIGHT = 20 // inches
-        val CARGO_HEIGHT = 20 // inches
-
-        val CAMERA_HEIGHT = 38.0085 // inches
-        val CAMERA_ANGLE = -22.409 // degrees
-        val TARGET_HEIGHT = 28.58722 // inches
-
-        val TARGET_HEIGHT_ADJUST = 10 //inches, NOT SET
-        val CAMERA_OFFSET = -0.71
-        val ERROR_MARGIN = 0.25 // degrees
-    }
-    object Velocity {
-        val HIGH_GEAR_VELOCITY_CONTROL_SLOT = 0
-        val LOW_GEAR_VELOCITY_CONTROL_SLOT = 0
-        val DRIVE_HIGH_GEAR_NOMINAL_OUTPUT = 0.0 //percentage
-        val DRIVE_LOW_GEAR_NOMINAL_OUTPUT = 0.0 //percentage
-        val DRIVE_HIGH_GEAR_MAX_FORWARD_OUTPUT = 1.0 //percentage
-        val DRIVE_HIGH_GEAR_MAX_REVERSE_OUTPUT = -1.0
-        val DRIVE_LOW_GEAR_MAX_FORWARD_OUTPUT = 1.0
-        val DRIVE_LOW_GEAR_MAX_REVERSE_OUTPUT = -1.0
-
-        val SHIFTER_CHANNEL = 0
-        val SHIFTER_MODULE = 0
-        val MAX_HIGH_VELOCITY = 72 //change
-        val MAX_HIGH_ACCEL =  78.2//change
-        val MAX_HIGH_JERK = 2000 //change
-
-        val MAX_LOW_VELOCITY = 72 //change
-        val MAX_LOW_ACCEL = 78.2 //change
-        val MAX_LOW_JERK = 2000 //change
-
-        val HIGH_KV = 1/MAX_HIGH_VELOCITY
-        val HIGH_KA = 0
-
-        val LOW_KV = 1/ MAX_LOW_VELOCITY
-        val LOW_KA = 0
-    }
     object Loopers {
         val LOOPER_DT = 0.02 // 50 Hz
     }
@@ -196,33 +102,4 @@ class Constants {
         val SHOTGUN_PORT = 1
     }
 
-    object Intake {
-        val INTAKE_TALON_ID = 12
-        val EXTENDER_FORWARD_ID = 5
-        val EXTENDER_REVERSE_ID = 2
-        val DEPLOYER_FORWARD_ID = 1
-        val DEPLOYER_REVERSE_ID = 6
-    }
-
-
-    object Wrist {
-        val WRIST_TALON_ID = 15 //MAY NOT MATCH FINAL BOT FIX LATER
-        val WRIST_SLAVE_VICTOR_ID = 14
-        val MAX_SPEED = 999.9
-
-        val WRIST_UP_KP = 0.74
-        val WRIST_UP_KI = 0.005
-        val WRIST_UP_KD = 87.0
-        val WRIST_UP_KF = 1.70
-
-        val WRIST_DOWN_KP = 0.4
-        val WRIST_DOWN_KI = 0.005
-        val WRIST_DOWN_KD = 87.0
-        val WRIST_DOWN_KF = 1.70
-
-        val WRiST_VELOCITY_KP = 0.5
-        val WRiST_VELOCITY_KI = 0.3
-        val WRiST_VELOCITY_KD = 0.0
-        val WRiST_VELOCITY_KF = 5.23
-    }
 }

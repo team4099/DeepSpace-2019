@@ -124,9 +124,9 @@ class Drive private constructor() : Subsystem {
         rightSlave1Spark.inverted = true
 
         leftMasterSpark.setSmartCurrentLimit(40)
-        leftMasterSpark.setSecondaryCurrentLimit(80.0)
+        leftMasterSpark.setSecondaryCurrentLimit(200.0)
         rightMasterSpark.setSmartCurrentLimit(40)
-        rightMasterSpark.setSecondaryCurrentLimit(80.0)
+        rightMasterSpark.setSecondaryCurrentLimit(200.0)
 
         highGear = false
 
